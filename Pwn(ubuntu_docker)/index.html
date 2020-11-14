@@ -14,7 +14,7 @@
     
     
       
-        <title>Pwn(ubuntu docker) - Trick</title>
+        <title>Pwn出题 - Trick</title>
       
     
     
@@ -91,7 +91,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Pwn(ubuntu docker)
+              Pwn出题
             
           </span>
         </div>
@@ -175,22 +175,181 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
     
     <label class="md-nav__link" for="nav-2">
-      Pwn基础
+      Pwn
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Pwn基础" data-md-level="1">
+    <nav class="md-nav" aria-label="Pwn" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
         <span class="md-nav__icon md-icon"></span>
-        Pwn基础
+        Pwn
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../checksec/" class="md-nav__link">
+      checksec
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Pwn_config/" class="md-nav__link">
+      Pwn环境配置
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Pwn出题
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Pwn出题
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    一、Docker 安装
+  </a>
+  
+    <nav class="md-nav" aria-label="一、Docker 安装">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    1.使用官方安装脚本自动安装
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2.切换镜像源
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker_1" class="md-nav__link">
+    二、Docker 简单使用
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ctf_xinetd" class="md-nav__link">
+    三、ctf_xinetd下载与使用
+  </a>
+  
+    <nav class="md-nav" aria-label="三、ctf_xinetd下载与使用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    1.放题目
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2ctfxinetd" class="md-nav__link">
+    2.修改ctf.xinetd文件
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3build" class="md-nav__link">
+    3.Build
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4run" class="md-nav__link">
+    4.Run
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    参考
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../libc_demo/" class="md-nav__link">
+      libc_demo
+    </a>
+  </li>
+
         
           
           
@@ -290,93 +449,32 @@
   </li>
 
         
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-  
-
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
-    
-    <label class="md-nav__link" for="nav-4">
-      其他记录
-      <span class="md-nav__icon md-icon"></span>
-    </label>
-    <nav class="md-nav" aria-label="其他记录" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
-        <span class="md-nav__icon md-icon"></span>
-        其他记录
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
           
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Pwn(ubuntu docker)
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
-      Pwn(ubuntu docker)
+  <li class="md-nav__item">
+    <a href="../%E6%B9%96%E6%B9%98%E6%9D%AFhxb_pwn/" class="md-nav__link">
+      湖湘杯hxb_pwn
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1daocloud" class="md-nav__link">
-    1.国内daocloud一键安装命令：
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
-    2.切换镜像源
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
       </ul>
     </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../friend/" class="md-nav__link">
+      友情链接
+    </a>
   </li>
 
     
@@ -406,8 +504,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="目录">
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -416,15 +512,83 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1daocloud" class="md-nav__link">
-    1.国内daocloud一键安装命令：
+  <a href="#docker" class="md-nav__link">
+    一、Docker 安装
+  </a>
+  
+    <nav class="md-nav" aria-label="一、Docker 安装">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    1.使用官方安装脚本自动安装
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2.切换镜像源
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker_1" class="md-nav__link">
+    二、Docker 简单使用
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
-    2.切换镜像源
+  <a href="#ctf_xinetd" class="md-nav__link">
+    三、ctf_xinetd下载与使用
+  </a>
+  
+    <nav class="md-nav" aria-label="三、ctf_xinetd下载与使用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    1.放题目
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2ctfxinetd" class="md-nav__link">
+    2.修改ctf.xinetd文件
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3build" class="md-nav__link">
+    3.Build
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4run" class="md-nav__link">
+    4.Run
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    参考
   </a>
   
 </li>
@@ -442,13 +606,16 @@
               
                 
                 
-                <p>@<a href="Pwn部署框架，出题（ubuntu）">TOC</a></p>
-<h1 id="docker">Docker 安装</h1>
-<h2 id="1daocloud">1.国内daocloud一键安装命令：</h2>
-<p><code>curl -sSL https://get.daocloud.io/docker | SH- SSL的https ：//get.daocloud.io/docker | SH</code></p>
-<p>备用apt安装：
-<code>apt-get install docker docker-compose</code></p>
-<h2 id="2">2.切换镜像源</h2>
+                  <h1>Pwn出题</h1>
+                
+                <h2 id="docker">一、Docker 安装</h2>
+<h3 id="1">1.使用官方安装脚本自动安装</h3>
+<p><code>curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</code></p>
+<p>也可以使用国内 daocloud 一键安装命令：</p>
+<p><code>curl -sSL https://get.daocloud.io/docker | sh</code></p>
+<p>apt安装docker-compose：</p>
+<p><code>apt-get install docker docker-compose</code></p>
+<h3 id="2">2.切换镜像源</h3>
 <p><code>vim /etc/docker/daemon.json</code></p>
 <pre><code class="language-python">cat &gt; /etc/docker/daemon.json &lt;&lt; EOF
 {
@@ -458,7 +625,7 @@ EOF
 
 service docker restart
 </code></pre>
-<h1 id="docker_1">Docker 简单使用</h1>
+<h2 id="docker_1">二、Docker 简单使用</h2>
 <p>我们可以通过以下几条命令简单测试一下docker是否安装成功：</p>
 <pre><code class="language-python">#启动docker
 service docker start
@@ -482,25 +649,28 @@ docker rm [container-id]
 docker rmi [images-name]
 #删除镜像
 </code></pre>
-<h1 id="ctf_xinetd">ctf_xinetd下载与使用</h1>
+<h2 id="ctf_xinetd">三、ctf_xinetd下载与使用</h2>
 <p>从GitHub上下载<a href="https://github.com/Eadom/ctf_xinetd">ctf_xinetd</a></p>
-<h2 id="1">1.放题目</h2>
+<h3 id="1_1">1.放题目</h3>
 <p>把题目可执行文件和flag放在ctf_xinetd/bin中
-ps：不要把 bin 作为题目的名字
-<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201103210513145.png#pic_center" /></p>
-<h2 id="2ctfxinetd">2.修改ctf.xinetd文件</h2>
+ps：不要把 bin 作为题目的名字</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201103210513145.png#pic_center" /></p>
+<h3 id="2ctfxinetd">2.修改ctf.xinetd文件</h3>
 <p>回到ctf_xinetd目录下，修改ctf.xinetd
 把图片箭头指向的 <code>helloworld</code> 改成bin文件夹中题目的名字
-保存退出
-<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201103210745998.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
-<h2 id="3build">3.Build</h2>
+保存退出</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201103210745998.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<h3 id="3build">3.Build</h3>
 <p>在ctf_xinetd目录下 <code>docker build -t "pwn" .</code></p>
-<h2 id="4run">4.Run</h2>
+<h3 id="4run">4.Run</h3>
 <p>在ctf_xinetd目录下 <code>docker run -d -p "0.0.0.0:pub_port:9999" -h "pwn" --name="pwn" pwn</code>
 -h：指定容器的hostname
 pub_port：改成你想放置的端口号，建议如8001，8002...等
 pub_port is the port you want to expose to the public network.</p>
 <p>此时输入docker ps 会发现题目容器已经启动了，可以nc 0.0.0.0 pub_port进行测试一下（pub_port：改成你想放置的端口号）</p>
+<h2 id="_1">参考</h2>
+<p><a href="https://www.runoob.com/docker/ubuntu-docker-install.html">docker | 菜鸟教程</a></p>
+<p><a href="https://blog.csdn.net/qq_40173126/article/details/83552307?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~first_rank_v2~rank_v25-3-83552307.nonecase&amp;utm_term=pwn%E5%87%BA%E9%A2%98%E6%BA%90%E4%BB%A3%E7%A0%81&amp;spm=1000.2123.3001.4430">使用Docker进行Pwn题环境部署</a></p>
                 
               
               
@@ -519,7 +689,7 @@ pub_port is the port you want to expose to the public network.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../Pwn_0xGame_02/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../Pwn_config/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -528,19 +698,19 @@ pub_port is the port you want to expose to the public network.</p>
                 <span class="md-footer-nav__direction">
                   上一页
                 </span>
-                Pwn_0xGame_02
+                Pwn环境配置
               </div>
             </div>
           </a>
         
         
-          <a href="../aboutMkdocs/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../libc_demo/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   下一页
                 </span>
-                MkDocs
+                libc_demo
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

