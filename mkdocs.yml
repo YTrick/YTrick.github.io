@@ -1,0 +1,52 @@
+site_name: Trick
+
+nav:
+  - Home: index.md  
+  - Pwn: 
+    - checksec: checksec.md
+    - Pwn环境配置: Pwn_config.md
+    - Pwn出题: Pwn(ubuntu_docker).md
+    - libc_demo: libc_demo.md
+    - test: test.md
+
+  - Python:
+    - python_learn: python_learn.md
+
+  - writeUp:
+    - Pwn_buuctf: Pwn_buuctf.md
+    - Pwn_buuctf_ciscn_2019_c_1 : Pwn_buuctf_ciscn_2019_c_1.md
+    - Pwn_buuctf_get_started_3dsctf_2016: Pwn_buuctf_get_started_3dsctf_2016.md
+    - Pwn_CTFShow_01: Pwn_CTFShow_01.md
+    - Pwn_CTFShow_02: Pwn_CTFShow_02.md
+    - Pwn_0xGame_01: Pwn_0xGame_01.md
+    - Pwn_0xGame_02: Pwn_0xGame_02.md
+    - 湖湘杯hxb_Pwn: 湖湘杯hxb_Pwn.md
+    - 湖湘杯hxb_Re: 湖湘杯hxb_Re.md
+    - 整形溢出: 整形溢出.md
+
+  
+
+  - 友情链接: friend.md
+  
+  - MkDocs: aboutMkdocs.md
+
+  
+
+
+
+theme:  
+  name: 'material' 
+  palette: 
+    primary: 'black'
+    accent: 'pink'
+  language: 'zh'  
+    
+
+# extra:
+#   social:
+    # - type: github
+    #   link: https://github.com/cyent
+  # search:
+  #   language: 'jp'
+
+  

