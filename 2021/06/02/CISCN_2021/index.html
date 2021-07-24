@@ -43,20 +43,20 @@
 <meta property="og:site_name" content="Trick&#39;s Blog">
 <meta property="og:description" content="CISCN_2021">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210517194723531.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210517194740860.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210602204007319.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210602204021587.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210602204121951.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210517195700168.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210517195801362.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210602204143302.png">
-<meta property="og:image" content="http://trick.ink/.ink//image-20210602204433065.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/CISCN_2021/CISCN_2021/image-20210517194723531.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/CISCN_2021/CISCN_2021/image-20210517194740860.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/CISCN_2021/CISCN_2021/image-20210602204007319.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/CISCN_2021/CISCN_2021/image-20210602204021587.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/CISCN_2021/CISCN_2021/image-20210602204121951.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/CISCN_2021/CISCN_2021/image-20210517195700168.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/CISCN_2021/CISCN_2021/image-20210517195801362.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/CISCN_2021/CISCN_2021/image-20210602204143302.png">
+<meta property="og:image" content="http://trick.ink/2021/06/02/CISCN_2021/CISCN_2021/image-20210602204433065.png">
 <meta property="article:published_time" content="2021-06-02T12:21:24.000Z">
 <meta property="article:modified_time" content="2021-07-24T06:35:41.734Z">
 <meta property="article:author" content="Trick">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://trick.ink/.ink//image-20210517194723531.png">
+<meta name="twitter:image" content="http://trick.ink/2021/06/02/CISCN_2021/CISCN_2021/image-20210517194723531.png">
 
 <link rel="canonical" href="http://trick.ink/2021/06/02/CISCN_2021/">
 
@@ -299,22 +299,22 @@
         <h1 id="CISCN-2021"><a href="#CISCN-2021" class="headerlink" title="CISCN_2021"></a>CISCN_2021</h1><span id="more"></span>
 
 <h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="pwny"><a href="#pwny" class="headerlink" title="pwny"></a>pwny</h2><p>保护全开</p>
-<p><img src="/.ink//image-20210517194723531.png" alt="image-20210517194723531"></p>
+<p><img src="CISCN_2021/image-20210517194723531.png" alt="image-20210517194723531"></p>
 <p>IDA</p>
 <ul>
 <li>main</li>
 </ul>
-<p><img src="/.ink//image-20210517194740860.png" alt="image-20210517194740860"></p>
+<p><img src="CISCN_2021/image-20210517194740860.png" alt="image-20210517194740860"></p>
 <ul>
 <li>read</li>
 </ul>
-<p><img src="/.ink//image-20210602204007319.png" alt="image-20210602204007319"></p>
+<p><img src="CISCN_2021/image-20210602204007319.png" alt="image-20210602204007319"></p>
 <ul>
 <li>write</li>
 </ul>
-<p><img src="/.ink//image-20210602204021587.png" alt="image-20210602204021587"></p>
+<p><img src="CISCN_2021/image-20210602204021587.png" alt="image-20210602204021587"></p>
 <p>write 的时候可以数组越界，输入256，第一次读入到 0x202860 处使fd非法，第二次读入时写入0，这样即可做写入操作</p>
-<p><img src="/.ink//image-20210602204121951.png" alt="image-20210602204121951"></p>
+<p><img src="CISCN_2021/image-20210602204121951.png" alt="image-20210602204121951"></p>
 <h3 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h3><p>利用数组溢出，实现任意地址读写。</p>
 <ul>
 <li>输入两次 0x100，数组越界，让 fd 置零</li>
@@ -323,15 +323,15 @@
 </ul>
 <h3 id="1、fd-置零"><a href="#1、fd-置零" class="headerlink" title="1、fd 置零"></a>1、fd 置零</h3><p>用vmmap 看 bss 段</p>
 <p>第二次read((unsigned __int8)random_fd, &amp;input, 8uLL)的时候fd是无效值，整个read是无效操作，input还是0，之后又赋值给了array[0x100]（即fd）</p>
-<p><img src="/.ink//image-20210517195700168.png" alt="image-20210517195700168"></p>
-<p><img src="/.ink//image-20210517195801362.png" alt="image-20210517195801362"></p>
-<h3 id="2、leak-libc"><a href="#2、leak-libc" class="headerlink" title="2、leak libc"></a>2、leak libc</h3><p><img src="/.ink//image-20210602204143302.png" alt="image-20210602204143302"></p>
+<p><img src="CISCN_2021/image-20210517195700168.png" alt="image-20210517195700168"></p>
+<p><img src="CISCN_2021/image-20210517195801362.png" alt="image-20210517195801362"></p>
+<h3 id="2、leak-libc"><a href="#2、leak-libc" class="headerlink" title="2、leak libc"></a>2、leak libc</h3><p><img src="CISCN_2021/image-20210602204143302.png" alt="image-20210602204143302"></p>
 <p>0x202060 - 0x202040 = 0x20 = 32 ，32/8 = 4</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">read(p64(<span class="number">0xFFFFFFFFFFFFFFFC</span>)) <span class="comment"># -4</span></span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="3、计算数组addr"><a href="#3、计算数组addr" class="headerlink" title="3、计算数组addr"></a>3、计算数组addr</h3><p><img src="/.ink//image-20210602204433065.png" alt="image-20210602204433065"></p>
+<h3 id="3、计算数组addr"><a href="#3、计算数组addr" class="headerlink" title="3、计算数组addr"></a>3、计算数组addr</h3><p><img src="CISCN_2021/image-20210602204433065.png" alt="image-20210602204433065"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">read(p64(<span class="number">0xFFFFFFFFFFFFFFF5</span>))<span class="comment"># -11</span></span><br></pre></td></tr></table></figure>
 
 
