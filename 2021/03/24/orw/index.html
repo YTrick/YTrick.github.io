@@ -45,8 +45,8 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/YTrick/image/branch/image/20210307191837.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/YTrick/image/branch/image/20210307194929.png">
-<meta property="og:image" content="http://trick.ink/2021/03/24/orw/shellcode/image-20210421165427835.png">
-<meta property="og:image" content="http://trick.ink/2021/03/24/orw/shellcode/image-20210421165445322.png">
+<meta property="og:image" content="http://trick.ink/.ink//image-20210421165427835.png">
+<meta property="og:image" content="http://trick.ink/.ink//image-20210421165445322.png">
 <meta property="article:published_time" content="2021-03-24T12:25:42.493Z">
 <meta property="article:modified_time" content="2021-07-24T06:32:49.541Z">
 <meta property="article:author" content="Trick">
@@ -308,9 +308,9 @@
 
 <p>搞不懂控制 rbp 为 0x00601000+0x500+0x10 是为什么。。。。</p>
 <h1 id="pwnable-orw"><a href="#pwnable-orw" class="headerlink" title="pwnable_orw"></a>pwnable_orw</h1><p>保护</p>
-<p><img src="shellcode/image-20210421165427835.png" alt="image-20210421165427835"></p>
+<p><img src="/.ink//image-20210421165427835.png" alt="image-20210421165427835"></p>
 <p>IDA</p>
-<p><img src="shellcode/image-20210421165445322.png" alt="image-20210421165445322"></p>
+<p><img src="/.ink//image-20210421165445322.png" alt="image-20210421165445322"></p>
 <p>一道写shellcode 的题目，题目意思也很明显是用orw，在pwnable中flag文件是在/home/orw/flag中，但是在buu中直接在当前目录下就有flag文件。</p>
 <p>写一个c程序再gcc -s 直接看汇编照着写就差不多了</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">100</span>];</span><br><span class="line">    <span class="keyword">int</span> fd;</span><br><span class="line"></span><br><span class="line">    fd = open(&#x27;flag&#x27;,0,0);</span><br><span class="line"></span><br><span class="line">    read(fd,buf,<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">    write(<span class="number">1</span>,buf,<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">    close(fd);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

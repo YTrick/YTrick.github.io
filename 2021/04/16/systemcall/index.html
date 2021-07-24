@@ -43,16 +43,16 @@
 <meta property="og:site_name" content="Trick&#39;s Blog">
 <meta property="og:description" content="systemcall">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://trick.ink/2021/04/16/systemcall/systemcall/image-20210417163706563.png">
-<meta property="og:image" content="http://trick.ink/2021/04/16/systemcall/systemcall/image-20210417163746110.png">
-<meta property="og:image" content="http://trick.ink/2021/04/16/systemcall/systemcall/image-20210417164011794.png">
-<meta property="og:image" content="http://trick.ink/2021/04/16/systemcall/systemcall/image-20210417164250630.png">
+<meta property="og:image" content="http://trick.ink/.ink//image-20210417163706563.png">
+<meta property="og:image" content="http://trick.ink/.ink//image-20210417163746110.png">
+<meta property="og:image" content="http://trick.ink/.ink//image-20210417164011794.png">
+<meta property="og:image" content="http://trick.ink/.ink//image-20210417164250630.png">
 <meta property="article:published_time" content="2021-04-16T08:36:34.189Z">
 <meta property="article:modified_time" content="2021-07-24T06:29:23.100Z">
 <meta property="article:author" content="Trick">
 <meta property="article:tag" content="SystemCall">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://trick.ink/2021/04/16/systemcall/systemcall/image-20210417163706563.png">
+<meta name="twitter:image" content="http://trick.ink/.ink//image-20210417163706563.png">
 
 <link rel="canonical" href="http://trick.ink/2021/04/16/systemcall/">
 
@@ -304,15 +304,15 @@
 <li>第三个参数，即 edx 应该为 0</li>
 </ul>
 <h1 id="BUUCTF-cmcc-simplerop"><a href="#BUUCTF-cmcc-simplerop" class="headerlink" title="BUUCTF_cmcc_simplerop"></a>BUUCTF_cmcc_simplerop</h1><p>保护</p>
-<p><img src="systemcall/image-20210417163706563.png" alt="image-20210417163706563"></p>
+<p><img src="/.ink//image-20210417163706563.png" alt="image-20210417163706563"></p>
 <p>IDA</p>
-<p><img src="systemcall/image-20210417163746110.png" alt="image-20210417163746110"></p>
-<p>很明显的漏洞点，但是参数v4距离返回地址的偏移并不是0x14+4，用gdb调试一下：<br><img src="systemcall/image-20210417164011794.png" alt="image-20210417164011794"></p>
+<p><img src="/.ink//image-20210417163746110.png" alt="image-20210417163746110"></p>
+<p>很明显的漏洞点，但是参数v4距离返回地址的偏移并不是0x14+4，用gdb调试一下：<br><img src="/.ink//image-20210417164011794.png" alt="image-20210417164011794"></p>
 <blockquote>
 <p>0x20</p>
 </blockquote>
 <p>找不到能利用的got表之类的东西，但能找到int 0x80，所以可以进行 systemcall</p>
-<p><img src="systemcall/image-20210417164250630.png" alt="image-20210417164250630"></p>
+<p><img src="/.ink//image-20210417164250630.png" alt="image-20210417164250630"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">execve(&quot;&#x2F;bin&#x2F;sh&quot;,NULL,NULL)</span><br></pre></td></tr></table></figure>
 
 <p>32位程序：</p>
