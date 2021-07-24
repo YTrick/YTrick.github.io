@@ -6,7 +6,7 @@
   <link href="http://trick.ink/atom.xml" rel="self"/>
   
   <link href="http://trick.ink/"/>
-  <updated>2021-07-24T07:39:32.082Z</updated>
+  <updated>2021-07-24T08:15:13.052Z</updated>
   <id>http://trick.ink/</id>
   
   <author>
@@ -18,12 +18,12 @@
   
   <entry>
     <title>Ubuntu20_zsh</title>
-    <link href="http://trick.ink/2021/07/24/Ubuntu20_zsh/"/>
-    <id>http://trick.ink/2021/07/24/Ubuntu20_zsh/</id>
+    <link href="http://trick.ink/2021/07/24/Ubuntu20-zsh/"/>
+    <id>http://trick.ink/2021/07/24/Ubuntu20-zsh/</id>
     <published>2021-07-24T05:00:11.000Z</published>
-    <updated>2021-07-24T07:39:32.082Z</updated>
+    <updated>2021-07-24T08:15:13.052Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"><a href="#Ubuntu20下zsh、oh-my-zsh、插件和主题安装" class="headerlink" title="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"></a>Ubuntu20下zsh、oh-my-zsh、插件和主题安装</h1><p>之前ubuntu16 18都没写过自己安装zsh的过程，借此次ubuntu20顺手写一下</p><span id="more"></span><h2 id="检查当前可用的shell："><a href="#检查当前可用的shell：" class="headerlink" title="检查当前可用的shell："></a>检查当前可用的shell：</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/shells</span><br></pre></td></tr></table></figure><h2 id="查看当前使用的shell："><a href="#查看当前使用的shell：" class="headerlink" title="查看当前使用的shell："></a>查看当前使用的shell：</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$SHELL</span></span><br></pre></td></tr></table></figure><h2 id="安装zsh"><a href="#安装zsh" class="headerlink" title="安装zsh"></a>安装zsh</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install zsh</span><br></pre></td></tr></table></figure><h2 id="把默认的Shell改成zsh"><a href="#把默认的Shell改成zsh" class="headerlink" title="把默认的Shell改成zsh"></a>把默认的Shell改成zsh</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br></pre></td></tr></table></figure><p>注意：不要使用sudo</p><h2 id="配置密码文件，解决chsh-PAM认证失败的问题"><a href="#配置密码文件，解决chsh-PAM认证失败的问题" class="headerlink" title="配置密码文件，解决chsh: PAM认证失败的问题"></a>配置密码文件，解决chsh: PAM认证失败的问题</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/passwd</span><br></pre></td></tr></table></figure><p><img src="/.ink//image-20210724130411040.png" alt="image-20210724130411040"></p><h2 id="安装-curl"><a href="#安装-curl" class="headerlink" title="安装 curl"></a>安装 curl</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt install curl</span><br></pre></td></tr></table></figure><h2 id="安装oh-my-zsh"><a href="#安装oh-my-zsh" class="headerlink" title="安装oh-my-zsh"></a>安装oh-my-zsh</h2><p>curl：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://gitee.com/shmhlsy/oh-my-zsh-install.sh/raw/master/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure><p>或者</p><p>wget：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget -O- https://gitee.com/shmhlsy/oh-my-zsh-install.sh/raw/master/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure><p><img src="/.ink//image-20210724130842599.png" alt="image-20210724130842599"></p><h2 id="下载-zsh-syntax-highlighting-语法高亮插件"><a href="#下载-zsh-syntax-highlighting-语法高亮插件" class="headerlink" title="下载 zsh-syntax-highlighting 语法高亮插件"></a>下载 zsh-syntax-highlighting 语法高亮插件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh&#125;</span>/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure><h2 id="下载-zsh-autosuggestions-自动提示插件"><a href="#下载-zsh-autosuggestions-自动提示插件" class="headerlink" title="下载 zsh-autosuggestions 自动提示插件"></a>下载 zsh-autosuggestions 自动提示插件</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-autosuggestions <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh&#125;</span>/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure><h2 id="配置生效"><a href="#配置生效" class="headerlink" title="配置生效"></a>配置生效</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure><h2 id="配置-zshrc文件"><a href="#配置-zshrc文件" class="headerlink" title="配置.zshrc文件"></a>配置.zshrc文件</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure><blockquote><p>plugins=(git zsh-syntax-highlighting zsh-autosuggestions)</p></blockquote><h1 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h1><h2 id="下载powerline"><a href="#下载powerline" class="headerlink" title="下载powerline"></a>下载powerline</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install powerline-status --user</span><br></pre></td></tr></table></figure><h2 id="安装PowerFonts"><a href="#安装PowerFonts" class="headerlink" title="安装PowerFonts"></a>安装PowerFonts</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/powerline/fonts.git --depth=1</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> fonts</span><br><span class="line"></span><br><span class="line">./install.sh</span><br></pre></td></tr></table></figure><h2 id="下载主题"><a href="#下载主题" class="headerlink" title="下载主题"></a>下载主题</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/fcamblor/oh-my-zsh-agnoster-fcamblor.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> oh-my-zsh-agnoster-fcamblor/</span><br><span class="line"></span><br><span class="line">./install</span><br></pre></td></tr></table></figure><h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure><blockquote><p>ZSH_THEME=”agnoster”</p></blockquote><h2 id="配置生效-1"><a href="#配置生效-1" class="headerlink" title="配置生效"></a>配置生效</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure><p>最后若是字体没有生效导致有乱码</p><ul><li><p>打开新的 Terminal 看是否生效</p></li><li><p>执行</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install fonts-powerline</span><br></pre></td></tr></table></figure></li></ul>]]></content>
+    <content type="html"><![CDATA[<h1 id="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"><a href="#Ubuntu20下zsh、oh-my-zsh、插件和主题安装" class="headerlink" title="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"></a>Ubuntu20下zsh、oh-my-zsh、插件和主题安装</h1><p>之前ubuntu16 18都没写过自己安装zsh的过程，借此次ubuntu20顺手写一下</p><span id="more"></span><h2 id="检查当前可用的shell："><a href="#检查当前可用的shell：" class="headerlink" title="检查当前可用的shell："></a>检查当前可用的shell：</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/shells</span><br></pre></td></tr></table></figure><h2 id="查看当前使用的shell："><a href="#查看当前使用的shell：" class="headerlink" title="查看当前使用的shell："></a>查看当前使用的shell：</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$SHELL</span></span><br></pre></td></tr></table></figure><h2 id="安装zsh"><a href="#安装zsh" class="headerlink" title="安装zsh"></a>安装zsh</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install zsh</span><br></pre></td></tr></table></figure><h2 id="把默认的Shell改成zsh"><a href="#把默认的Shell改成zsh" class="headerlink" title="把默认的Shell改成zsh"></a>把默认的Shell改成zsh</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br></pre></td></tr></table></figure><p>注意：不要使用sudo</p><h2 id="配置密码文件，解决chsh-PAM认证失败的问题"><a href="#配置密码文件，解决chsh-PAM认证失败的问题" class="headerlink" title="配置密码文件，解决chsh: PAM认证失败的问题"></a>配置密码文件，解决chsh: PAM认证失败的问题</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/passwd</span><br></pre></td></tr></table></figure><p><img src="/.ink//image-20210724130411040.png" alt="image-20210724130411041"></p><h2 id="安装-curl"><a href="#安装-curl" class="headerlink" title="安装 curl"></a>安装 curl</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt install curl</span><br></pre></td></tr></table></figure><h2 id="安装oh-my-zsh"><a href="#安装oh-my-zsh" class="headerlink" title="安装oh-my-zsh"></a>安装oh-my-zsh</h2><p>curl：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://gitee.com/shmhlsy/oh-my-zsh-install.sh/raw/master/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure><p>或者</p><p>wget：</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh -c <span class="string">&quot;<span class="subst">$(wget -O- https://gitee.com/shmhlsy/oh-my-zsh-install.sh/raw/master/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure><p><img src="/.ink//image-20210724130842599.png" alt="image-20210724130842599"></p><h2 id="下载-zsh-syntax-highlighting-语法高亮插件"><a href="#下载-zsh-syntax-highlighting-语法高亮插件" class="headerlink" title="下载 zsh-syntax-highlighting 语法高亮插件"></a>下载 zsh-syntax-highlighting 语法高亮插件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh&#125;</span>/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure><h2 id="下载-zsh-autosuggestions-自动提示插件"><a href="#下载-zsh-autosuggestions-自动提示插件" class="headerlink" title="下载 zsh-autosuggestions 自动提示插件"></a>下载 zsh-autosuggestions 自动提示插件</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-autosuggestions <span class="variable">$&#123;ZSH_CUSTOM:-~/.oh-my-zsh&#125;</span>/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure><h2 id="配置生效"><a href="#配置生效" class="headerlink" title="配置生效"></a>配置生效</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure><h2 id="配置-zshrc文件"><a href="#配置-zshrc文件" class="headerlink" title="配置.zshrc文件"></a>配置.zshrc文件</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure><blockquote><p>plugins=(git zsh-syntax-highlighting zsh-autosuggestions)</p></blockquote><h1 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h1><h2 id="下载powerline"><a href="#下载powerline" class="headerlink" title="下载powerline"></a>下载powerline</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install powerline-status --user</span><br></pre></td></tr></table></figure><h2 id="安装PowerFonts"><a href="#安装PowerFonts" class="headerlink" title="安装PowerFonts"></a>安装PowerFonts</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/powerline/fonts.git --depth=1</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> fonts</span><br><span class="line"></span><br><span class="line">./install.sh</span><br></pre></td></tr></table></figure><h2 id="下载主题"><a href="#下载主题" class="headerlink" title="下载主题"></a>下载主题</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/fcamblor/oh-my-zsh-agnoster-fcamblor.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> oh-my-zsh-agnoster-fcamblor/</span><br><span class="line"></span><br><span class="line">./install</span><br></pre></td></tr></table></figure><h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure><blockquote><p>ZSH_THEME=”agnoster”</p></blockquote><h2 id="配置生效-1"><a href="#配置生效-1" class="headerlink" title="配置生效"></a>配置生效</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure><p>最后若是字体没有生效导致有乱码</p><ul><li><p>打开新的 Terminal 看是否生效</p></li><li><p>执行</p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install fonts-powerline</span><br></pre></td></tr></table></figure></li></ul><p><img src="/.ink//image-20210724161512808.png" alt="image-20210724161512808"></p>]]></content>
     
     
     <summary type="html">&lt;h1 id=&quot;Ubuntu20下zsh、oh-my-zsh、插件和主题安装&quot;&gt;&lt;a href=&quot;#Ubuntu20下zsh、oh-my-zsh、插件和主题安装&quot; class=&quot;headerlink&quot; title=&quot;Ubuntu20下zsh、oh-my-zsh、插件和主题安装&quot;&gt;&lt;/a&gt;Ubuntu20下zsh、oh-my-zsh、插件和主题安装&lt;/h1&gt;&lt;p&gt;之前ubuntu16 18都没写过自己安装zsh的过程，借此次ubuntu20顺手写一下&lt;/p&gt;</summary>
@@ -37,8 +37,8 @@
   
   <entry>
     <title>汇编</title>
-    <link href="http://trick.ink/2021/07/11/assembly/"/>
-    <id>http://trick.ink/2021/07/11/assembly/</id>
+    <link href="http://trick.ink/2021/07/11/%E6%B1%87%E7%BC%96/"/>
+    <id>http://trick.ink/2021/07/11/%E6%B1%87%E7%BC%96/</id>
     <published>2021-07-11T07:02:50.000Z</published>
     <updated>2021-07-24T07:18:28.548Z</updated>
     
@@ -96,8 +96,8 @@
   
   <entry>
     <title>CISCN_2019</title>
-    <link href="http://trick.ink/2021/06/02/CISCN_2019/"/>
-    <id>http://trick.ink/2021/06/02/CISCN_2019/</id>
+    <link href="http://trick.ink/2021/06/02/ciscn_2019/"/>
+    <id>http://trick.ink/2021/06/02/ciscn_2019/</id>
     <published>2021-06-02T12:21:24.000Z</published>
     <updated>2021-07-24T06:35:58.361Z</updated>
     
@@ -134,8 +134,8 @@
   
   <entry>
     <title>C语言中常见漏洞点</title>
-    <link href="http://trick.ink/2021/05/11/C/"/>
-    <id>http://trick.ink/2021/05/11/C/</id>
+    <link href="http://trick.ink/2021/05/11/C%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E7%82%B9/"/>
+    <id>http://trick.ink/2021/05/11/C%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E7%82%B9/</id>
     <published>2021-05-11T05:08:25.047Z</published>
     <updated>2021-07-24T06:37:24.412Z</updated>
     
@@ -233,8 +233,8 @@
   
   <entry>
     <title>DASCTF_2021_3</title>
-    <link href="http://trick.ink/2021/04/06/DASCTF_2021_3/"/>
-    <id>http://trick.ink/2021/04/06/DASCTF_2021_3/</id>
+    <link href="http://trick.ink/2021/04/06/DASCTF/"/>
+    <id>http://trick.ink/2021/04/06/DASCTF/</id>
     <published>2021-04-06T04:52:05.077Z</published>
     <updated>2021-07-24T06:35:25.709Z</updated>
     
@@ -294,8 +294,8 @@
   
   <entry>
     <title>湖湘杯hxb_Re</title>
-    <link href="http://trick.ink/2021/03/30/hxb_Re/"/>
-    <id>http://trick.ink/2021/03/30/hxb_Re/</id>
+    <link href="http://trick.ink/2021/03/30/%E6%B9%96%E6%B9%98%E6%9D%AFhxb_Re/"/>
+    <id>http://trick.ink/2021/03/30/%E6%B9%96%E6%B9%98%E6%9D%AFhxb_Re/</id>
     <published>2021-03-30T04:41:25.222Z</published>
     <updated>2021-07-24T06:39:27.240Z</updated>
     
@@ -313,8 +313,8 @@
   
   <entry>
     <title>湖湘杯hxb_Pwn</title>
-    <link href="http://trick.ink/2021/03/30/hxb_Pwn/"/>
-    <id>http://trick.ink/2021/03/30/hxb_Pwn/</id>
+    <link href="http://trick.ink/2021/03/30/%E6%B9%96%E6%B9%98%E6%9D%AFhxb_Pwn/"/>
+    <id>http://trick.ink/2021/03/30/%E6%B9%96%E6%B9%98%E6%9D%AFhxb_Pwn/</id>
     <published>2021-03-30T04:41:25.217Z</published>
     <updated>2021-07-24T06:39:33.265Z</updated>
     
@@ -332,8 +332,8 @@
   
   <entry>
     <title>CTFShow_0x1</title>
-    <link href="http://trick.ink/2021/03/30/CTFShow_0x1/"/>
-    <id>http://trick.ink/2021/03/30/CTFShow_0x1/</id>
+    <link href="http://trick.ink/2021/03/30/Pwn_CTFShow_01/"/>
+    <id>http://trick.ink/2021/03/30/Pwn_CTFShow_01/</id>
     <published>2021-03-30T04:41:21.935Z</published>
     <updated>2021-07-24T06:31:12.627Z</updated>
     
@@ -370,8 +370,8 @@
   
   <entry>
     <title>HGame</title>
-    <link href="http://trick.ink/2021/03/30/HGame/"/>
-    <id>http://trick.ink/2021/03/30/HGame/</id>
+    <link href="http://trick.ink/2021/03/30/Hgame/"/>
+    <id>http://trick.ink/2021/03/30/Hgame/</id>
     <published>2021-03-30T04:41:13.457Z</published>
     <updated>2021-07-24T06:33:04.180Z</updated>
     
