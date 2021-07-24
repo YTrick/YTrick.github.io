@@ -18,8 +18,8 @@
   
   <entry>
     <title>Ubuntu20_zsh</title>
-    <link href="https://trick.ink/2021/07/24/Ubuntu20_zsh/"/>
-    <id>https://trick.ink/2021/07/24/Ubuntu20_zsh/</id>
+    <link href="https://trick.ink/article/Ubuntu20_zsh/"/>
+    <id>https://trick.ink/article/Ubuntu20_zsh/</id>
     <published>2021-07-24T05:00:11.000Z</published>
     <updated>2021-07-24T09:26:07.524Z</updated>
     
@@ -37,8 +37,8 @@
   
   <entry>
     <title>汇编</title>
-    <link href="https://trick.ink/2021/07/11/assembly/"/>
-    <id>https://trick.ink/2021/07/11/assembly/</id>
+    <link href="https://trick.ink/article/assembly/"/>
+    <id>https://trick.ink/article/assembly/</id>
     <published>2021-07-11T07:02:50.000Z</published>
     <updated>2021-07-24T07:18:28.548Z</updated>
     
@@ -56,8 +56,8 @@
   
   <entry>
     <title>CISCN_2021</title>
-    <link href="https://trick.ink/2021/06/02/CISCN_2021/"/>
-    <id>https://trick.ink/2021/06/02/CISCN_2021/</id>
+    <link href="https://trick.ink/article/CISCN_2021/"/>
+    <id>https://trick.ink/article/CISCN_2021/</id>
     <published>2021-06-02T12:21:24.000Z</published>
     <updated>2021-07-24T06:35:41.734Z</updated>
     
@@ -75,8 +75,8 @@
   
   <entry>
     <title>checksec</title>
-    <link href="https://trick.ink/2021/06/02/checksec/"/>
-    <id>https://trick.ink/2021/06/02/checksec/</id>
+    <link href="https://trick.ink/article/checksec/"/>
+    <id>https://trick.ink/article/checksec/</id>
     <published>2021-06-02T12:21:24.000Z</published>
     <updated>2021-07-24T06:36:45.983Z</updated>
     
@@ -96,8 +96,8 @@
   
   <entry>
     <title>CISCN_2019</title>
-    <link href="https://trick.ink/2021/06/02/CISCN_2019/"/>
-    <id>https://trick.ink/2021/06/02/CISCN_2019/</id>
+    <link href="https://trick.ink/article/CISCN_2019/"/>
+    <id>https://trick.ink/article/CISCN_2019/</id>
     <published>2021-06-02T12:21:24.000Z</published>
     <updated>2021-07-24T06:35:58.361Z</updated>
     
@@ -115,8 +115,8 @@
   
   <entry>
     <title>ISCC_2021</title>
-    <link href="https://trick.ink/2021/05/26/ISCC_2021/"/>
-    <id>https://trick.ink/2021/05/26/ISCC_2021/</id>
+    <link href="https://trick.ink/article/ISCC_2021/"/>
+    <id>https://trick.ink/article/ISCC_2021/</id>
     <published>2021-05-26T05:16:35.062Z</published>
     <updated>2021-07-24T06:33:00.854Z</updated>
     
@@ -134,8 +134,8 @@
   
   <entry>
     <title>C语言中常见漏洞点</title>
-    <link href="https://trick.ink/2021/05/11/C/"/>
-    <id>https://trick.ink/2021/05/11/C/</id>
+    <link href="https://trick.ink/article/C/"/>
+    <id>https://trick.ink/article/C/</id>
     <published>2021-05-11T05:08:25.047Z</published>
     <updated>2021-07-24T06:37:24.412Z</updated>
     
@@ -153,8 +153,8 @@
   
   <entry>
     <title>systemcall</title>
-    <link href="https://trick.ink/2021/04/16/systemcall/"/>
-    <id>https://trick.ink/2021/04/16/systemcall/</id>
+    <link href="https://trick.ink/article/systemcall/"/>
+    <id>https://trick.ink/article/systemcall/</id>
     <published>2021-04-16T08:36:34.189Z</published>
     <updated>2021-07-24T06:29:23.100Z</updated>
     
@@ -174,8 +174,8 @@
   
   <entry>
     <title>BUUCTF</title>
-    <link href="https://trick.ink/2021/04/13/BUUCTF/"/>
-    <id>https://trick.ink/2021/04/13/BUUCTF/</id>
+    <link href="https://trick.ink/article/BUUCTF/"/>
+    <id>https://trick.ink/article/BUUCTF/</id>
     <published>2021-04-13T11:36:49.981Z</published>
     <updated>2021-07-24T06:37:37.588Z</updated>
     
@@ -193,8 +193,8 @@
   
   <entry>
     <title>BUU_Heap</title>
-    <link href="https://trick.ink/2021/04/13/BUU_Heap/"/>
-    <id>https://trick.ink/2021/04/13/BUU_Heap/</id>
+    <link href="https://trick.ink/article/BUU_Heap/"/>
+    <id>https://trick.ink/article/BUU_Heap/</id>
     <published>2021-04-13T05:59:59.220Z</published>
     <updated>2021-07-24T06:37:55.423Z</updated>
     
@@ -214,8 +214,8 @@
   
   <entry>
     <title>program</title>
-    <link href="https://trick.ink/2021/04/12/program/"/>
-    <id>https://trick.ink/2021/04/12/program/</id>
+    <link href="https://trick.ink/article/program/"/>
+    <id>https://trick.ink/article/program/</id>
     <published>2021-04-12T12:12:58.770Z</published>
     <updated>2021-07-24T06:31:32.655Z</updated>
     
@@ -233,8 +233,8 @@
   
   <entry>
     <title>DASCTF_2021_3</title>
-    <link href="https://trick.ink/2021/04/06/DASCTF_2021_3/"/>
-    <id>https://trick.ink/2021/04/06/DASCTF_2021_3/</id>
+    <link href="https://trick.ink/article/DASCTF_2021_3/"/>
+    <id>https://trick.ink/article/DASCTF_2021_3/</id>
     <published>2021-04-06T04:52:05.077Z</published>
     <updated>2021-07-24T06:35:25.709Z</updated>
     
@@ -252,8 +252,8 @@
   
   <entry>
     <title>Heap_Learn</title>
-    <link href="https://trick.ink/2021/04/05/Heap_Learn/"/>
-    <id>https://trick.ink/2021/04/05/Heap_Learn/</id>
+    <link href="https://trick.ink/article/Heap_Learn/"/>
+    <id>https://trick.ink/article/Heap_Learn/</id>
     <published>2021-04-05T06:05:00.654Z</published>
     <updated>2021-07-24T06:33:32.136Z</updated>
     
@@ -273,8 +273,8 @@
   
   <entry>
     <title>EIP</title>
-    <link href="https://trick.ink/2021/03/30/EIP/"/>
-    <id>https://trick.ink/2021/03/30/EIP/</id>
+    <link href="https://trick.ink/article/EIP/"/>
+    <id>https://trick.ink/article/EIP/</id>
     <published>2021-03-30T05:07:44.918Z</published>
     <updated>2021-07-24T07:01:32.398Z</updated>
     
@@ -294,8 +294,8 @@
   
   <entry>
     <title>湖湘杯hxb_Re</title>
-    <link href="https://trick.ink/2021/03/30/hxb_Re/"/>
-    <id>https://trick.ink/2021/03/30/hxb_Re/</id>
+    <link href="https://trick.ink/article/hxb_Re/"/>
+    <id>https://trick.ink/article/hxb_Re/</id>
     <published>2021-03-30T04:41:25.222Z</published>
     <updated>2021-07-24T06:39:27.240Z</updated>
     
@@ -313,8 +313,8 @@
   
   <entry>
     <title>湖湘杯hxb_Pwn</title>
-    <link href="https://trick.ink/2021/03/30/hxb_Pwn/"/>
-    <id>https://trick.ink/2021/03/30/hxb_Pwn/</id>
+    <link href="https://trick.ink/article/hxb_Pwn/"/>
+    <id>https://trick.ink/article/hxb_Pwn/</id>
     <published>2021-03-30T04:41:25.217Z</published>
     <updated>2021-07-24T06:39:33.265Z</updated>
     
@@ -332,8 +332,8 @@
   
   <entry>
     <title>CTFShow_0x1</title>
-    <link href="https://trick.ink/2021/03/30/CTFShow_0x1/"/>
-    <id>https://trick.ink/2021/03/30/CTFShow_0x1/</id>
+    <link href="https://trick.ink/article/CTFShow_0x1/"/>
+    <id>https://trick.ink/article/CTFShow_0x1/</id>
     <published>2021-03-30T04:41:21.935Z</published>
     <updated>2021-07-24T06:31:12.627Z</updated>
     
@@ -351,8 +351,8 @@
   
   <entry>
     <title>NepCTF</title>
-    <link href="https://trick.ink/2021/03/30/NepCTF/"/>
-    <id>https://trick.ink/2021/03/30/NepCTF/</id>
+    <link href="https://trick.ink/article/NepCTF/"/>
+    <id>https://trick.ink/article/NepCTF/</id>
     <published>2021-03-30T04:41:16.445Z</published>
     <updated>2021-07-24T06:32:56.781Z</updated>
     
@@ -370,8 +370,8 @@
   
   <entry>
     <title>HGame</title>
-    <link href="https://trick.ink/2021/03/30/HGame/"/>
-    <id>https://trick.ink/2021/03/30/HGame/</id>
+    <link href="https://trick.ink/article/HGame/"/>
+    <id>https://trick.ink/article/HGame/</id>
     <published>2021-03-30T04:41:13.457Z</published>
     <updated>2021-07-24T06:33:04.180Z</updated>
     
@@ -389,8 +389,8 @@
   
   <entry>
     <title>Pwn_0xGame_01</title>
-    <link href="https://trick.ink/2021/03/30/Pwn_0xGame_01/"/>
-    <id>https://trick.ink/2021/03/30/Pwn_0xGame_01/</id>
+    <link href="https://trick.ink/article/Pwn_0xGame_01/"/>
+    <id>https://trick.ink/article/Pwn_0xGame_01/</id>
     <published>2021-03-30T04:41:06.251Z</published>
     <updated>2021-07-24T06:31:19.064Z</updated>
     

