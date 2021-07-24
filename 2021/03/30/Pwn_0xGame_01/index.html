@@ -33,13 +33,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"ytrick.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"trick.ink","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Pwn_0xGame_01">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pwn_0xGame_01">
-<meta property="og:url" content="https://ytrick.github.io/2021/03/30/Pwn_0xGame_01/index.html">
+<meta property="og:url" content="https://trick.ink/2021/03/30/Pwn_0xGame_01/index.html">
 <meta property="og:site_name" content="Trick&#39;s Blog">
 <meta property="og:description" content="Pwn_0xGame_01">
 <meta property="og:locale" content="zh_CN">
@@ -51,17 +51,17 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201019200641989.png#pic_center">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201019205534671.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20201019210240376.png#pic_center">
-<meta property="og:image" content="https://ytrick.github.io/.io//20201022204647356.png">
-<meta property="og:image" content="https://ytrick.github.io/.io//20201022204851409.png">
-<meta property="og:image" content="https://ytrick.github.io/.io//20201022210119569.png">
-<meta property="og:image" content="https://ytrick.github.io/.io//20201022210755704.png">
+<meta property="og:image" content="https://trick.ink/.ink//20201022204647356.png">
+<meta property="og:image" content="https://trick.ink/.ink//20201022204851409.png">
+<meta property="og:image" content="https://trick.ink/.ink//20201022210119569.png">
+<meta property="og:image" content="https://trick.ink/.ink//20201022210755704.png">
 <meta property="article:published_time" content="2021-03-30T04:41:06.251Z">
 <meta property="article:modified_time" content="2021-07-24T06:31:19.064Z">
 <meta property="article:author" content="Trick">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img-blog.csdnimg.cn/20201018162746427.png#pic_center">
 
-<link rel="canonical" href="https://ytrick.github.io/2021/03/30/Pwn_0xGame_01/">
+<link rel="canonical" href="https://trick.ink/2021/03/30/Pwn_0xGame_01/">
 
 
 <script id="page-configurations">
@@ -218,7 +218,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://ytrick.github.io/2021/03/30/Pwn_0xGame_01/">
+    <link itemprop="mainEntityOfPage" href="https://trick.ink/2021/03/30/Pwn_0xGame_01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/TRICK-LOGO.gif">
@@ -358,17 +358,17 @@
 
 
 <h2 id="6-Pwn题滞销-帮帮我好吗"><a href="#6-Pwn题滞销-帮帮我好吗" class="headerlink" title="6.Pwn题滞销,帮帮我好吗?"></a>6.Pwn题滞销,帮帮我好吗?</h2><h3 id="syscall"><a href="#syscall" class="headerlink" title="syscall"></a>syscall</h3><p>IDA打开</p>
-<p><img src="/.io//20201022204647356.png" alt="在这里插入图片描述"></p>
+<p><img src="/.ink//20201022204647356.png" alt="在这里插入图片描述"></p>
 <p>发现是个syscall的题目<br>直接去看这个函数的汇编</p>
-<p><img src="/.io//20201022204851409.png" alt="在这里插入图片描述"></p>
+<p><img src="/.ink//20201022204851409.png" alt="在这里插入图片描述"></p>
 <p>根据师傅们所说，我们需要让rax存入59，让syscall去调用execve函数 （ret2syscall？）</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/torvalds/linux/blob/16f73eb02d7e1765ccab3d2018e0bd98eb93d973/arch/x86/entry/syscalls/syscall_64.tbl">syscall_64 GitHub查询</a></p>
 <p>之后要构造出来  execve(“/bin/sh”,0,0) 拿取权限<br>找”/bin/sh”字符串<br>方法一：<br>在程序中有，找到它</p>
-<p><img src="/.io//20201022210119569.png" alt="在这里插入图片描述"></p>
+<p><img src="/.ink//20201022210119569.png" alt="在这里插入图片描述"></p>
 <p>从’[‘数起到斜杠前面的空格’ ‘，再加上前面的04个字符，一共是22个，换成16进制是16h<br>所以”/bin/sh”的地址为：0x402016</p>
 <p>方法二：<br>构造ROP链来寻找（这是看官方WriteUp看到的方法</p>
 <p><code>ROPgadget --binary ./main --string &#39;/bin/sh&#39;</code></p>
-<p><img src="/.io//20201022210755704.png" alt="在这里插入图片描述"></p>
+<p><img src="/.ink//20201022210755704.png" alt="在这里插入图片描述"></p>
 <p>找来找去，最后还是要用到csu init函数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> text:00000000004011D8 loc_4011D8:                             ; CODE XREF: init+4C↓j</span><br><span class="line">.text:00000000004011D8                 mov     rdx, r14</span><br><span class="line">.text:00000000004011DB                 mov     rsi, r13</span><br><span class="line">.text:00000000004011DE                 mov     edi, r12d</span><br><span class="line">.text:00000000004011E1                 call    qword ptr [r15+rbx*8]</span><br><span class="line">.text:00000000004011E5                 add     rbx, 1</span><br><span class="line">.text:00000000004011E9                 cmp     rbp, rbx</span><br><span class="line">.text:00000000004011EC                 jnz     short loc_4011D8</span><br><span class="line">.text:00000000004011EE</span><br><span class="line">.text:00000000004011EE loc_4011EE:                             ; CODE XREF: init+31↑j</span><br><span class="line">.text:00000000004011EE                 add     rsp, 8</span><br><span class="line">.text:00000000004011F2                 pop     rbx</span><br><span class="line">.text:00000000004011F3                 pop     rbp</span><br><span class="line">.text:00000000004011F4                 pop     r12</span><br><span class="line">.text:00000000004011F6                 pop     r13</span><br><span class="line">.text:00000000004011F8                 pop     r14</span><br><span class="line">.text:00000000004011FA                 pop     r15</span><br><span class="line">.text:00000000004011FC                 retn</span><br><span class="line">.text:00000000004011FC ; &#125; &#x2F;&#x2F; starts at 4011A0</span><br><span class="line">.text:00000000004011FC init            endp</span><br><span class="line">.text:00000000004011FC</span><br></pre></td></tr></table></figure>
 
