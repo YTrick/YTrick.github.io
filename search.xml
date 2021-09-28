@@ -225,51 +225,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Heap_Learn</title>
-    <url>/article/Heap_Learn/</url>
-    <content><![CDATA[<h1 id="Heap-Learn"><a href="#Heap-Learn" class="headerlink" title="Heap_Learn"></a>Heap_Learn</h1><span id="more"></span>
-
-<h1 id="堆相关数据结构"><a href="#堆相关数据结构" class="headerlink" title="堆相关数据结构"></a>堆相关数据结构</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- chunk </span><br><span class="line">| 		prev_size		 |	  	size  		|A|M|P|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">| user data	(fd)		 |	 	(bk)			  |</span><br><span class="line">|												|</span><br><span class="line">|												|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- next chunk</span><br></pre></td></tr></table></figure>
-
-<p><strong>prev_size</strong>，物理相邻的前一个chunk是空闲的话，则记录前一个chunk的大小（包括chunk头）；<br>                    若前一个chunk处于使用状态，则可以存储前一个chunk的数据。<strong>这是 chunk 中的空间复用</strong></p>
-<p><strong>size</strong>，必须是 2 * SIZE_SZ 的整数倍。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。</p>
-<ul>
-<li>A：NON_MAIN_ARENA，记录当前 chunk 是否不属于主线程，1 表示不属于，0 表示属于。</li>
-</ul>
-<ul>
-<li><p>M：IS_MAPPED，记录当前 chunk 是否是由 mmap 分配的。</p>
-</li>
-<li><p>P：<strong>PREV_INUSE</strong>，记录前一个 chunk 块是否被分配。一般来说，堆中第一个被分配的内存块的 size 字段的 P 位都会被设置为 1，以便于防止访问前面的非法内存。当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。这也方便进行空闲 chunk 之间的合并。</p>
-</li>
-</ul>
-<p><strong>fd</strong>，<strong>bk</strong> 。chunk在分配状态下存储数据，在free了chunk之后：</p>
-<ul>
-<li>fd 指向下一个空闲的chunk（非物理相邻）</li>
-<li>bk指向上一个空闲的chunk（非物理相邻）</li>
-</ul>
-<h1 id="Off-By-One"><a href="#Off-By-One" class="headerlink" title="Off-By-One"></a>Off-By-One</h1><h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>漏洞的产生与边界验证不严和字符串操作有关，包括</p>
-<ul>
-<li>使用循环语句向堆块中写入数据时，循环的次数设置错误（这在 C 语言初学者中很常见）导致多写入了一个字节。</li>
-<li>字符串操作不合适</li>
-</ul>
-<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><ol>
-<li><p>溢出字节为可控制任意字节：通过修改大小造成块结构之间出现重叠，从而泄露其他块数据，或是覆盖其他块数据。也可使用 NULL 字节溢出的方法</p>
-</li>
-<li><p>溢出字节为 NULL 字节：在 size 为 0x100 的时候，溢出 NULL 字节可以使得 <code>prev_in_use</code> 位被清，这样前块会被认为是 free 块。</p>
-<p>（1） 这时可以选择使用 unlink 方法（见 unlink 部分）进行处理。</p>
-<p>（2） 另外，这时 <code>prev_size</code> 域就会启用，就可以伪造 <code>prev_size</code> ，从而造成块之间发生重叠。此方法的关键在于 unlink 的时候没有检查按照 <code>prev_size</code>     找到的块的大小与<code>prev_size</code> 是否一致。</p>
-</li>
-</ol>
-<h1 id="large-bin"><a href="#large-bin" class="headerlink" title="large bin"></a>large bin</h1><p>当 large bin 中只存在一个chunk，那么该 chunk 的两个 nextsize指针都会指向自己</p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>Heap</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>HGame</title>
     <url>/article/HGame/</url>
     <content><![CDATA[<h1 id="week1"><a href="#week1" class="headerlink" title="week1"></a>week1</h1><span id="more"></span>
@@ -351,6 +306,51 @@
       <categories>
         <category>比赛WriteUp</category>
       </categories>
+  </entry>
+  <entry>
+    <title>Heap_Learn</title>
+    <url>/article/Heap_Learn/</url>
+    <content><![CDATA[<h1 id="Heap-Learn"><a href="#Heap-Learn" class="headerlink" title="Heap_Learn"></a>Heap_Learn</h1><span id="more"></span>
+
+<h1 id="堆相关数据结构"><a href="#堆相关数据结构" class="headerlink" title="堆相关数据结构"></a>堆相关数据结构</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- chunk </span><br><span class="line">| 		prev_size		 |	  	size  		|A|M|P|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">| user data	(fd)		 |	 	(bk)			  |</span><br><span class="line">|												|</span><br><span class="line">|												|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- next chunk</span><br></pre></td></tr></table></figure>
+
+<p><strong>prev_size</strong>，物理相邻的前一个chunk是空闲的话，则记录前一个chunk的大小（包括chunk头）；<br>                    若前一个chunk处于使用状态，则可以存储前一个chunk的数据。<strong>这是 chunk 中的空间复用</strong></p>
+<p><strong>size</strong>，必须是 2 * SIZE_SZ 的整数倍。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。</p>
+<ul>
+<li>A：NON_MAIN_ARENA，记录当前 chunk 是否不属于主线程，1 表示不属于，0 表示属于。</li>
+</ul>
+<ul>
+<li><p>M：IS_MAPPED，记录当前 chunk 是否是由 mmap 分配的。</p>
+</li>
+<li><p>P：<strong>PREV_INUSE</strong>，记录前一个 chunk 块是否被分配。一般来说，堆中第一个被分配的内存块的 size 字段的 P 位都会被设置为 1，以便于防止访问前面的非法内存。当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。这也方便进行空闲 chunk 之间的合并。</p>
+</li>
+</ul>
+<p><strong>fd</strong>，<strong>bk</strong> 。chunk在分配状态下存储数据，在free了chunk之后：</p>
+<ul>
+<li>fd 指向下一个空闲的chunk（非物理相邻）</li>
+<li>bk指向上一个空闲的chunk（非物理相邻）</li>
+</ul>
+<h1 id="Off-By-One"><a href="#Off-By-One" class="headerlink" title="Off-By-One"></a>Off-By-One</h1><h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>漏洞的产生与边界验证不严和字符串操作有关，包括</p>
+<ul>
+<li>使用循环语句向堆块中写入数据时，循环的次数设置错误（这在 C 语言初学者中很常见）导致多写入了一个字节。</li>
+<li>字符串操作不合适</li>
+</ul>
+<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><ol>
+<li><p>溢出字节为可控制任意字节：通过修改大小造成块结构之间出现重叠，从而泄露其他块数据，或是覆盖其他块数据。也可使用 NULL 字节溢出的方法</p>
+</li>
+<li><p>溢出字节为 NULL 字节：在 size 为 0x100 的时候，溢出 NULL 字节可以使得 <code>prev_in_use</code> 位被清，这样前块会被认为是 free 块。</p>
+<p>（1） 这时可以选择使用 unlink 方法（见 unlink 部分）进行处理。</p>
+<p>（2） 另外，这时 <code>prev_size</code> 域就会启用，就可以伪造 <code>prev_size</code> ，从而造成块之间发生重叠。此方法的关键在于 unlink 的时候没有检查按照 <code>prev_size</code>     找到的块的大小与<code>prev_size</code> 是否一致。</p>
+</li>
+</ol>
+<h1 id="large-bin"><a href="#large-bin" class="headerlink" title="large bin"></a>large bin</h1><p>当 large bin 中只存在一个chunk，那么该 chunk 的两个 nextsize指针都会指向自己</p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>Heap</tag>
+      </tags>
   </entry>
   <entry>
     <title>ISCC_2021</title>
@@ -948,14 +948,6 @@
       </tags>
   </entry>
   <entry>
-    <title>code</title>
-    <url>/article/code/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>CISCN_2019</title>
     <url>/article/CISCN_2019/</url>
     <content><![CDATA[<h1 id="ciscn-2019"><a href="#ciscn-2019" class="headerlink" title="ciscn_2019"></a>ciscn_2019</h1><span id="more"></span>
@@ -1012,6 +1004,14 @@
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>code</title>
+    <url>/article/code/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
+      </categories>
   </entry>
   <entry>
     <title>One_gadget</title>
@@ -1120,14 +1120,6 @@
       </tags>
   </entry>
   <entry>
-    <title>shellcode</title>
-    <url>/article/shellcode/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>program</title>
     <url>/article/program/</url>
     <content><![CDATA[<p>记录编程相关</p>
@@ -1158,6 +1150,14 @@
 ]]></content>
       <categories>
         <category>program</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>shellcode</title>
+    <url>/article/shellcode/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
       </categories>
   </entry>
   <entry>
