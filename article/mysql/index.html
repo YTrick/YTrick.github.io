@@ -36,15 +36,19 @@
     var CONFIG = {"hostname":"trick.ink","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Trick&#39;s Blog">
-<meta property="og:url" content="https://trick.ink/tags/%E6%A0%88%E8%BF%81%E7%A7%BB/index.html">
+  <meta name="description" content="MySQLssh连接服务器1ssh username@ipaddress    登录1mysql -u root -p    修改密码想修改密码，网上找到的指令，结果报错了 12mysql&gt; update user set password&#x3D;password(&#39;新密码&#39;) where user&#x3D;&#39;用户名&#39;;ERROR 1054 (42S22">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql">
+<meta property="og:url" content="https://trick.ink/article/mysql/index.html">
 <meta property="og:site_name" content="Trick&#39;s Blog">
+<meta property="og:description" content="MySQLssh连接服务器1ssh username@ipaddress    登录1mysql -u root -p    修改密码想修改密码，网上找到的指令，结果报错了 12mysql&gt; update user set password&#x3D;password(&#39;新密码&#39;) where user&#x3D;&#39;用户名&#39;;ERROR 1054 (42S22">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-30T08:07:11.000Z">
+<meta property="article:modified_time" content="2021-09-30T09:27:15.308Z">
 <meta property="article:author" content="Trick">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://trick.ink/tags/%E6%A0%88%E8%BF%81%E7%A7%BB/">
+<link rel="canonical" href="https://trick.ink/article/mysql/">
 
 
 <script id="page-configurations">
@@ -52,12 +56,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: 栈迁移 | Trick's Blog</title>
+  <title>mysql | Trick's Blog</title>
   
 
 
@@ -194,51 +198,121 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">栈迁移
-          <small>标签</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://trick.ink/article/mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/TRICK-LOGO.gif">
+      <meta itemprop="name" content="Trick">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Trick's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          mysql
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-30 16:07:11 / 修改时间：17:27:15" itemprop="dateCreated datePublished" datetime="2021-09-30T16:07:11+08:00">2021-09-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/WriteUp-%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">WriteUp/笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>571</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+        <h1 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h1><h2 id="ssh连接服务器"><a href="#ssh连接服务器" class="headerlink" title="ssh连接服务器"></a>ssh连接服务器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh username@ipaddress</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h2><p>想修改密码，网上找到的指令，结果报错了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update user set password&#x3D;password(&#39;新密码&#39;) where user&#x3D;&#39;用户名&#39;;</span><br><span class="line">ERROR 1054 (42S22): Unknown column &#39;password&#39; in &#39;field list&#39;</span><br></pre></td></tr></table></figure>
+
+<p>错误的原因是 5.7版本下的mysql数据库下已经没有password这个字段了，password字段改成了authentication_string</p>
+<p>正确姿势：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update mysql.user set authentication_string&#x3D;password(&#39;****&#39;) where user&#x3D;&#39;****&#39;;</span><br><span class="line">Query OK, 1 row affected, 1 warning (0.00 sec)</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 1</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; quit</span><br><span class="line">Bye</span><br></pre></td></tr></table></figure>
+
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-29T03:24:35+08:00"
-              content="2021-09-29">
-          09-29
-        </time>
-      </div>
+      <footer class="post-footer">
 
-      <div class="post-title">
-          <a class="post-title-link" href="/article/Stack%20migration/" itemprop="url">
-            <span itemprop="name">栈迁移</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/article/Shaping%20overflow/" rel="prev" title="整形溢出">
+      <i class="fa fa-chevron-left"></i> 整形溢出
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
@@ -291,6 +365,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL"><span class="nav-number">1.</span> <span class="nav-text">MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ssh%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">1.1.</span> <span class="nav-text">ssh连接服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95"><span class="nav-number">1.2.</span> <span class="nav-text">登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81"><span class="nav-number">1.3.</span> <span class="nav-text">修改密码</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

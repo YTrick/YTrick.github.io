@@ -6,7 +6,7 @@
   <link href="https://trick.ink/atom.xml" rel="self"/>
   
   <link href="https://trick.ink/"/>
-  <updated>2021-07-24T06:38:48.427Z</updated>
+  <updated>2021-09-30T09:27:15.308Z</updated>
   <id>https://trick.ink/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>mysql</title>
+    <link href="https://trick.ink/article/mysql/"/>
+    <id>https://trick.ink/article/mysql/</id>
+    <published>2021-09-30T08:07:11.000Z</published>
+    <updated>2021-09-30T09:27:15.308Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h1><h2 id="ssh连接服务器"><a href="#ssh连接服务器" class="headerlink" title="ssh连接服务器"></a>ssh连接服务器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh username@ipaddress</span><br></pre></td></tr></table></figure><h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure><h2 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h2><p>想修改密码，网上找到的指令，结果报错了</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update user set password&#x3D;password(&#39;新密码&#39;) where user&#x3D;&#39;用户名&#39;;</span><br><span class="line">ERROR 1054 (42S22): Unknown column &#39;password&#39; in &#39;field list&#39;</span><br></pre></td></tr></table></figure><p>错误的原因是 5.7版本下的mysql数据库下已经没有password这个字段了，password字段改成了authentication_string</p><p>正确姿势：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; update mysql.user set authentication_string&#x3D;password(&#39;****&#39;) where user&#x3D;&#39;****&#39;;</span><br><span class="line">Query OK, 1 row affected, 1 warning (0.00 sec)</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 1</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; quit</span><br><span class="line">Bye</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;MySQL&quot;&gt;&lt;a href=&quot;#MySQL&quot; class=&quot;headerlink&quot; title=&quot;MySQL&quot;&gt;&lt;/a&gt;MySQL&lt;/h1&gt;&lt;h2 id=&quot;ssh连接服务器&quot;&gt;&lt;a href=&quot;#ssh连接服务器&quot; class=&quot;headerlink&quot; titl</summary>
+      
+    
+    
+    
+    <category term="WriteUp/笔记" scheme="https://trick.ink/categories/WriteUp-%E7%AC%94%E8%AE%B0/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>整形溢出</title>
@@ -388,28 +410,6 @@
     
     
     <category term="栈迁移" scheme="https://trick.ink/tags/%E6%A0%88%E8%BF%81%E7%A7%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Untitled</title>
-    <link href="https://trick.ink/article/Untitled/"/>
-    <id>https://trick.ink/article/Untitled/</id>
-    <published>2021-09-28T19:24:33.000Z</published>
-    <updated>2021-09-28T19:24:33.943Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;title&quot;&gt;&lt;a href=&quot;#title&quot; class=&quot;headerlink&quot; title=&quot;title&quot;&gt;&lt;/a&gt;title&lt;/h1&gt;</summary>
-      
-    
-    
-    
-    <category term="WriteUp/笔记" scheme="https://trick.ink/categories/WriteUp-%E7%AC%94%E8%AE%B0/"/>
-    
     
   </entry>
   

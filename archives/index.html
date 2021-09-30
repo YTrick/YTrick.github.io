@@ -19,7 +19,7 @@
     }
     .pace .pace-activity {
         border-top-color: #1E92FB;    /*上边框颜色*/
-        border-left-color: #1E92FB;    /*左边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色1E92FB*/
     }
 </style>
   <link rel="apple-touch-icon" sizes="180x180" href="/images/TRICK-LOGO.png">
@@ -204,13 +204,33 @@
     <div class="posts-collapse">
       <div class="collection-title">
         
-        <span class="collection-header">还行! 目前共计 39 篇日志。 继续努力。</span>
+        <span class="collection-header">还行! 目前共计 40 篇日志。 继续努力。</span>
       </div>
 
       
     <div class="collection-year">
       <span class="collection-header">2021</span>
     </div>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-09-30T16:07:11+08:00"
+              content="2021-09-30">
+          09-30
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/article/mysql/" itemprop="url">
+            <span itemprop="name">mysql</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
 
   <article itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
@@ -392,26 +412,6 @@
     </header>
   </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-29T03:45:18+08:00"
-              content="2021-09-29">
-          09-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/article/One_gadget/" itemprop="url">
-            <span itemprop="name">One_gadget</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
 
     </div>
   </div>
@@ -489,7 +489,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -531,6 +531,7 @@
         
 
         
+<!--备案-->
 
 
 
@@ -543,7 +544,7 @@
 
 
 
-
+<!--版权-->
 <div class="copyright">
   
   &copy; 
@@ -601,12 +602,14 @@
 		var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
 		var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
 		var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
-		document.getElementById("sitetime").innerHTML=" 已运行"+/*diffYears+" 年 "+*/diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+		document.getElementById("sitetime").innerHTML=" </br>小破站已运行"+/*diffYears+" 年 "+*/diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
 	}
 	siteTime();
 </script>
 <!--// 添加运行时间-->
 
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 

