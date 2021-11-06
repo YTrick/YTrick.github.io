@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'tzy';
+    /* 字体名自定义 */
+    src: url('https://cdn.jsdelivr.net/gh/tzy13755126023/BLOG_SOURCE/font/ZhuZiAWan.woff2');
+}
+
+#web_bg {
+    background: var(--card-bg) !important; /* 慎用!important */
+  }
