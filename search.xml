@@ -514,39 +514,6 @@
       </categories>
   </entry>
   <entry>
-    <title>program</title>
-    <url>/article/program/</url>
-    <content><![CDATA[<h1 id="program"><a href="#program" class="headerlink" title="program"></a>program</h1><p>记录编程相关</p>
-<span id="more"></span>
-
-<h1 id="2020蓝桥杯省赛"><a href="#2020蓝桥杯省赛" class="headerlink" title="2020蓝桥杯省赛"></a>2020蓝桥杯省赛</h1><h2 id="A-门牌制作"><a href="#A-门牌制作" class="headerlink" title="A 门牌制作"></a>A 门牌制作</h2><p>【问题描述】<br>小蓝要为一条街的住户制作门牌号。<br>这条街一共有 2020 位住户，门牌号从 1 到 2020 编号。<br>小蓝制作门牌的方法是先制作 0 到 9 这几个数字字符，最后根据需要将字<br>符粘贴到门牌上，例如门牌 1017 需要依次粘贴字符 1、 0、 1、 7，即需要 1 个<br>字符 0， 2 个字符 1， 1 个字符 7。<br>请问要制作所有的 1 到 2020 号门牌，总共需要多少个字符 2？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i,t,n=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">		<span class="keyword">for</span>(t=i;t!=<span class="number">0</span>;t/=<span class="number">10</span>)</span><br><span class="line">			<span class="keyword">if</span>(t%<span class="number">10</span>==<span class="number">2</span>)</span><br><span class="line">				n++;</span><br><span class="line">	cout&lt;&lt; n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>624</p>
-</blockquote>
-<h2 id="试题B-既约分数"><a href="#试题B-既约分数" class="headerlink" title="试题B 既约分数"></a>试题B 既约分数</h2><p>【问题描述】<br>如果一个分数的分子和分母的最大公约数是1，这个分数称为既约分数。例如，3/4 , 5/2 , 1/8 , 7/1都是既约分数。请问，有多少个既约分数，分子和分母都是1 到2020 之间的整数（包括1和2020）？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> num=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> k=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">2020</span>;j++)</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>(k=i;;k--)</span><br><span class="line">    			<span class="keyword">if</span>(i%k==<span class="number">0</span> &amp;&amp; j%k==<span class="number">0</span>)</span><br><span class="line">    				<span class="keyword">break</span>;</span><br><span class="line">    		<span class="keyword">if</span>(k==<span class="number">1</span>)</span><br><span class="line">    			num++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	cout&lt;&lt;num;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="试题C-蛇形填数"><a href="#试题C-蛇形填数" class="headerlink" title="试题C 蛇形填数"></a>试题C 蛇形填数</h2><p>【问题描述】<br>如下图所示，小明用从1 开始的正整数“蛇形”填充无限大的矩阵。</p>
-<p><img src="/article/program/image-20210412201731138.png" alt="image-20210412201731138"></p>
-<p>容易看出矩阵第二行第二列中的数是5。请你计算矩阵中第20 行第20 列的数是多少？</p>
-<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<h2 id="试题D-跑步锻炼"><a href="#试题D-跑步锻炼" class="headerlink" title="试题D 跑步锻炼"></a>试题D 跑步锻炼</h2><p>【问题描述】<br>小蓝每天都锻炼身体。<br>正常情况下，小蓝每天跑 1 千米。如果某天是周一或者月初（1 日），为了<br>激励自己，小蓝要跑 2 千米。如果同时是周一或月初，小蓝也是跑 2 千米。<br>小蓝跑步已经坚持了很长时间，从 2000 年 1 月 1 日周六（含）到 2020 年<br>10 月 1 日周四（含）。请问这段时间小蓝总共跑步多少千米？</p>
-<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-<h2 id="试题E-七段码"><a href="#试题E-七段码" class="headerlink" title="试题E 七段码"></a>试题E 七段码</h2><p>【问题描述】<br>小蓝要用七段码数码管来表示一种特殊的文字。</p>
-<p>七段码上图给出了七段码数码管的一个图示，数码管中一共有7 段可以发光的二极管，分别标记为a, b, c, d, e, f, g。小蓝要选择一部分二极管（至少要有一个）发光来表达字符。在设计字符的表达时，要求所有发光的二极管是连成一片的。<br>例如：b 发光，其他二极管不发光可以用来表达一种字符。<br>例如：c 发光，其他二极管不发光可以用来表达一种字符。这种方案与上一行的方案可以用来表示不同的字符，尽管看上去比较相似。<br>例如：a, b, c, d, e 发光，f, g 不发光可以用来表达一种字符。<br>例如：b, f 发光，其他二极管不发光则不能用来表达一种字符，因为发光的二极管没有连成一片。<br>请问，小蓝可以用七段码数码管表达多少种不同的字符？</p>
-<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
-]]></content>
-      <categories>
-        <category>program</category>
-      </categories>
-  </entry>
-  <entry>
     <title>Pwn(ubuntu_docker)</title>
     <url>/article/Pwn_ubuntu_docker/</url>
     <content><![CDATA[<h2 id="一、Docker-安装"><a href="#一、Docker-安装" class="headerlink" title="一、Docker 安装"></a>一、Docker 安装</h2><h3 id="1-使用官方安装脚本自动安装"><a href="#1-使用官方安装脚本自动安装" class="headerlink" title="1.使用官方安装脚本自动安装"></a>1.使用官方安装脚本自动安装</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -fsSL https:&#x2F;&#x2F;get.docker.com | bash -s docker --mirror Aliyun</span><br></pre></td></tr></table></figure>
@@ -587,6 +554,39 @@
         <tag>ubuntu</tag>
         <tag>题目环境</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>program</title>
+    <url>/article/program/</url>
+    <content><![CDATA[<h1 id="program"><a href="#program" class="headerlink" title="program"></a>program</h1><p>记录编程相关</p>
+<span id="more"></span>
+
+<h1 id="2020蓝桥杯省赛"><a href="#2020蓝桥杯省赛" class="headerlink" title="2020蓝桥杯省赛"></a>2020蓝桥杯省赛</h1><h2 id="A-门牌制作"><a href="#A-门牌制作" class="headerlink" title="A 门牌制作"></a>A 门牌制作</h2><p>【问题描述】<br>小蓝要为一条街的住户制作门牌号。<br>这条街一共有 2020 位住户，门牌号从 1 到 2020 编号。<br>小蓝制作门牌的方法是先制作 0 到 9 这几个数字字符，最后根据需要将字<br>符粘贴到门牌上，例如门牌 1017 需要依次粘贴字符 1、 0、 1、 7，即需要 1 个<br>字符 0， 2 个字符 1， 1 个字符 7。<br>请问要制作所有的 1 到 2020 号门牌，总共需要多少个字符 2？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> i,t,n=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">		<span class="keyword">for</span>(t=i;t!=<span class="number">0</span>;t/=<span class="number">10</span>)</span><br><span class="line">			<span class="keyword">if</span>(t%<span class="number">10</span>==<span class="number">2</span>)</span><br><span class="line">				n++;</span><br><span class="line">	cout&lt;&lt; n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>624</p>
+</blockquote>
+<h2 id="试题B-既约分数"><a href="#试题B-既约分数" class="headerlink" title="试题B 既约分数"></a>试题B 既约分数</h2><p>【问题描述】<br>如果一个分数的分子和分母的最大公约数是1，这个分数称为既约分数。例如，3/4 , 5/2 , 1/8 , 7/1都是既约分数。请问，有多少个既约分数，分子和分母都是1 到2020 之间的整数（包括1和2020）？<br>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> num=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> k=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">2020</span>;i++)</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">2020</span>;j++)</span><br><span class="line">    	&#123;</span><br><span class="line">    		<span class="keyword">for</span>(k=i;;k--)</span><br><span class="line">    			<span class="keyword">if</span>(i%k==<span class="number">0</span> &amp;&amp; j%k==<span class="number">0</span>)</span><br><span class="line">    				<span class="keyword">break</span>;</span><br><span class="line">    		<span class="keyword">if</span>(k==<span class="number">1</span>)</span><br><span class="line">    			num++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	cout&lt;&lt;num;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="试题C-蛇形填数"><a href="#试题C-蛇形填数" class="headerlink" title="试题C 蛇形填数"></a>试题C 蛇形填数</h2><p>【问题描述】<br>如下图所示，小明用从1 开始的正整数“蛇形”填充无限大的矩阵。</p>
+<p><img src="/article/program/image-20210412201731138.png" alt="image-20210412201731138"></p>
+<p>容易看出矩阵第二行第二列中的数是5。请你计算矩阵中第20 行第20 列的数是多少？</p>
+<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<h2 id="试题D-跑步锻炼"><a href="#试题D-跑步锻炼" class="headerlink" title="试题D 跑步锻炼"></a>试题D 跑步锻炼</h2><p>【问题描述】<br>小蓝每天都锻炼身体。<br>正常情况下，小蓝每天跑 1 千米。如果某天是周一或者月初（1 日），为了<br>激励自己，小蓝要跑 2 千米。如果同时是周一或月初，小蓝也是跑 2 千米。<br>小蓝跑步已经坚持了很长时间，从 2000 年 1 月 1 日周六（含）到 2020 年<br>10 月 1 日周四（含）。请问这段时间小蓝总共跑步多少千米？</p>
+<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+<h2 id="试题E-七段码"><a href="#试题E-七段码" class="headerlink" title="试题E 七段码"></a>试题E 七段码</h2><p>【问题描述】<br>小蓝要用七段码数码管来表示一种特殊的文字。</p>
+<p>七段码上图给出了七段码数码管的一个图示，数码管中一共有7 段可以发光的二极管，分别标记为a, b, c, d, e, f, g。小蓝要选择一部分二极管（至少要有一个）发光来表达字符。在设计字符的表达时，要求所有发光的二极管是连成一片的。<br>例如：b 发光，其他二极管不发光可以用来表达一种字符。<br>例如：c 发光，其他二极管不发光可以用来表达一种字符。这种方案与上一行的方案可以用来表示不同的字符，尽管看上去比较相似。<br>例如：a, b, c, d, e 发光，f, g 不发光可以用来表达一种字符。<br>例如：b, f 发光，其他二极管不发光则不能用来表达一种字符，因为发光的二极管没有连成一片。<br>请问，小蓝可以用七段码数码管表达多少种不同的字符？</p>
+<p>【答案提交】<br>这是一道结果填空的题，你只需要算出结果后提交即可。本题的结果为一<br>个整数，在提交答案时只填写这个整数，填写多余的内容将无法得分。</p>
+]]></content>
+      <categories>
+        <category>program</category>
+      </categories>
   </entry>
   <entry>
     <title>Pwn_0xGame_01</title>
