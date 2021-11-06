@@ -114,46 +114,6 @@
       </categories>
   </entry>
   <entry>
-    <title>checksec</title>
-    <url>/article/checksec/</url>
-    <content><![CDATA[<h1 id="checksec"><a href="#checksec" class="headerlink" title="checksec"></a>checksec</h1><span id="more"></span>
-
-<p>checksec到底是用来干什么的？</p>
-<p>它是用来检查可执行文件属性，例如PIE, RELRO, PaX, Canaries, ASLR, Fortify Source等等属性。</p>
-<p>使用命令：</p>
-<p><code>checksec [filename]</code></p>
-<p>我们在ubuntu下使用它时，会显示有5行信息：</p>
-<p><img src="https://img-blog.csdnimg.cn/2020111011454314.png#pic_center" alt="在这里插入图片描述"></p>
-<h2 id="1-Arch"><a href="#1-Arch" class="headerlink" title="1.Arch"></a>1.Arch</h2><p>从这行信息可以知道程序是32bit还是64bit的</p>
-<h2 id="2-RELRO"><a href="#2-RELRO" class="headerlink" title="2.RELRO"></a>2.RELRO</h2><p>Full Relro（重定位表只读）</p>
-<p>Relocation Read Only， 重定位表只读。重定位表即.got 和 .plt 两个表。</p>
-<h2 id="3-Stack"><a href="#3-Stack" class="headerlink" title="3.Stack"></a>3.Stack</h2><p>显示Stack：No canary found则表示可以利用栈溢出</p>
-<p>Canary在pwn中是什么呢？<br>Canary翻译金丝雀。金丝雀原来是石油工人用来判断气体是否有毒。<br>而应用于在栈保护上则是在初始化一个栈帧时在栈底（stack overflow 发生的高位区域的尾部）设置一个随机的 canary 值，当函数返回之时检测 canary 的值是否经过了改变，以此来判断 stack/buffer overflow 是否发生，若改变则说明栈溢出发生，程序走另一个流程结束，以免漏洞利用成功。 因此我们需要获取 Canary 的值，或者防止触发 stack_chk_fail 函数，或是利用此函数。</p>
-<p>编译时控制是否开启栈保护以及程度：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">gcc -fno-stack-protector -o test test.c  //禁用栈保护</span><br><span class="line">gcc -fstack-protector -o test test.c   //启用堆栈保护，不过只为局部变量中含有 char 数组的函数插入保护代码</span><br><span class="line">gcc -fstack-protector-<span class="built_in">all</span> -o test test.c //启用堆栈保护，为所有函数插入保护代码</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-NX"><a href="#4-NX" class="headerlink" title="4.NX"></a>4.NX</h2><p>NX enable（不可执行内存）</p>
-<p>最常见的方法为 ROP (Return-Oriented Programming 返回导向编程)，利用栈溢出在栈上布置地址，每个内存地址对应一个 gadget，利用 ret 等指令进行衔接来执行某项功能，最终达到 pwn 掉程序的目的。</p>
-<p>gcc编译器默认开启了NX选项，如果需要关闭NX选项，可以给gcc编译器添加-z execstack参数。<br>例如：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">gcc -z execstack -o test test.c</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-PIE（ASLR）"><a href="#5-PIE（ASLR）" class="headerlink" title="5.PIE（ASLR）"></a>5.PIE（ASLR）</h2><p>称作 地址空间分布随机化（ASLR）<br>内存地址随机化机制（address space layout randomization)，有以下三种情况</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span> - 表示关闭进程地址空间随机化。</span><br><span class="line"><span class="number">1</span> - 表示将mmap的基址，stack和vdso页面随机化。</span><br><span class="line"><span class="number">2</span> - 表示在<span class="number">1</span>的基础上增加栈（heap）的随机化。</span><br></pre></td></tr></table></figure>
-
-<p>liunx下关闭PIE的命令如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sudo -s echo <span class="number">0</span> &gt; /proc/sys/kernel/randomize_va_space</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="转载"><a href="#转载" class="headerlink" title="转载"></a>转载</h2><p><a href="https://www.jianshu.com/p/31449fdfe35f">Checksec</a></p>
-]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>checksec</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>DASCTF_2021_3</title>
     <url>/article/DASCTF_2021_3/</url>
     <content><![CDATA[<span id="more"></span>
@@ -201,6 +161,46 @@
       <categories>
         <category>WriteUp/笔记</category>
       </categories>
+  </entry>
+  <entry>
+    <title>checksec</title>
+    <url>/article/checksec/</url>
+    <content><![CDATA[<h1 id="checksec"><a href="#checksec" class="headerlink" title="checksec"></a>checksec</h1><span id="more"></span>
+
+<p>checksec到底是用来干什么的？</p>
+<p>它是用来检查可执行文件属性，例如PIE, RELRO, PaX, Canaries, ASLR, Fortify Source等等属性。</p>
+<p>使用命令：</p>
+<p><code>checksec [filename]</code></p>
+<p>我们在ubuntu下使用它时，会显示有5行信息：</p>
+<p><img src="https://img-blog.csdnimg.cn/2020111011454314.png#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="1-Arch"><a href="#1-Arch" class="headerlink" title="1.Arch"></a>1.Arch</h2><p>从这行信息可以知道程序是32bit还是64bit的</p>
+<h2 id="2-RELRO"><a href="#2-RELRO" class="headerlink" title="2.RELRO"></a>2.RELRO</h2><p>Full Relro（重定位表只读）</p>
+<p>Relocation Read Only， 重定位表只读。重定位表即.got 和 .plt 两个表。</p>
+<h2 id="3-Stack"><a href="#3-Stack" class="headerlink" title="3.Stack"></a>3.Stack</h2><p>显示Stack：No canary found则表示可以利用栈溢出</p>
+<p>Canary在pwn中是什么呢？<br>Canary翻译金丝雀。金丝雀原来是石油工人用来判断气体是否有毒。<br>而应用于在栈保护上则是在初始化一个栈帧时在栈底（stack overflow 发生的高位区域的尾部）设置一个随机的 canary 值，当函数返回之时检测 canary 的值是否经过了改变，以此来判断 stack/buffer overflow 是否发生，若改变则说明栈溢出发生，程序走另一个流程结束，以免漏洞利用成功。 因此我们需要获取 Canary 的值，或者防止触发 stack_chk_fail 函数，或是利用此函数。</p>
+<p>编译时控制是否开启栈保护以及程度：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">gcc -fno-stack-protector -o test test.c  //禁用栈保护</span><br><span class="line">gcc -fstack-protector -o test test.c   //启用堆栈保护，不过只为局部变量中含有 char 数组的函数插入保护代码</span><br><span class="line">gcc -fstack-protector-<span class="built_in">all</span> -o test test.c //启用堆栈保护，为所有函数插入保护代码</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-NX"><a href="#4-NX" class="headerlink" title="4.NX"></a>4.NX</h2><p>NX enable（不可执行内存）</p>
+<p>最常见的方法为 ROP (Return-Oriented Programming 返回导向编程)，利用栈溢出在栈上布置地址，每个内存地址对应一个 gadget，利用 ret 等指令进行衔接来执行某项功能，最终达到 pwn 掉程序的目的。</p>
+<p>gcc编译器默认开启了NX选项，如果需要关闭NX选项，可以给gcc编译器添加-z execstack参数。<br>例如：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">gcc -z execstack -o test test.c</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-PIE（ASLR）"><a href="#5-PIE（ASLR）" class="headerlink" title="5.PIE（ASLR）"></a>5.PIE（ASLR）</h2><p>称作 地址空间分布随机化（ASLR）<br>内存地址随机化机制（address space layout randomization)，有以下三种情况</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="number">0</span> - 表示关闭进程地址空间随机化。</span><br><span class="line"><span class="number">1</span> - 表示将mmap的基址，stack和vdso页面随机化。</span><br><span class="line"><span class="number">2</span> - 表示在<span class="number">1</span>的基础上增加栈（heap）的随机化。</span><br></pre></td></tr></table></figure>
+
+<p>liunx下关闭PIE的命令如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sudo -s echo <span class="number">0</span> &gt; /proc/sys/kernel/randomize_va_space</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="转载"><a href="#转载" class="headerlink" title="转载"></a>转载</h2><p><a href="https://www.jianshu.com/p/31449fdfe35f">Checksec</a></p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>checksec</tag>
+      </tags>
   </entry>
   <entry>
     <title>docker</title>
@@ -547,6 +547,48 @@
       </categories>
   </entry>
   <entry>
+    <title>Pwn(ubuntu_docker)</title>
+    <url>/article/Pwn_ubuntu_docker/</url>
+    <content><![CDATA[<h2 id="一、Docker-安装"><a href="#一、Docker-安装" class="headerlink" title="一、Docker 安装"></a>一、Docker 安装</h2><h3 id="1-使用官方安装脚本自动安装"><a href="#1-使用官方安装脚本自动安装" class="headerlink" title="1.使用官方安装脚本自动安装"></a>1.使用官方安装脚本自动安装</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -fsSL https:&#x2F;&#x2F;get.docker.com | bash -s docker --mirror Aliyun</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用国内 daocloud 一键安装命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -sSL https:&#x2F;&#x2F;get.daocloud.io&#x2F;docker | sh</span><br></pre></td></tr></table></figure>
+
+<p>apt安装docker-compose：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">apt-get install docker docker-compose -y</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-切换镜像源"><a href="#2-切换镜像源" class="headerlink" title="2.切换镜像源"></a>2.切换镜像源</h3><p><code>vim /etc/docker/daemon.json</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">cat &gt; /etc/docker/daemon.json &lt;&lt; EOF</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">service docker restart</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、Docker-简单使用"><a href="#二、Docker-简单使用" class="headerlink" title="二、Docker 简单使用"></a>二、Docker 简单使用</h2><p>我们可以通过以下几条命令简单测试一下docker是否安装成功：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#启动docker</span></span><br><span class="line">service docker start</span><br><span class="line">docker images</span><br><span class="line"><span class="comment">#hello-world为其自带的一个image</span></span><br><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
+
+<p>常用指令：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">docker images</span><br><span class="line"><span class="comment">#查看镜像</span></span><br><span class="line">docker run -d [images_name/<span class="built_in">id</span>] /<span class="built_in">bin</span>/bash</span><br><span class="line"><span class="comment">#run：运行 镜像 从而生成 容器; -d：后台运行容器; [images_name/id]：换成镜像的id或者名称; /bin/bash：运行镜像的权限</span></span><br><span class="line">docker ps</span><br><span class="line"><span class="comment">#查看在运行的容器</span></span><br><span class="line">docker ps -a</span><br><span class="line"><span class="comment">#查看所有容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it [container-<span class="built_in">id</span>] /<span class="built_in">bin</span>/bash</span><br><span class="line"><span class="comment">#进入容器; exec:在运行的容器中执行命令; -i:互交界面, -t:分配一个伪终端; container-id:换成容器id</span></span><br><span class="line">docker rm [container-<span class="built_in">id</span>]</span><br><span class="line"><span class="comment">#删除容器</span></span><br><span class="line">docker rmi [images-name]</span><br><span class="line"><span class="comment">#删除镜像</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三、ctf-xinetd下载与使用"><a href="#三、ctf-xinetd下载与使用" class="headerlink" title="三、ctf_xinetd下载与使用"></a>三、ctf_xinetd下载与使用</h2><p>从GitHub上下载<a href="https://github.com/Eadom/ctf_xinetd">ctf_xinetd</a></p>
+<h3 id="1-放题目"><a href="#1-放题目" class="headerlink" title="1.放题目"></a>1.放题目</h3><p>把题目可执行文件和flag放在ctf_xinetd/bin中<br>ps：不要把 bin 作为题目的名字</p>
+<p><img src="https://img-blog.csdnimg.cn/20201103210513145.png#pic_center" alt="在这里插入图片描述"></p>
+<h3 id="2-修改ctf-xinetd文件"><a href="#2-修改ctf-xinetd文件" class="headerlink" title="2.修改ctf.xinetd文件"></a>2.修改ctf.xinetd文件</h3><p>回到ctf_xinetd目录下，修改ctf.xinetd<br>把图片箭头指向的 <code>helloworld</code> 改成bin文件夹中题目的名字<br>保存退出</p>
+<p><img src="https://img-blog.csdnimg.cn/20201103210745998.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h3 id="3-Build"><a href="#3-Build" class="headerlink" title="3.Build"></a>3.Build</h3><p>在ctf_xinetd目录下 <code>docker build -t &quot;pwn&quot; .</code></p>
+<h3 id="4-Run"><a href="#4-Run" class="headerlink" title="4.Run"></a>4.Run</h3><p>在ctf_xinetd目录下 <code>docker run -d -p &quot;0.0.0.0:pub_port:9999&quot; -h &quot;pwn&quot; --name=&quot;pwn&quot; pwn</code><br>-h：指定容器的hostname<br>pub_port：改成你想放置的端口号，建议如8001，8002…等<br>pub_port is the port you want to expose to the public network.</p>
+<p>此时输入docker ps 会发现题目容器已经启动了，可以nc 0.0.0.0 pub_port进行测试一下（pub_port：改成你想放置的端口号）</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.runoob.com/docker/ubuntu-docker-install.html">docker | 菜鸟教程</a></p>
+<p><a href="https://blog.csdn.net/qq_40173126/article/details/83552307?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~first_rank_v2~rank_v25-3-83552307.nonecase&utm_term=pwn%E5%87%BA%E9%A2%98%E6%BA%90%E4%BB%A3%E7%A0%81&spm=1000.2123.3001.4430">使用Docker进行Pwn题环境部署</a></p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>ubuntu</tag>
+        <tag>题目环境</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Pwn_0xGame_01</title>
     <url>/article/Pwn_0xGame_01/</url>
     <content><![CDATA[<h1 id="Pwn-0xGame-01"><a href="#Pwn-0xGame-01" class="headerlink" title="Pwn_0xGame_01"></a>Pwn_0xGame_01</h1><span id="more"></span>
@@ -628,48 +670,6 @@
       <categories>
         <category>比赛WriteUp</category>
       </categories>
-  </entry>
-  <entry>
-    <title>Pwn(ubuntu_docker)</title>
-    <url>/article/Pwn_ubuntu_docker/</url>
-    <content><![CDATA[<h2 id="一、Docker-安装"><a href="#一、Docker-安装" class="headerlink" title="一、Docker 安装"></a>一、Docker 安装</h2><h3 id="1-使用官方安装脚本自动安装"><a href="#1-使用官方安装脚本自动安装" class="headerlink" title="1.使用官方安装脚本自动安装"></a>1.使用官方安装脚本自动安装</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -fsSL https:&#x2F;&#x2F;get.docker.com | bash -s docker --mirror Aliyun</span><br></pre></td></tr></table></figure>
-
-<p>也可以使用国内 daocloud 一键安装命令：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -sSL https:&#x2F;&#x2F;get.daocloud.io&#x2F;docker | sh</span><br></pre></td></tr></table></figure>
-
-<p>apt安装docker-compose：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">apt-get install docker docker-compose -y</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-切换镜像源"><a href="#2-切换镜像源" class="headerlink" title="2.切换镜像源"></a>2.切换镜像源</h3><p><code>vim /etc/docker/daemon.json</code></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">cat &gt; /etc/docker/daemon.json &lt;&lt; EOF</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">service docker restart</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、Docker-简单使用"><a href="#二、Docker-简单使用" class="headerlink" title="二、Docker 简单使用"></a>二、Docker 简单使用</h2><p>我们可以通过以下几条命令简单测试一下docker是否安装成功：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#启动docker</span></span><br><span class="line">service docker start</span><br><span class="line">docker images</span><br><span class="line"><span class="comment">#hello-world为其自带的一个image</span></span><br><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
-
-<p>常用指令：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">docker images</span><br><span class="line"><span class="comment">#查看镜像</span></span><br><span class="line">docker run -d [images_name/<span class="built_in">id</span>] /<span class="built_in">bin</span>/bash</span><br><span class="line"><span class="comment">#run：运行 镜像 从而生成 容器; -d：后台运行容器; [images_name/id]：换成镜像的id或者名称; /bin/bash：运行镜像的权限</span></span><br><span class="line">docker ps</span><br><span class="line"><span class="comment">#查看在运行的容器</span></span><br><span class="line">docker ps -a</span><br><span class="line"><span class="comment">#查看所有容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it [container-<span class="built_in">id</span>] /<span class="built_in">bin</span>/bash</span><br><span class="line"><span class="comment">#进入容器; exec:在运行的容器中执行命令; -i:互交界面, -t:分配一个伪终端; container-id:换成容器id</span></span><br><span class="line">docker rm [container-<span class="built_in">id</span>]</span><br><span class="line"><span class="comment">#删除容器</span></span><br><span class="line">docker rmi [images-name]</span><br><span class="line"><span class="comment">#删除镜像</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="三、ctf-xinetd下载与使用"><a href="#三、ctf-xinetd下载与使用" class="headerlink" title="三、ctf_xinetd下载与使用"></a>三、ctf_xinetd下载与使用</h2><p>从GitHub上下载<a href="https://github.com/Eadom/ctf_xinetd">ctf_xinetd</a></p>
-<h3 id="1-放题目"><a href="#1-放题目" class="headerlink" title="1.放题目"></a>1.放题目</h3><p>把题目可执行文件和flag放在ctf_xinetd/bin中<br>ps：不要把 bin 作为题目的名字</p>
-<p><img src="https://img-blog.csdnimg.cn/20201103210513145.png#pic_center" alt="在这里插入图片描述"></p>
-<h3 id="2-修改ctf-xinetd文件"><a href="#2-修改ctf-xinetd文件" class="headerlink" title="2.修改ctf.xinetd文件"></a>2.修改ctf.xinetd文件</h3><p>回到ctf_xinetd目录下，修改ctf.xinetd<br>把图片箭头指向的 <code>helloworld</code> 改成bin文件夹中题目的名字<br>保存退出</p>
-<p><img src="https://img-blog.csdnimg.cn/20201103210745998.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<h3 id="3-Build"><a href="#3-Build" class="headerlink" title="3.Build"></a>3.Build</h3><p>在ctf_xinetd目录下 <code>docker build -t &quot;pwn&quot; .</code></p>
-<h3 id="4-Run"><a href="#4-Run" class="headerlink" title="4.Run"></a>4.Run</h3><p>在ctf_xinetd目录下 <code>docker run -d -p &quot;0.0.0.0:pub_port:9999&quot; -h &quot;pwn&quot; --name=&quot;pwn&quot; pwn</code><br>-h：指定容器的hostname<br>pub_port：改成你想放置的端口号，建议如8001，8002…等<br>pub_port is the port you want to expose to the public network.</p>
-<p>此时输入docker ps 会发现题目容器已经启动了，可以nc 0.0.0.0 pub_port进行测试一下（pub_port：改成你想放置的端口号）</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.runoob.com/docker/ubuntu-docker-install.html">docker | 菜鸟教程</a></p>
-<p><a href="https://blog.csdn.net/qq_40173126/article/details/83552307?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~first_rank_v2~rank_v25-3-83552307.nonecase&utm_term=pwn%E5%87%BA%E9%A2%98%E6%BA%90%E4%BB%A3%E7%A0%81&spm=1000.2123.3001.4430">使用Docker进行Pwn题环境部署</a></p>
-]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>ubuntu</tag>
-        <tag>题目环境</tag>
-      </tags>
   </entry>
   <entry>
     <title>CTFShow_0x1</title>
