@@ -272,14 +272,14 @@
   </url>
   
   <url>
-    <loc>https://trick.ink/categories/WriteUp-%E7%AC%94%E8%AE%B0/</loc>
+    <loc>https://trick.ink/categories/%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2021-11-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://trick.ink/categories/%E7%AC%94%E8%AE%B0/</loc>
+    <loc>https://trick.ink/categories/WriteUp-%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2021-11-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
