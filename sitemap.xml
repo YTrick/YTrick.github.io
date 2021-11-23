@@ -2,35 +2,63 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://trick.ink/article/Hello%20World/</loc>
+    <loc>https://trick.ink/article/xhlj2021/</loc>
     
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     
   </url>
   
   <url>
     <loc>https://trick.ink/article/DHB_2021/</loc>
     
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-21</lastmod>
     
   </url>
   
   <url>
     <loc>https://trick.ink/article/Heap_Exploitation/</loc>
     
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://trick.ink/article/SYB2021/</loc>
+    
+    <lastmod>2021-11-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://trick.ink/article/Pwn_ubuntu_docker/</loc>
+    
+    <lastmod>2021-11-17</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://trick.ink/article/hectf_2021/</loc>
+    
+    <lastmod>2021-11-13</lastmod>
     
   </url>
   
   <url>
     <loc>https://trick.ink/article/Heap_Learn/</loc>
     
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-12</lastmod>
     
   </url>
   
   <url>
     <loc>https://trick.ink/article/Stack%20Overflow/</loc>
+    
+    <lastmod>2021-11-09</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://trick.ink/article/Hello%20World/</loc>
     
     <lastmod>2021-11-06</lastmod>
     
@@ -103,13 +131,6 @@
     <loc>https://trick.ink/article/hxb_2020/</loc>
     
     <lastmod>2021-11-06</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://trick.ink/article/Pwn_ubuntu_docker/</loc>
-    
-    <lastmod>2021-11-05</lastmod>
     
   </url>
   
@@ -200,7 +221,7 @@
 
   <url>
     <loc>https://trick.ink/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -208,56 +229,56 @@
   
   <url>
     <loc>https://trick.ink/tags/checksec/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/tags/docker/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/tags/DVWA/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/tags/Heap/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/tags/ubuntu/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/tags/%E9%A2%98%E7%9B%AE%E7%8E%AF%E5%A2%83/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/tags/%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/tags/Stack-Overflow/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -266,35 +287,35 @@
   
   <url>
     <loc>https://trick.ink/categories/%E6%AF%94%E8%B5%9BWriteUp/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/categories/%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/categories/WriteUp-%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/categories/WriteUp/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://trick.ink/categories/program/</loc>
-    <lastmod>2021-11-06</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
