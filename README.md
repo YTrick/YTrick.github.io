@@ -1,2 +1,2 @@
 # Blog
-[https://trick.ink/](https://trick.ink/)
+# [https://trick.ink/](https://trick.ink/)
