@@ -1,0 +1,509 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FUZZ-AFL | Trick's Blog</title><meta name="keywords" content="fuzz"><meta name="author" content="Trick"><meta name="copyright" content="Trick"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="FUZZ-AFL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FUZZ-AFL">
+<meta property="og:url" content="https://trick.ink/article/FUZZ-AFL/index.html">
+<meta property="og:site_name" content="Trick&#39;s Blog">
+<meta property="og:description" content="FUZZ-AFL">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://trick.ink/img/%E5%8E%9F%E7%A5%9E%20(11).jpg">
+<meta property="article:published_time" content="2022-04-12T06:18:55.000Z">
+<meta property="article:modified_time" content="2023-02-09T18:00:12.424Z">
+<meta property="article:author" content="Trick">
+<meta property="article:tag" content="fuzz">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://trick.ink/img/%E5%8E%9F%E7%A5%9E%20(11).jpg"><link rel="shortcut icon" href="https://i.loli.net/2021/11/04/lIr7iRh6fkg5uCe.png"><link rel="canonical" href="https://trick.ink/article/FUZZ-AFL/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?84e6e5e6ffdd2fdd1283ef8b6bf33355";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'FUZZ-AFL',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-10 02:00:12'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const now = new Date()
+          const hour = now.getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="/css/icon.css"><link rel="stylesheet" href="/css/color.css"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Trick's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/11/04/lIr7iRh6fkg5uCe.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">30</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/%E5%8E%9F%E7%A5%9E%20(11).jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Trick's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">FUZZ-AFL<a class="post-edit-link" href="null_posts/FUZZ-AFL.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-12T06:18:55.000Z" title="发表于 2022-04-12 14:18:55">2022-04-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-02-09T18:00:12.424Z" title="更新于 2023-02-10 02:00:12">2023-02-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="FUZZ-AFL"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="FUZZ-AFL"><a href="#FUZZ-AFL" class="headerlink" title="FUZZ-AFL"></a>FUZZ-AFL</h1><!-- 文章页 配置 -->
+
+<h1 id="浅试FUZZ-AFL安装与使用"><a href="#浅试FUZZ-AFL安装与使用" class="headerlink" title="浅试FUZZ-AFL安装与使用"></a>浅试FUZZ-AFL安装与使用</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>官网下载：<a target="_blank" rel="noopener" href="https://lcamtuf.coredump.cx/afl/">https://lcamtuf.coredump.cx/afl/</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<p>验证成功</p>
+<p><img src="/article/FUZZ-AFL/image-20220424191446449.png" alt="image-20220424191446449"></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>创建两个文件夹</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir fuzz_in</span><br><span class="line">mkdir fuzz_out</span><br></pre></td></tr></table></figure>
+
+<p>简单的测试用例</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fun</span><span class="params">(<span class="keyword">char</span> *buf)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(buf[<span class="number">0</span>]=<span class="string">&#x27;a&#x27;</span>&amp;&amp;<span class="built_in">strlen</span>(buf)==<span class="number">5</span>)</span><br><span class="line">	        raise(SIGSEGV);	<span class="comment">//	如果输入的字符串开头是a，且长度为5，则异常退出</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">char</span> buf[<span class="number">100</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line">        gets(buf); <span class="comment">//栈溢出漏洞</span></span><br><span class="line">        <span class="built_in">printf</span>(buf); <span class="comment">//格式化字符串漏洞</span></span><br><span class="line">        fun(buf);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-gcc -g -o <span class="built_in">test</span> test.c</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建数据"><a href="#创建数据" class="headerlink" title="创建数据"></a>创建数据</h3><p>在fuzz_in文件夹中创建文件test，并随便输入一些数据</p>
+<h3 id="开始FUZZ"><a href="#开始FUZZ" class="headerlink" title="开始FUZZ"></a>开始FUZZ</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i fuzz_in -o fuzz_out ./<span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/article/FUZZ-AFL/image-20220424192447765.png" alt="image-20220424192447765"></p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>在fuzz_out的crashes文件中找到需要分析的crash</p>
+<p><img src="/article/FUZZ-AFL/image-20220424193216200.png" alt="image-20220424193216200"></p>
+<ol>
+<li></li>
+</ol>
+<h1 id="FUZZ之源码阅读"><a href="#FUZZ之源码阅读" class="headerlink" title="FUZZ之源码阅读"></a>FUZZ之源码阅读</h1><p>读源码真的会谢</p>
+<h2 id="获取命令行参数"><a href="#获取命令行参数" class="headerlink" title="获取命令行参数"></a>获取命令行参数</h2><p>通过<code>getopt</code>扫描我们的 argv 里面的参数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> ((opt = getopt(argc, argv, <span class="string">&quot;+i:o:f:m:t:T:dnCB:S:M:x:Q&quot;</span>)) &gt; <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>-i：设置输入文件。</p>
+<ul>
+<li>如果 in_dir = “-“，设置 in_place_resume = 1</li>
+</ul>
+</li>
+<li><p>-o：设置输出文件。</p>
+</li>
+<li><p>-M：主同步ID（sync_id），用于并行fuzz。</p>
+<ul>
+<li><code>force_deterministic = 1</code>，</li>
+</ul>
+</li>
+<li><p>-S：从同步ID（sync_id），用于并行fuzz。</p>
+</li>
+<li><p>-f：模糊程序读取case的位置。</p>
+<ul>
+<li><code>out_file</code>变量被赋值。</li>
+</ul>
+</li>
+<li><p>-x：设置自定义token（一些容易触发漏洞的输入，比如边界值、很大的数…）。用于后面变异过程中的替换和插入。</p>
+<ul>
+<li><code>extras_dir</code>变量被赋值。</li>
+</ul>
+</li>
+<li><p>-t：设置被测试程序的运行时间限制。</p>
+<ul>
+<li><code>exec_tmout</code>变量被赋值（%u）。</li>
+<li>如果后缀为”+”，则 timeout_given = 2；否则 timeout_given = 1，表示设置了运行时间限制。</li>
+</ul>
+</li>
+<li><p>-m：设置被测程序的内存空间大小。</p>
+<ul>
+<li><code>mem_limit_given = 1</code>，表示设置了内存空间。</li>
+<li><code>mem_limit</code>变量被赋值为内存大小，默认单位是M，可以设置K、G、T。</li>
+</ul>
+</li>
+<li><p>-d：跳过变异时的确定性变异阶段。</p>
+<ul>
+<li><code>skip_deterministic = 1</code></li>
+<li><code>use_splicing = 1</code>，（重新组合输入文件）</li>
+</ul>
+</li>
+<li><p>-B：读取位图？（基本用不到）</p>
+<ul>
+<li>大概意思是：在测试的过程中如果发现了有趣的测试用例，在没有发现新的测试用例的情况下对其进行变异。</li>
+<li><code>in_bitmap</code>变量被赋值。</li>
+</ul>
+</li>
+<li><p>-C：将一个测试用例crash作为afl-fuzz的输入。（crash mode）</p>
+<ul>
+<li>可以快速地产生很多和输入crash相关，但稍微不同的crashes。</li>
+<li><code>crash_mode</code>变量被赋值。</li>
+</ul>
+</li>
+<li><p>-n：非插桩模式。（dumb mode）</p>
+<ul>
+<li>如果环境变量中有”AFL_DUMB_FORKSRV”，<code>dumb_mode = 2</code>，否则为1。</li>
+</ul>
+</li>
+<li><p>-T：修改横幅名称</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">afl-fuzz -i fuzz_in -o fuzz_out -T aTestOpt-T ./<span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>在fuzz时横幅会变成：american fuzzy lop 2.52b (aTestOpt-T)</p>
+<p>如果没有-T，默认是程序名称，也就是test</p>
+</li>
+<li><p>-Q：QEMU模式。</p>
+<ul>
+<li><code>qemu_mode = 1</code></li>
+<li>如果没有设置运行内存限制（-m），即（!mem_limit_given），则<code>mem_limit = MEM_LIMIT_QEMU</code>。</li>
+</ul>
+</li>
+<li><p>default：<code>usage(argv[0])</code></p>
+<p>打印使用提示。</p>
+</li>
+</ul>
+<h2 id="setup-signal-handlers"><a href="#setup-signal-handlers" class="headerlink" title="setup_signal_handlers"></a>setup_signal_handlers</h2><p>注册必要的信号处理函数</p>
+<ul>
+<li><p>停止的各种方式</p>
+<ul>
+<li>如果进程接收到这些信号中的一个，而事先又没有安排捕获它，进程就会终止。</li>
+<li>SIGHUP（hangup）：连接挂断</li>
+<li>SIGINT（interrupt）：终端中断</li>
+<li>SIGTERM（software termination signal from kill）：终止</li>
+<li>handle_stop_sig<ul>
+<li>设置stop_soon为1</li>
+<li>如果child_pid存在，向其发送SIGKILL终止信号，从而被系统杀死</li>
+<li>如果forksrv_pid存在，向其发送SIGKILL终止信号</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>处理超时的情况</p>
+<ul>
+<li>SIGALRM（alarm clock）</li>
+<li>handle_timeout<ul>
+<li>如果child_pid&gt;0，则设置child_timed_out为1，并kill掉child_pid</li>
+<li>如果child_pid==-1，且forksrv_pid&gt;0，则设置child_timed_out为1，并kill掉forksrv_pid</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>处理窗口大小变化的信号</p>
+<ul>
+<li>SIGWINCH（Window resize）</li>
+<li>handle_resize<ul>
+<li>设置clear_screen=1</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>用户自定义信号</p>
+<ul>
+<li>SIGUSR1（user defined signal 1）</li>
+<li>handle_skipreq<ul>
+<li>设置skip_requested=1</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>不关心的信号</p>
+<ul>
+<li>SIGTSTP（stop signal from tty）</li>
+<li>SIGPIPE（write on a pipe with no one to read it）</li>
+<li>设置为SIG_IGN（忽略信号）</li>
+</ul>
+</li>
+</ul>
+<h2 id="check-asan-opts"><a href="#check-asan-opts" class="headerlink" title="check_asan_opts"></a>check_asan_opts</h2><p>读取环境变量<code>ASAN_OPTIONS</code>和<code>MSAN_OPTIONS</code>，做一些必要性检查</p>
+<p>ASAN是一个快速的内存错误检测工具</p>
+<h2 id="fix-up-sync"><a href="#fix-up-sync" class="headerlink" title="fix_up_sync"></a>fix_up_sync</h2><p>检查环境变量中的一些冲突参数。</p>
+<ul>
+<li><p>如果环境变量参数中用了-M或者-S，则改变了sync_id的值，会进入到该函数中</p>
+<ul>
+<li><code>sync_dir = out_dir</code></li>
+<li><code>out_dir  = out_dir/sync_id</code></li>
+</ul>
+</li>
+<li><p>如果参数中没有-M</p>
+<ul>
+<li>等同于输入了参数-d</li>
+<li><code>skip_deterministic = 1</code>。跳过确定性阶段</li>
+<li><code>use_splicing = 1</code>。重新组合输入文件</li>
+</ul>
+</li>
+</ul>
+<h2 id="save-cmdline"><a href="#save-cmdline" class="headerlink" title="save_cmdline"></a>save_cmdline</h2><p>将命令行参数保存到全局变量<code>orig_cmdline</code>中</p>
+<h2 id="fix-up-banner"><a href="#fix-up-banner" class="headerlink" title="fix_up_banner"></a>fix_up_banner</h2><p>修剪并且创建一个运行横幅。与参数-T相关</p>
+<h2 id="check-if-tty"><a href="#check-if-tty" class="headerlink" title="check_if_tty"></a>check_if_tty</h2><p>检查是否在tty终端上运行</p>
+<ul>
+<li>读取环境变量是否存在AFL_NO_UI，存在则<code>not_on_tty = 1</code></li>
+<li>通过函数<code>ioctl(1, TIOCGWINSZ, &amp;ws)</code>读取window size，如果报错为ENOTTY，则代表当前不在一个tty终端运行，<code>not_on_tty = 1</code></li>
+</ul>
+<h2 id="get-core-count"><a href="#get-core-count" class="headerlink" title="get_core_count"></a>get_core_count</h2><p>获取cpu核心数量。保存在全局变量<code>cpu_core_count</code>中</p>
+<h2 id="bind-to-free-cpu"><a href="#bind-to-free-cpu" class="headerlink" title="bind_to_free_cpu"></a>bind_to_free_cpu</h2><p>构建绑定到特定核心的进程列表</p>
+<h2 id="check-crash-handling"><a href="#check-crash-handling" class="headerlink" title="check_crash_handling"></a>check_crash_handling</h2><p>如果系统配置为将核心转储文件（core）通知发送到外部程序，会导致将崩溃信息发送到Fuzzer之间的延迟增大，进而可能将崩溃被误报为超时，所以我们得临时修改core_pattern文件</p>
+<p>就是第一次运行时报错让你去执行的那句话（echo core &gt; /proc/sys/kernel/core_pattern）就是因为这个函数</p>
+<h2 id="check-cpu-governor"><a href="#check-cpu-governor" class="headerlink" title="check_cpu_governor"></a>check_cpu_governor</h2><p>检查CPU管理者</p>
+<h2 id="setup-post"><a href="#setup-post" class="headerlink" title="setup_post"></a>setup_post</h2><p>加载后置处理器</p>
+<h2 id="setup-shm"><a href="#setup-shm" class="headerlink" title="setup_shm"></a>setup_shm</h2><p>设置 <code>trace_bits</code> 和 <code>virgin_bits</code></p>
+<ul>
+<li><p>如果<code>in_bitmap = 0</code>，则通过<code>memset(virgin_bits, 255, MAP_SIZE)</code>初始化数组为255（0xff）。<code>in_bitmap</code>与参数-B有关</p>
+</li>
+<li><p>继续使用<code>memset</code>初始化：<code>memset(virgin_tmout, 255, MAP_SIZE); memset(virgin_crash, 255, MAP_SIZE);</code></p>
+</li>
+<li><p><code>shm_id = shmget(IPC_PRIVATE, MAP_SIZE, IPC_CREAT | IPC_EXCL | 0600);</code></p>
+<ul>
+<li>函数原型：<code>int shmget(key_t key, size_t size, int shmflg);</code>，用来创建共享内存<ul>
+<li>第一个参数：程序需要提供一个参数key（非0整数），它有效地为共享内存段命名，shmget()函数成功时返回一个与key相关的共享内存标识符（非负整数），用于后续的共享内存函数。调用失败返回-1<ul>
+<li>这里shm_id取值是IPC_PRIVATE，所以函数shmget()将创建一块新的共享内存</li>
+</ul>
+</li>
+<li>第二个参数：size以字节为单位指定需要共享的内存容量</li>
+<li>第三个参数：权限标志<ul>
+<li>IPC_CREAT：如果共享内存不存在，则创建一个共享内存，否则打开操作</li>
+<li>IPC_EXCL：只有在共享内存不存在的时候，新的共享内存才建立，否则就产生错误</li>
+<li>0600：每一位表示一种类型的权限，比如，第一位是表示八进制,第二位表示拥有者的权限为读写，第三位表示同组无权限，第四位表示他人无权限</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>atexit(remove_shm)</code>，注册终止函数</p>
+<ul>
+<li><p>注册为函数<code>remove_shm</code></p>
+</li>
+<li><p>```c<br>static void remove_shm(void) {<br>  shmctl(shm_id, IPC_RMID, NULL);<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    * 函数原型：&#96;int shmctl(int shm_id, int command, struct shmid_ds *buf);&#96;</span><br><span class="line">    </span><br><span class="line">      * 第一个参数：shm_id是shmget()函数返回的共享内存标识符。</span><br><span class="line">      * 第二个参数：command是要采取的操作，它可以取三个值</span><br><span class="line">        * IPC_STAT：把shmid_ds结构中的数据设置为共享内存的当前关联值，即用共享内存的当前关联值覆盖shmid_ds的值。</span><br><span class="line">        * IPC_SET：如果进程有足够的权限，就把共享内存的当前关联值设置为shmid_ds结构中给出的值</span><br><span class="line">        * IPC_RMID：删除共享内存段</span><br><span class="line">    </span><br><span class="line">      * 第三个参数：buf，一个结构指针</span><br><span class="line">  </span><br><span class="line">* 如果不是&#96;dump_mode&#96;，则设置环境变量&#96;SHM_ENV_VAR&#96;的值为&#96;shm_str&#96;。&#96;dump_mode&#96;与参数-n有关</span><br><span class="line"></span><br><span class="line">* &#96;trace_bits &#x3D; shmat(shm_id, NULL, 0);&#96;</span><br><span class="line"></span><br><span class="line">  * 第一次创建共享内存之后还不能被任何进程访问，所以需要通过shmat函数来启动对该共享内存的访问，并把共享内存连接到当前进程的地址空间</span><br><span class="line">  * 函数原型：&#96;void *shmat(int shm_id, const void *shm_addr, int shmflg)&#96;</span><br><span class="line">    * 第一个参数，shm_id是由shmget()函数返回的共享内存标识</span><br><span class="line">    * 第二个参数，shm_addr指定共享内存连接到当前进程中的地址位置，通常为空，表示让系统来选择共享内存的地址</span><br><span class="line">    * 第三个参数，shm_flg是一组标志位，通常为0</span><br><span class="line">    * 调用成功时返回一个指向共享内存第一个字节的指针，如果调用失败返回-1</span><br><span class="line"></span><br><span class="line">## init_count_class16</span><br><span class="line"></span><br><span class="line">路径命中次数规整。</span><br><span class="line">trace_bits是用一个字节来记录是否到达这个路径，和这个路径被命中了多少次的，即 &#96;count_class_lookup8[256]&#96;。</span><br><span class="line">在每次去计算是否发现了新路径之前，先把这个路径命中次数进行规整，比如把命中4~7次都统计为命中了8次。</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;c</span><br><span class="line">static const u8 count_class_lookup8[256] &#x3D; &#123;</span><br><span class="line">  [0]           &#x3D; 0,</span><br><span class="line">  [1]           &#x3D; 1,</span><br><span class="line">  [2]           &#x3D; 2,</span><br><span class="line">  [3]           &#x3D; 4,</span><br><span class="line">  [4 ... 7]     &#x3D; 8,</span><br><span class="line">  [8 ... 15]    &#x3D; 16,</span><br><span class="line">  [16 ... 31]   &#x3D; 32,</span><br><span class="line">  [32 ... 127]  &#x3D; 64,</span><br><span class="line">  [128 ... 255] &#x3D; 128</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<p>而在实际的规整过程中是一次规整两个字节，即<code>count_class_lookup8[65536]</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">EXP_ST <span class="keyword">void</span> <span class="title">init_count_class16</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">  u32 b1, b2;</span><br><span class="line">  <span class="keyword">for</span> (b1 = <span class="number">0</span>; b1 &lt; <span class="number">256</span>; b1++) </span><br><span class="line">    <span class="keyword">for</span> (b2 = <span class="number">0</span>; b2 &lt; <span class="number">256</span>; b2++)</span><br><span class="line">      count_class_lookup16[(b1 &lt;&lt; <span class="number">8</span>) + b2] = </span><br><span class="line">        (count_class_lookup8[b1] &lt;&lt; <span class="number">8</span>) |</span><br><span class="line">        count_class_lookup8[b2];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="setup-dirs-fds"><a href="#setup-dirs-fds" class="headerlink" title="setup_dirs_fds"></a>setup_dirs_fds</h2><p>设置输出目录和文件描述符。</p>
+<ul>
+<li>如果sync_id存在<ul>
+<li>创建sync_dir文件夹</li>
+</ul>
+</li>
+<li>创建out_dir文件夹<ul>
+<li>调用<code>maybe_delete_out_dir</code>，返回文件句柄out_dir_fd<ul>
+<li><code>out_dir_fd = open(out_dir, O_RDONLY);</code><ul>
+<li>以只读的模式打开</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>创建queue文件夹<ul>
+<li>创建<code>out_dir/queue</code></li>
+<li>创建<code>out_dir/queue/.state/</code></li>
+<li>创建<code>out_dir/queue/.state/deterministic_done</code></li>
+<li>创建<code>out_dir/queue/.state/auto_extras</code></li>
+<li>创建<code>out_dir/queue/.state/redundant_edges</code></li>
+<li>创建<code>out_dir/queue/.state/variable_behavior</code></li>
+</ul>
+</li>
+<li>如果sync_id存在<ul>
+<li>创建<code>out_dir/.synced</code>文件夹</li>
+</ul>
+</li>
+<li>创建<code>out_dir/crashes</code>文件夹</li>
+<li>创建<code>out_dir/hangs</code>文件夹</li>
+<li>创建<code>out_dir/hangs</code>文件夹</li>
+<li>通常有用的文件描述符<ul>
+<li><code>dev_null_fd = open(&quot;/dev/null&quot;, O_RDWR);</code>，读写模式</li>
+<li><code>dev_urandom_fd = open(&quot;/dev/urandom&quot;, O_RDONLY);</code>，只读模式</li>
+</ul>
+</li>
+<li>创建Gnuplot输出文件<ul>
+<li>以只写模式打开<code>out_dir/plot_data</code>文件</li>
+<li>写入<code>\# unix_time, cycles_done, cur_path, paths_total, pending_total, pending_favs, map_size, unique_crashes, unique_hangs, max_depth, execs_per_sec\n </code></li>
+</ul>
+</li>
+</ul>
+<h2 id="read-testcases"><a href="#read-testcases" class="headerlink" title="read_testcases"></a>read_testcases</h2><p>从输入文件中读取testcases，排成队列用于测试</p>
+<ul>
+<li>尝试访问<code>in_dir/queue</code>文件夹，如果存在，重新设置<code>in_dir = fn;</code></li>
+<li></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Trick</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://trick.ink/article/FUZZ-AFL/">https://trick.ink/article/FUZZ-AFL/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://trick.ink" target="_blank">Trick's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/fuzz/">fuzz</a></div><div class="post_share"><div class="social-share" data-image="/img/%E5%8E%9F%E7%A5%9E%20(11).jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/article/XCTF-StartCTF/"><img class="prev-cover" src="/img/%E5%8E%9F%E7%A5%9E%20(13).jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">XCTF-StartCTF</div></div></a></div><div class="next-post pull-right"><a href="/article/Linux%20Kernel%200x1/"><img class="next-cover" src="/img/%E5%8E%9F%E7%A5%9E%20(6).jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux Kernel 0x1</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#FUZZ-AFL"><span class="toc-number">1.</span> <span class="toc-text">FUZZ-AFL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%85%E8%AF%95FUZZ-AFL%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">浅试FUZZ-AFL安装与使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">2.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">2.2.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">2.2.1.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE"><span class="toc-number">2.2.2.</span> <span class="toc-text">创建数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%A7%8BFUZZ"><span class="toc-number">2.2.3.</span> <span class="toc-text">开始FUZZ</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">2.3.</span> <span class="toc-text">分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FUZZ%E4%B9%8B%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB"><span class="toc-number">3.</span> <span class="toc-text">FUZZ之源码阅读</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="toc-number">3.1.</span> <span class="toc-text">获取命令行参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#setup-signal-handlers"><span class="toc-number">3.2.</span> <span class="toc-text">setup_signal_handlers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#check-asan-opts"><span class="toc-number">3.3.</span> <span class="toc-text">check_asan_opts</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fix-up-sync"><span class="toc-number">3.4.</span> <span class="toc-text">fix_up_sync</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#save-cmdline"><span class="toc-number">3.5.</span> <span class="toc-text">save_cmdline</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fix-up-banner"><span class="toc-number">3.6.</span> <span class="toc-text">fix_up_banner</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#check-if-tty"><span class="toc-number">3.7.</span> <span class="toc-text">check_if_tty</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#get-core-count"><span class="toc-number">3.8.</span> <span class="toc-text">get_core_count</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bind-to-free-cpu"><span class="toc-number">3.9.</span> <span class="toc-text">bind_to_free_cpu</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#check-crash-handling"><span class="toc-number">3.10.</span> <span class="toc-text">check_crash_handling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#check-cpu-governor"><span class="toc-number">3.11.</span> <span class="toc-text">check_cpu_governor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#setup-post"><span class="toc-number">3.12.</span> <span class="toc-text">setup_post</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#setup-shm"><span class="toc-number">3.13.</span> <span class="toc-text">setup_shm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#setup-dirs-fds"><span class="toc-number">3.14.</span> <span class="toc-text">setup_dirs_fds</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#read-testcases"><span class="toc-number">3.15.</span> <span class="toc-text">read_testcases</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2023 By Trick</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="rightside.chat_btn"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>(()=>{
+  const $countDom = document.getElementById('twikoo-count')
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-two-xi.vercel.app/',
+      region: ''
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-two-xi.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      $countDom.innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const loadTwikoo = (bool = false) => {
+    if (typeof twikoo === 'object') {
+      init()
+      bool && $countDom && setTimeout(getCount,0)
+    } else {
+      getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(()=> {
+        init()
+        bool && $countDom && setTimeout(getCount,0)
+      })
+    }
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo(true)
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script>(function(d, w, c) {
+    w.ChatraID = 'yfxzEQMWMFaNkeGAQ';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (true) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (true) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
